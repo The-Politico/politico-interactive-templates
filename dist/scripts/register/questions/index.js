@@ -4,15 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _name = require("./name");
-
-Object.defineProperty(exports, "name", {
-  enumerable: true,
-  get: function () {
-    return _interopRequireDefault(_name).default;
-  }
-});
-
 var _path = require("./path");
 
 Object.defineProperty(exports, "path", {

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import yargs from 'yargs';
-import newProject from './new';
-import register from './register';
+import * as scripts from './scripts';
 
 yargs // eslint-disable-line
   .help()
@@ -26,7 +25,7 @@ yargs // eslint-disable-line
         default: true,
       });
   }, async function(argv) {
-    await newProject(argv.template, argv.directory, argv.verbose);
+    await scripts.newProject(argv.template, argv.directory, argv.verbose);
   })
 
   // Register
@@ -47,6 +46,6 @@ yargs // eslint-disable-line
         default: true,
       });
   }, async function(argv) {
-    await register(argv.name, argv.path, argv.verbose);
+    await scripts.register(argv.name, argv.path, argv.verbose);
   })
   .argv;

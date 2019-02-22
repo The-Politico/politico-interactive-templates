@@ -2,14 +2,15 @@ import fs from 'fs-extra';
 import path from 'path';
 import glob from 'glob';
 import keys from 'lodash/keys';
+import merge from 'lodash/merge';
 import inquirer from 'inquirer';
 
 import getConfig from 'Utils/getConfig';
-import spawn from 'Utils/spawn';
 import rimraf from 'Utils/rimraf';
 import cwd from 'Utils/cwd';
 import processFile from 'Utils/processFile';
 import * as renderMethods from 'Utils/renderer';
+import downloadRepo from 'Utils/downloadRepo';
 
 import * as q from './questions';
 
@@ -29,7 +30,7 @@ export const setup = async function(template, directory = '', verbose = true) {
 
   const templatePath = globalConfig.templates[template].path;
 
-  await spawn('git', ['clone', templatePath, path.join(directory, '.tmp.pit')], verbose);
+  await downloadRepo(templatePath, directory, verbose);
 };
 
 export const build = async function(context, directory = '', verbose = true) {
@@ -43,6 +44,8 @@ export const build = async function(context, directory = '', verbose = true) {
   if (!context) {
     context = await inquirer.prompt(projectConfig.args);
   }
+
+  context = merge({}, context, projectConfig.context);
 
   const templateFiles = glob.sync(path.join(directory, '.tmp.pit', '**'), { dot: true });
   return Promise.all(templateFiles.map(filepath => processFile(filepath, {

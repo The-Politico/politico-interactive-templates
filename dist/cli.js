@@ -5,13 +5,11 @@ var _yargs = require("yargs");
 
 var _yargs2 = _interopRequireDefault(_yargs);
 
-var _new = require("./new");
+var _scripts = require("./scripts");
 
-var _new2 = _interopRequireDefault(_new);
+var scripts = _interopRequireWildcard(_scripts);
 
-var _register = require("./register");
-
-var _register2 = _interopRequireDefault(_register);
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32,7 +30,7 @@ _yargs2.default // eslint-disable-line
     default: true
   });
 }, async function (argv) {
-  await (0, _new2.default)(argv.template, argv.directory, argv.verbose);
+  await scripts.newProject(argv.template, argv.directory, argv.verbose);
 }) // Register
 .command('register [name] [path]', 'Registers new templates for use.', yargs => {
   yargs.positional('name', {
@@ -48,5 +46,5 @@ _yargs2.default // eslint-disable-line
     default: true
   });
 }, async function (argv) {
-  await (0, _register2.default)(argv.name, argv.path, argv.verbose);
+  await scripts.register(argv.name, argv.path, argv.verbose);
 }).argv;

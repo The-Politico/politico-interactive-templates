@@ -15,7 +15,17 @@ var _configFile2 = _interopRequireDefault(_configFile);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = () => {
-  return _fsExtra2.default.readJson(_configFile2.default).catch(e => {
-    console.error(e);
+  return new Promise((resolve, reject) => {
+    _fsExtra2.default.readJson(_configFile2.default).then(d => {
+      resolve(d);
+    }).catch(e => {
+      if (e.message.endsWith('Unexpected end of JSON input')) {
+        resolve({});
+      } else if (e.message.startsWith('ENOENT: no such file or directory')) {
+        resolve({});
+      } else {
+        reject(e);
+      }
+    });
   });
 };

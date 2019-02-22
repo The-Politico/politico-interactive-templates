@@ -21,33 +21,37 @@ var _keys = require("lodash/keys");
 
 var _keys2 = _interopRequireDefault(_keys);
 
+var _merge = require("lodash/merge");
+
+var _merge2 = _interopRequireDefault(_merge);
+
 var _inquirer = require("inquirer");
 
 var _inquirer2 = _interopRequireDefault(_inquirer);
 
-var _getConfig = require("../utils/getConfig");
+var _getConfig = require("../../utils/getConfig");
 
 var _getConfig2 = _interopRequireDefault(_getConfig);
 
-var _spawn = require("../utils/spawn");
-
-var _spawn2 = _interopRequireDefault(_spawn);
-
-var _rimraf = require("../utils/rimraf");
+var _rimraf = require("../../utils/rimraf");
 
 var _rimraf2 = _interopRequireDefault(_rimraf);
 
-var _cwd = require("../utils/cwd");
+var _cwd = require("../../utils/cwd");
 
 var _cwd2 = _interopRequireDefault(_cwd);
 
-var _processFile = require("../utils/processFile");
+var _processFile = require("../../utils/processFile");
 
 var _processFile2 = _interopRequireDefault(_processFile);
 
-var _renderer = require("../utils/renderer");
+var _renderer = require("../../utils/renderer");
 
 var renderMethods = _interopRequireWildcard(_renderer);
+
+var _downloadRepo = require("../../utils/downloadRepo");
+
+var _downloadRepo2 = _interopRequireDefault(_downloadRepo);
 
 var _questions = require("./questions");
 
@@ -71,7 +75,7 @@ const setup = exports.setup = async function (template, directory = '', verbose 
   }
 
   const templatePath = globalConfig.templates[template].path;
-  await (0, _spawn2.default)('git', ['clone', templatePath, _path2.default.join(directory, '.tmp.pit')], verbose);
+  await (0, _downloadRepo2.default)(templatePath, directory, verbose);
 };
 
 const build = exports.build = async function (context, directory = '', verbose = true) {
@@ -86,6 +90,8 @@ const build = exports.build = async function (context, directory = '', verbose =
   if (!context) {
     context = await _inquirer2.default.prompt(projectConfig.args);
   }
+
+  context = (0, _merge2.default)({}, context, projectConfig.context);
 
   const templateFiles = _glob2.default.sync(_path2.default.join(directory, '.tmp.pit', '**'), {
     dot: true

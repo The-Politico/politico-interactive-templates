@@ -49,6 +49,11 @@ describe('New - Build: Builds Template Files', () => {
     expect(file).to.be('# app\n');
   });
 
+  it('Uses project context', async function() {
+    const file = fs.readFileSync(path.join(dir, 'extra.txt')).toString('utf-8');
+    expect(file).to.be('context field\n');
+  });
+
   it('Renames files with strings', async function() {
     expect(files).to.contain(path.join(dir, 'renamed.txt'));
   });

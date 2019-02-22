@@ -16,7 +16,7 @@ var _glob = require("glob");
 
 var _glob2 = _interopRequireDefault(_glob);
 
-var _rimraf = require("../utils/rimraf");
+var _rimraf = require("../../utils/rimraf");
 
 var _rimraf2 = _interopRequireDefault(_rimraf);
 
@@ -63,6 +63,11 @@ describe('New - Build: Builds Template Files', () => {
     const file = _fs2.default.readFileSync(_path2.default.join(dir, 'README.md')).toString('utf-8');
 
     (0, _expect2.default)(file).to.be('# app\n');
+  });
+  it('Uses project context', async function () {
+    const file = _fs2.default.readFileSync(_path2.default.join(dir, 'extra.txt')).toString('utf-8');
+
+    (0, _expect2.default)(file).to.be('context field\n');
   });
   it('Renames files with strings', async function () {
     (0, _expect2.default)(files).to.contain(_path2.default.join(dir, 'renamed.txt'));
