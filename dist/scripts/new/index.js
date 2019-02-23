@@ -13,10 +13,6 @@ var _path = require("path");
 
 var _path2 = _interopRequireDefault(_path);
 
-var _glob = require("glob");
-
-var _glob2 = _interopRequireDefault(_glob);
-
 var _keys = require("lodash/keys");
 
 var _keys2 = _interopRequireDefault(_keys);
@@ -28,6 +24,8 @@ var _merge2 = _interopRequireDefault(_merge);
 var _inquirer = require("inquirer");
 
 var _inquirer2 = _interopRequireDefault(_inquirer);
+
+var _globGitignore = require("glob-gitignore");
 
 var _getConfig = require("../../utils/getConfig");
 
@@ -53,6 +51,10 @@ var _downloadRepo = require("../../utils/downloadRepo");
 
 var _downloadRepo2 = _interopRequireDefault(_downloadRepo);
 
+var _ignores = require("../../constants/ignores");
+
+var _ignores2 = _interopRequireDefault(_ignores);
+
 var _questions = require("./questions");
 
 var q = _interopRequireWildcard(_questions);
@@ -69,7 +71,7 @@ const setup = exports.setup = async function (template, directory = '', verbose 
     template = await q.template(globalConfig.templates);
   }
 
-  if (_glob2.default.sync(_path2.default.join(directory, _cwd2.default, '**')).length > 1) {
+  if ((0, _globGitignore.sync)(_path2.default.join(directory, _cwd2.default, '**')).length > 1) {
     console.error('There are files in this directory. Please empty it to start a new project.');
     return;
   }
@@ -92,16 +94,14 @@ const build = exports.build = async function (context, directory = '', verbose =
   }
 
   context = (0, _merge2.default)({}, context, projectConfig.context);
-
-  const templateFiles = _glob2.default.sync(_path2.default.join(directory, '.tmp.pit', '**'), {
-    dot: true
+  const templateFiles = (0, _globGitignore.sync)(_path2.default.join(directory, '.tmp.pit', '**'), {
+    dot: true,
+    ignore: projectConfig.ignore.concat(_ignores2.default)
   });
-
   return Promise.all(templateFiles.map(filepath => (0, _processFile2.default)(filepath, {
     renderer,
     context,
     directory,
-    ignore: projectConfig.ignore,
     rename: projectConfig.rename
   })));
 };
