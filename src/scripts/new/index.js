@@ -1,9 +1,9 @@
 import fs from 'fs-extra';
 import path from 'path';
-import glob from 'glob';
 import keys from 'lodash/keys';
 import merge from 'lodash/merge';
 import inquirer from 'inquirer';
+import { sync as globSync } from 'glob-gitignore';
 
 import getConfig from 'Utils/getConfig';
 import rimraf from 'Utils/rimraf';
@@ -11,6 +11,7 @@ import cwd from 'Utils/cwd';
 import processFile from 'Utils/processFile';
 import * as renderMethods from 'Utils/renderer';
 import downloadRepo from 'Utils/downloadRepo';
+import alwaysIgnore from 'Constants/ignores';
 
 import * as q from './questions';
 
@@ -23,7 +24,7 @@ export const setup = async function(template, directory = '', verbose = true) {
     template = await q.template(globalConfig.templates);
   }
 
-  if (glob.sync(path.join(directory, cwd, '**')).length > 1) {
+  if (globSync(path.join(directory, cwd, '**')).length > 1) {
     console.error('There are files in this directory. Please empty it to start a new project.');
     return;
   }
@@ -47,12 +48,14 @@ export const build = async function(context, directory = '', verbose = true) {
 
   context = merge({}, context, projectConfig.context);
 
-  const templateFiles = glob.sync(path.join(directory, '.tmp.pit', '**'), { dot: true });
+  const templateFiles = globSync(path.join(directory, '.tmp.pit', '**'), {
+    dot: true,
+    ignore: projectConfig.ignore.concat(alwaysIgnore),
+  });
   return Promise.all(templateFiles.map(filepath => processFile(filepath, {
     renderer,
     context,
     directory,
-    ignore: projectConfig.ignore,
     rename: projectConfig.rename,
   })));
 };

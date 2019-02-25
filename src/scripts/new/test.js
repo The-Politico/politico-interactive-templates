@@ -4,6 +4,10 @@ import fs from 'fs';
 import glob from 'glob';
 import rimraf from 'Utils/rimraf';
 import { setup, build, cleanup } from './index';
+import getConfig from 'Utils/getConfig';
+import outputConfig from 'Utils/outputConfig';
+import { testTemplateName, testTemplateRepo } from 'Constants/testing';
+import register from '../register/index';
 
 const context = {
   'name': 'app',
@@ -12,9 +16,12 @@ const context = {
 
 describe('New - Setup: Downloads Template Repo', () => {
   const dir = 'example/setup';
+  let config = { templates: {} };
 
   before(async function() {
-    await setup('PIT Test', dir, false);
+    config = await getConfig();
+    await register(testTemplateRepo, false);
+    await setup(testTemplateName, dir, false);
   });
 
   it('Downloads files', async function() {
@@ -24,16 +31,21 @@ describe('New - Setup: Downloads Template Repo', () => {
   });
 
   after(async function() {
+    delete config.templates[testTemplateName];
+    await outputConfig(config);
     rimraf(dir);
   });
 });
 
 describe('New - Build: Builds Template Files', () => {
   const dir = 'example/build';
+  let config = { templates: {} };
   let files;
 
   before(async function() {
-    await setup('PIT Test', dir, false);
+    config = await getConfig();
+    await register(testTemplateRepo, false);
+    await setup(testTemplateName, dir, false);
     await build(context, dir, false);
 
     files = glob.sync(path.join(dir, '**'), { dot: true });
@@ -79,15 +91,20 @@ describe('New - Build: Builds Template Files', () => {
   });
 
   after(async function() {
+    delete config.templates[testTemplateName];
+    await outputConfig(config);
     rimraf(dir);
   });
 });
 
 describe('New - Cleanup: Deletes Template Repo', () => {
   const dir = 'example/cleanup';
+  let config = { templates: {} };
 
   before(async function() {
-    await setup('PIT Test', dir, false);
+    config = await getConfig();
+    await register(testTemplateRepo, false);
+    await setup(testTemplateName, dir, false);
     await build(context, dir, false);
     await cleanup(dir, false);
   });
@@ -98,6 +115,8 @@ describe('New - Cleanup: Deletes Template Repo', () => {
   });
 
   after(async function() {
+    delete config.templates[testTemplateName];
+    await outputConfig(config);
     rimraf(dir);
   });
 });

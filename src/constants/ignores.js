@@ -1,9 +1,4 @@
-export default {
-  directories: [
-    '.git',
-  ],
-
-  files: [
-    '.pitrc',
-  ],
-};
+export default [
+  '.git',
+  '.pitrc',
+];
