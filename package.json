@@ -9,12 +9,13 @@
   "scripts": {
     "dev": "nodemon --ignore dist --exec npm run build",
     "build": "babel src --out-dir dist --copy-files",
-    "test": "nyc mocha $(find dist/**/**/test.js -name '*.js') --timeout 30000",
+    "test": "nyc mocha $(find src/**/**/test.js -name '*.js') --require \"@babel/register\" --timeout 30000",
     "posttest": "rmdir example"
   },
   "devDependencies": {
     "@babel/cli": "^7.1.0",
     "@babel/core": "^7.1.0",
+    "@babel/register": "^7.0.0",
     "@politico/eslint-config-interactives": "^0.0.4",
     "@politico/interactive-bin": "^0.1.5",
     "babel-core": "7.0.0-bridge.0",
