@@ -23,7 +23,7 @@ const register = async function(githubPath, verbose = true) {
   }
 
   const alreadyRegistered = keys(globalConfig.templates).some(t => {
-    if (globalConfig.templates[t].githubPath === githubPath) {
+    if (globalConfig.templates[t].path === githubPath) {
       console.log(`This template name has already been registered as "${t}".`);
       return true;
     }
@@ -44,6 +44,10 @@ const register = async function(githubPath, verbose = true) {
 
   globalConfig.templates[name] = { path: githubPath };
   await outputConfig(globalConfig);
+
+  if (verbose) {
+    console.log(`Success! Your template, ${name}, has been registered. Run "pit new" to generate a new project.`);
+  }
 };
 
 export default register;

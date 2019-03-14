@@ -114,6 +114,10 @@ const newProject = async function (template, directory, verbose = true) {
   await setup(template, directory, verbose);
   await build(null, directory, verbose);
   await cleanup(directory, verbose);
+
+  if (verbose) {
+    console.log('Success! Your new project is ready.');
+  }
 };
 
 exports.default = newProject;
