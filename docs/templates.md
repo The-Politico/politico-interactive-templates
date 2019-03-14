@@ -22,7 +22,7 @@ That's actually all you need to make your codebase a template, but you probably 
 
 For a complete breakdown of `.pitrc` options check out [these docs](pitrc.md).
 
-## [`args`](.pitrc.md#args)
+## `args`
 PIT provides an easy way to prompt your users for input and use those answers in your codebase.
 
 Set the `args` key to an empty array in the `export` of your `.pitrc`.
@@ -56,7 +56,7 @@ For example, you might want the user's provided name to appear in their `README.
 *Documentation coming soon...*
 ```
 
-## [`context`](.pitrc.md#context)
+## `context`
 You can also provide variables that all instances of your template have available with the `context` key in your `.pitrc` file. It should be an object with various keys and values. Those keys will then be variable when writing your templates.
 
 For example, you can add a `credit` value and give it a value:
@@ -78,7 +78,7 @@ _____
 Template created by <%=credit%>.
 ```
 
-## [`ignore`](.pitrc.md#ignore)
+## `ignore`
 If you want files in your template's repo that shouldn't be downloaded and used in new instances of your template, you can define them using the `ignore` key in your `.pitrc`'s export. It should be an array of [`glob` strings](https://www.npmjs.com/package/glob#glob-primer).
 
 For example, you might want a README for your template repo with instructions on using the template. In this case, you don't want this file to appear every time a user uses your template. To do this, you could add it to your ignores:
@@ -94,7 +94,7 @@ module.exports = {
 }
 ```
 
-## [`rename`](.pitrc.md#rename)
+## `rename`
 You may also want to rename directories, or files based with hard-coded rules or based on their input. That's where the `rename` key comes in which should be an object.
 
 The keys correspond to the name (or parts of the name) of the directory or file names that should should be replaced. For example if your key is `a` then any `a` in filenames will be replaced with your value. For this reason, it's advised that you make these replacements more unique than single letters.
