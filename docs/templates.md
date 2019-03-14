@@ -57,7 +57,7 @@ For example, you might want the user's provided name to appear in their `README.
 ```
 
 ## `context`
-You can also provide variables that all instances of your template have available with the `context` key in your `.pitrc` file. It should be an object with various keys and values. Those keys will then be variable when writing your templates.
+You can also provide variables that all instances of your template have available with the `context` key in your `.pitrc` file. It should be an object with various keys and values. Those keys will then be variables when writing your templates.
 
 For example, you can add a `credit` value and give it a value:
 ```javascript
@@ -214,9 +214,11 @@ ROOT
 └── README.md
 ```
 <br/>
+
 ```bash
 # README.md
 ```
+
 ```markdown
 # my-project
 
