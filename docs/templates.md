@@ -39,19 +39,19 @@ module.exports = {
   args: [
     {
       type: 'input',
-      name: 'project-name',
+      name: 'projectName',
       message: 'Project Name: ',
     },  
   ]
 }
 ```
 
-Using the example above, `project-name` will be a variable available to you when writing your templates.
+Using the example above, `projectName` will be a variable available to you when writing your templates.
 
 For example, you might want the user's provided name to appear in their `README.md`. Make a file named `README.md` in your template and paste the following:
 
 ```markdown
-# <%=project-name%>
+# <%=projectName%>
 
 *Documentation coming soon...*
 ```
@@ -118,7 +118,7 @@ module.exports = {
 
 ### Function Replacement
 
-For example, if your template has a folder that should be called the same as your user's project name you can use provide a function that returns the `project-name` of the template context:
+For example, if your template has a folder that should be called the same as your user's project name you can use provide a function that returns the `projectName` of the template context:
 
 ```javascript
 // .pitrc
@@ -126,7 +126,7 @@ module.exports = {
   ...
 
   rename: {
-    "rename-as-project-name": d => d['project-name']
+    "renameAsProjectName": d => d['projectName']
   }
 }
 ```
@@ -136,7 +136,7 @@ So if you've followed all the examples in this guide your template should at lea
 
 ```
 YOUR_TEMPLATE
-├── project-name-src
+├── projectName-src
 │  └── ...
 ├── README_template.md
 ├── README.md
@@ -153,7 +153,7 @@ module.exports = {
   args: [
     {
       type: 'input',
-      name: 'project-name',
+      name: 'projectName',
       message: 'Project Name: ',
     },  
   ],
@@ -168,7 +168,7 @@ module.exports = {
 
   rename: {
     "README_template.md": "README.md"
-    "project-name": d => d['project-name']
+    "projectName": d => d['projectName']
   }
 }
 ```
@@ -190,7 +190,7 @@ To use my template follow these instructions...
 # README_template.md
 ```
 ```markdown
-# <%=project-name%>
+# <%=projectName%>
 
 *Documentation coming soon...*
 _____
