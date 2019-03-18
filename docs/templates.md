@@ -81,14 +81,14 @@ Template created by <%=credit%>.
 ## `ignore`
 If you want files in your template's repo that shouldn't be downloaded and used in new instances of your template, you can define them using the `ignore` key in your `.pitrc`'s export. It should be an array of [`glob` strings](https://www.npmjs.com/package/glob#glob-primer).
 
-For example, you might want a README for your template repo with instructions on using the template. In this case, you don't want this file to appear every time a user uses your template. To do this, you could add it to your ignores:
+For example, you might want a README for your template repo with instructions on using the template. In this case, you don't want this file to appear every time a user uses your template. To do this, you could add it to your ignore:
 
 ```javascript
 // .pitrc
 module.exports = {
   ...
 
-  ignores: [
+  ignore: [
     'README.md'
   ]
 }
@@ -162,7 +162,7 @@ module.exports = {
     credit: 'Andrew Briz'
   },
 
-  ignores: [
+  ignore: [
     'README.md'
   ],
 
