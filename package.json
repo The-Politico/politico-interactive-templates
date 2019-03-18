@@ -1,10 +1,10 @@
 {
-  "name": "gspan",
+  "name": "@politico/interactive-templates",
   "version": "0.0.1",
-  "description": "",
-  "main": "dist/index.js",
+  "description": "Templating engine for generating codebases.",
+  "main": "dist/scripts/index.js",
   "bin": {
-    "gspan": "dist/cli.js"
+    "pit": "dist/cli.js"
   },
   "scripts": {
     "dev": "nodemon --ignore dist --exec npm run build",
