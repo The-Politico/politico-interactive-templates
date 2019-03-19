@@ -4,16 +4,16 @@ import * as q from './questions';
 import defaultConfig from './default';
 
 const register = async function(name, verbose = true) {
+  if (await exists('.pitrc')) {
+    throw new Error('.pitrc file already exists.');
+  }
+
   if (!name) {
     if (verbose) {
       name = await q.name();
     } else {
       throw new Error('Missing first argument: "name"');
     }
-  }
-
-  if (await exists('.pitrc')) {
-    throw new Error('.pitrc file already exists.');
   }
 
   const config = assign({}, defaultConfig, { name });

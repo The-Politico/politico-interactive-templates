@@ -4,7 +4,13 @@ PIT is designed to easily turn an existing project into a template. To see a fin
 
 
 ## Getting Started
-You may want to duplicate your entire project before doing this to keep your template separate from your original project. To start, delete the `.git` folder in your template's project folder. Then create a file called `.pitrc`, and paste the following:
+You may want to duplicate your entire project before doing this to keep your template separate from your original project. To start, delete the `.git` folder in your template's project folder. Then use THE CLI to create a `.pitrc` file in the root of your directory:
+
+```
+$ pit make
+```
+
+OR you can create the file manually, paste the following, and change the `name` to the name of your template:
 
 ```javascript
 // .pitrc
@@ -13,8 +19,6 @@ module.exports = {
   renderer: 'ejs',
 }
 ```
-
-Change the `name` to the name of your template. This will have to be a unique name for your user.
 
 Once PIT supports more than one rendering engine, you'll be able to replace the `renderer` value as well, but for now `ejs` is the only supported value.
 
