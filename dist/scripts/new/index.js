@@ -90,10 +90,10 @@ const build = exports.build = async function (context, directory = '', verbose =
   }
 
   if (!context) {
-    context = await _inquirer2.default.prompt(projectConfig.args);
+    context = await _inquirer2.default.prompt(projectConfig.prompts);
   }
 
-  context = (0, _merge2.default)({}, context, projectConfig.context);
+  context = (0, _merge2.default)({}, context, projectConfig.statics);
   const templateFiles = (0, _globGitignore.sync)(_path2.default.join(directory, '.tmp.pit', '**'), {
     dot: true,
     ignore: projectConfig.ignore.concat(_ignores2.default)

@@ -9,7 +9,11 @@ import * as q from './questions';
 
 const register = async function(githubPath, verbose = true) {
   if (!githubPath) {
-    githubPath = await q.path();
+    if (verbose) {
+      githubPath = await q.path();
+    } else {
+      throw new Error('Missing first argument: "githubPath"');
+    }
   }
 
   let globalConfig = await getConfig();
@@ -24,8 +28,9 @@ const register = async function(githubPath, verbose = true) {
 
   const alreadyRegistered = keys(globalConfig.templates).some(t => {
     if (globalConfig.templates[t].path === githubPath) {
-      console.log(`This template name has already been registered as "${t}".`);
-      return true;
+      if (verbose) {
+        console.log(`This template has already been registered as "${t}".`);
+      }
     }
   });
   if (alreadyRegistered) { return; }
@@ -41,6 +46,13 @@ const register = async function(githubPath, verbose = true) {
   }
 
   await rimraf('.tmp.pit');
+
+  if (name in globalConfig.templates) {
+    if (verbose) {
+      const confirmOverride = await q.path();
+      if (!confirmOverride) { return; }
+    }
+  }
 
   globalConfig.templates[name] = { path: githubPath };
   await outputConfig(globalConfig);

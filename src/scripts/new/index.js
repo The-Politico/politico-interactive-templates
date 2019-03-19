@@ -43,10 +43,10 @@ export const build = async function(context, directory = '', verbose = true) {
   }
 
   if (!context) {
-    context = await inquirer.prompt(projectConfig.args);
+    context = await inquirer.prompt(projectConfig.prompts);
   }
 
-  context = merge({}, context, projectConfig.context);
+  context = merge({}, context, projectConfig.statics);
 
   const templateFiles = globSync(path.join(directory, '.tmp.pit', '**'), {
     dot: true,

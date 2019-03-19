@@ -42,7 +42,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const register = async function (githubPath, verbose = true) {
   if (!githubPath) {
-    githubPath = await q.path();
+    if (verbose) {
+      githubPath = await q.path();
+    } else {
+      throw new Error('Missing first argument: "githubPath"');
+    }
   }
 
   let globalConfig = await (0, _getConfig2.default)();
@@ -57,8 +61,9 @@ const register = async function (githubPath, verbose = true) {
 
   const alreadyRegistered = (0, _keys2.default)(globalConfig.templates).some(t => {
     if (globalConfig.templates[t].path === githubPath) {
-      console.log(`This template name has already been registered as "${t}".`);
-      return true;
+      if (verbose) {
+        console.log(`This template has already been registered as "${t}".`);
+      }
     }
   });
 
@@ -80,6 +85,17 @@ const register = async function (githubPath, verbose = true) {
   }
 
   await (0, _rimraf2.default)('.tmp.pit');
+
+  if (name in globalConfig.templates) {
+    if (verbose) {
+      const confirmOverride = await q.path();
+
+      if (!confirmOverride) {
+        return;
+      }
+    }
+  }
+
   globalConfig.templates[name] = {
     path: githubPath
   };

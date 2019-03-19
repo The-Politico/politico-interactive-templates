@@ -13,4 +13,13 @@ Object.defineProperty(exports, "path", {
   }
 });
 
+var _override = require("./override");
+
+Object.defineProperty(exports, "override", {
+  enumerable: true,
+  get: function () {
+    return _interopRequireDefault(_override).default;
+  }
+});
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

@@ -22,23 +22,27 @@ That's actually all you need to make your codebase a template, but you probably 
 
 For a quick breakdown of `.pitrc` options check out [these docs](pitrc.md). In this doc, we'll go through each option and provide a reasonable example of when you might use it. Remember, everything below this is optional.
 
-## `args`
+## Context creators
+
+The context passed to your `renderer` will be a combination of the answers to user `prompts` and `statics` context defined by the developer of the template.
+
+### `prompts`
 PIT provides an easy way to prompt your users for input and use those answers in your codebase.
 
-Set the `args` key to an empty array in the `export` of your `.pitrc`.
+Set the `prompts` key to an empty array in the `export` of your `.pitrc`.
 
-Each item in `args` should be an object the follows the [`inquirer` question format](https://www.npmjs.com/package/inquirer#question). The `name` key in each item will be added to your template context when a user creates a new instance of your template.
+Each item in `prompts` should be an object the follows the [`inquirer` question format](https://www.npmjs.com/package/inquirer#question). The `name` key in each item will be added to your template context when a user creates a new instance of your template.
 
-**IMPORTANT: The `name` of your args must be in camelCase if using the `ejs` renderer. Any dashes or spaces will throw an error when a user runs `pit new`.**
+**IMPORTANT: The `name` of your prompts must be in camelCase if using the `ejs` renderer. Any dashes or spaces will throw an error when a user runs `pit new`.**
 
-For example, you might want a user to provide a name for their project. Your `args` could look something like this:
+For example, you might want a user to provide a name for their project. Your `prompts` could look something like this:
 
 ```javascript
 // .pitrc
 module.exports = {
   ...
 
-  args: [
+  prompts: [
     {
       type: 'input',
       name: 'projectName',
@@ -58,17 +62,18 @@ For example, you might want the user's provided name to appear in their `README.
 *Documentation coming soon...*
 ```
 
-## `context`
-You can also provide variables that all instances of your template have available with the `context` key in your `.pitrc` file. It should be an object with various keys and values. Those keys will then be variables when writing your templates.
+### `statics`
+You can also provide variables that all instances of your template have available with the `statics` key in your `.pitrc` file. It should be an object with various keys and values. Those keys will then be variables when writing your templates. Remember that this is a JavaScript file, so any valid JavaScript values are acceptable.
 
-For example, you can add a `credit` value and give it a value:
+For example, you can add a `copyright` value and `year`:
 ```javascript
 // .pitrc
 module.exports = {
   ...
 
-  context: {
-    credit: 'Andrew Briz'
+  statics: {
+    copyright: 'POLITICO',
+    year: new Date().getFullYear()
   }
 }
 ```
@@ -77,8 +82,11 @@ Then in your template's `README.md` you can use this like any other variable:
 ```markdown
 
 _____
-Template created by <%=credit%>.
+© <%=copyright%> <%=year%>
 ```
+
+## Path handlers
+While the content of your files will be passed through your selected `renderer`, managing which and how files make it from your template to your user's instance can be managed through `ignore` and `rename` respectively.
 
 ## `ignore`
 If you want files in your template's repo that shouldn't be downloaded and used in new instances of your template, you can define them using the `ignore` key in your `.pitrc`'s export. It should be an array of [`glob` strings](https://www.npmjs.com/package/glob#glob-primer).
@@ -105,7 +113,7 @@ The value can either be a string which is the replacement value, or a function r
 
 ### String Replacement
 
-For example, if your template has it's own README you could ignore it in your templates output (see `ignore` above), and create a new file called `README_template.md` and fill that with the content of your user's template (see `args` above). Then in your `.pitrc` your can add this rename so that any files called `README_template.md` in your template will be called `README.md` when a user generates a new instance of your template:
+For example, if your template has it's own README you could ignore it in your templates output (see `ignore` above), and create a new file called `README_template.md` and fill that with the content of your user's template (see `prompts` above). Then in your `.pitrc` your can add this rename so that any files called `README_template.md` in your template will be called `README.md` when a user generates a new instance of your template:
 
 ```javascript
 // .pitrc
@@ -152,7 +160,7 @@ module.exports = {
   name: 'Your Template Name',
   renderer: 'ejs',
 
-  args: [
+  prompts: [
     {
       type: 'input',
       name: 'projectName',
@@ -160,9 +168,10 @@ module.exports = {
     },  
   ],
 
-  context: {
-    credit: 'Andrew Briz'
-  },
+  statics: {
+    copyright: 'POLITICO',
+    year: new Date().getFullYear()
+  }
 
   ignore: [
     'README.md'
@@ -196,13 +205,13 @@ To use my template follow these instructions...
 
 *Documentation coming soon...*
 _____
-Template created by <%=credit%>.
+© <%=copyright%> <%=year%>
 ```
 <br/>
 
 ## Example Usage
 
-When a user tries to make a new instance of the template above they'll see this prompt (as defined in the `args`'s `message`):
+When a user tries to make a new instance of the template above they'll see this prompt (as defined in the `prompts`'s `message`):
 
 ```
 $ Project Name:
@@ -226,6 +235,6 @@ ROOT
 
 *Documentation coming soon...*
 _____
-Template created by Andrew Briz.
+© POLITICO 2019
 ```
 <br/>
