@@ -51,6 +51,14 @@ var _downloadRepo = require("../../utils/downloadRepo");
 
 var _downloadRepo2 = _interopRequireDefault(_downloadRepo);
 
+var _renameFile = require("../../utils/renameFile");
+
+var _renameFile2 = _interopRequireDefault(_renameFile);
+
+var _fileExists = require("../../utils/fileExists");
+
+var _fileExists2 = _interopRequireDefault(_fileExists);
+
 var _ignores = require("../../constants/ignores");
 
 var _ignores2 = _interopRequireDefault(_ignores);
@@ -71,11 +79,6 @@ const setup = exports.setup = async function (template, directory = '', verbose 
     template = await q.template(globalConfig.templates);
   }
 
-  if ((0, _globGitignore.sync)(_path2.default.join(directory, _cwd2.default, '**')).length > 1) {
-    console.error('There are files in this directory. Please empty it to start a new project.');
-    return;
-  }
-
   const templatePath = globalConfig.templates[template].path;
   await (0, _downloadRepo2.default)(templatePath, directory, verbose);
 };
@@ -94,16 +97,32 @@ const build = exports.build = async function (context, directory = '', verbose =
   }
 
   context = (0, _merge2.default)({}, context, projectConfig.statics);
-  const templateFiles = (0, _globGitignore.sync)(_path2.default.join(directory, '.tmp.pit', '**'), {
-    dot: true,
-    ignore: projectConfig.ignore.concat(_ignores2.default)
-  });
-  return Promise.all(templateFiles.map(filepath => (0, _processFile2.default)(filepath, {
+  const processConfig = {
     renderer,
     context,
     directory,
     rename: projectConfig.rename
-  })));
+  };
+  const templateFiles = (0, _globGitignore.sync)(_path2.default.join(directory, '.tmp.pit', '**'), {
+    dot: true,
+    ignore: projectConfig.ignore.concat(_ignores2.default)
+  }); // Error if conflicts exist
+
+  let conflictingFile = null;
+  await Promise.all(templateFiles.map(filepath => (0, _renameFile2.default)(filepath, processConfig)).filter(f => f !== null).map(async function (fp) {
+    if (await (0, _fileExists2.default)(fp, directory)) {
+      conflictingFile = fp;
+      return true;
+    }
+
+    return false;
+  }));
+
+  if (conflictingFile) {
+    throw new Error(`"${conflictingFile}" already exists. Aborting template creation. No files were created.`);
+  }
+
+  return Promise.all(templateFiles.map(filepath => (0, _processFile2.default)(filepath, processConfig)));
 };
 
 const cleanup = exports.cleanup = async function (directory = '', verbose = true) {

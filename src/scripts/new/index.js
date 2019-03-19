@@ -11,6 +11,8 @@ import cwd from 'Utils/cwd';
 import processFile from 'Utils/processFile';
 import * as renderMethods from 'Utils/renderer';
 import downloadRepo from 'Utils/downloadRepo';
+import renameFile from 'Utils/renameFile';
+import fileExists from 'Utils/fileExists';
 import alwaysIgnore from 'Constants/ignores';
 
 import * as q from './questions';
@@ -22,11 +24,6 @@ export const setup = async function(template, directory = '', verbose = true) {
 
   if (!template) {
     template = await q.template(globalConfig.templates);
-  }
-
-  if (globSync(path.join(directory, cwd, '**')).length > 1) {
-    console.error('There are files in this directory. Please empty it to start a new project.');
-    return;
   }
 
   const templatePath = globalConfig.templates[template].path;
@@ -48,16 +45,42 @@ export const build = async function(context, directory = '', verbose = true) {
 
   context = merge({}, context, projectConfig.statics);
 
-  const templateFiles = globSync(path.join(directory, '.tmp.pit', '**'), {
-    dot: true,
-    ignore: projectConfig.ignore.concat(alwaysIgnore),
-  });
-  return Promise.all(templateFiles.map(filepath => processFile(filepath, {
+  const processConfig = {
     renderer,
     context,
     directory,
     rename: projectConfig.rename,
-  })));
+  };
+
+  const templateFiles = globSync(path.join(directory, '.tmp.pit', '**'), {
+    dot: true,
+    ignore: projectConfig.ignore.concat(alwaysIgnore),
+  });
+
+  // Error if conflicts exist
+  let conflictingFile = null;
+  await Promise.all(
+    templateFiles
+      .map(
+        filepath => renameFile(filepath, processConfig)
+      ).filter(
+        f => f !== null
+      ).map(
+        async function(fp) {
+          if (await fileExists(fp, directory)) {
+            conflictingFile = fp;
+            return true;
+          }
+          return false;
+        }
+      )
+  );
+
+  if (conflictingFile) {
+    throw new Error(`"${conflictingFile}" already exists. Aborting template creation. No files were created.`);
+  }
+
+  return Promise.all(templateFiles.map(filepath => processFile(filepath, processConfig)));
 };
 
 export const cleanup = async function(directory = '', verbose = true) {

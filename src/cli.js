@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 import yargs from 'yargs';
 import { newProject, register, make } from './scripts';
+import figlet from 'figlet';
 
+console.log('\nWelcome to Politico Interactive Templates (PIT)!');
 yargs // eslint-disable-line
   .help()
   .scriptName('pit')
@@ -42,6 +44,7 @@ yargs // eslint-disable-line
         default: true,
       });
   }, async function(argv) {
+    console.log('Looks like you want to register an existing template.');
     await register(argv.path, argv.verbose);
   })
 
@@ -59,6 +62,7 @@ yargs // eslint-disable-line
         default: true,
       });
   }, async function(argv) {
+    console.log('Looks like you want to make a new template.');
     await make(argv.name, argv.verbose);
   })
 

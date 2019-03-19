@@ -6,7 +6,7 @@ import rimraf from 'Utils/rimraf';
 import { setup, build, cleanup } from './index';
 import getConfig from 'Utils/getConfig';
 import outputConfig from 'Utils/outputConfig';
-import { testTemplateName, testTemplateRepo } from 'Constants/testing';
+import { testTemplateName, testTemplateRepo, testSnippetTemplateName, testSnippetTemplateRepo } from 'Constants/testing';
 import register from '../register/index';
 
 const context = {
@@ -16,10 +16,8 @@ const context = {
 
 describe('New - Setup: Downloads Template Repo', () => {
   const dir = 'example/setup';
-  let config = { templates: {} };
 
   before(async function() {
-    config = await getConfig();
     await register(testTemplateRepo, false);
     await setup(testTemplateName, dir, false);
   });
@@ -31,6 +29,7 @@ describe('New - Setup: Downloads Template Repo', () => {
   });
 
   after(async function() {
+    const config = await getConfig();
     delete config.templates[testTemplateName];
     await outputConfig(config);
     rimraf(dir);
@@ -39,11 +38,9 @@ describe('New - Setup: Downloads Template Repo', () => {
 
 describe('New - Build: Builds Template Files', () => {
   const dir = 'example/build';
-  let config = { templates: {} };
   let files;
 
   before(async function() {
-    config = await getConfig();
     await register(testTemplateRepo, false);
     await setup(testTemplateName, dir, false);
     await build(context, dir, false);
@@ -91,6 +88,7 @@ describe('New - Build: Builds Template Files', () => {
   });
 
   after(async function() {
+    const config = await getConfig();
     delete config.templates[testTemplateName];
     await outputConfig(config);
     rimraf(dir);
@@ -99,10 +97,8 @@ describe('New - Build: Builds Template Files', () => {
 
 describe('New - Cleanup: Deletes Template Repo', () => {
   const dir = 'example/cleanup';
-  let config = { templates: {} };
 
   before(async function() {
-    config = await getConfig();
     await register(testTemplateRepo, false);
     await setup(testTemplateName, dir, false);
     await build(context, dir, false);
@@ -115,7 +111,45 @@ describe('New - Cleanup: Deletes Template Repo', () => {
   });
 
   after(async function() {
+    const config = await getConfig();
     delete config.templates[testTemplateName];
+    await outputConfig(config);
+    rimraf(dir);
+  });
+});
+
+describe('New - Snippets', () => {
+  const dir = 'example/snippets';
+
+  before(async function() {
+    await register(testSnippetTemplateRepo, false, '.tmp.pit.snippet');
+    await setup(testSnippetTemplateName, dir, false);
+
+    await build({ name: 'one', content: 'good' }, dir, false);
+    await build({ name: 'two', content: 'good' }, dir, false);
+    await cleanup(dir, false);
+  });
+
+  it('Merges existing file structure with new files', async function() {
+    const files = glob.sync(path.join(dir, '**'), { dot: true });
+    expect(files).to.contain(path.join(dir, 'src/components/one/touch'));
+    expect(files).to.contain(path.join(dir, 'src/components/two/touch'));
+  });
+
+  it('Fails if conflicts appear', async function() {
+    try {
+      await build({ name: 'one', content: 'bad' }, dir, false);
+    } catch (err) {
+      expect(err.message).to.be(`"src/components/one/touch" already exists. Aborting template creation. No files were created.`);
+    }
+
+    const file = fs.readFileSync(path.join(dir, 'src/components/one/touch')).toString('utf-8');
+    expect(file.trim()).to.be('good');
+  });
+
+  after(async function() {
+    const config = await getConfig();
+    delete config.templates[testSnippetTemplateName];
     await outputConfig(config);
     rimraf(dir);
   });

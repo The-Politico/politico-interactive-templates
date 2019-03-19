@@ -40,7 +40,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const register = async function (githubPath, verbose = true) {
+const register = async function (githubPath, verbose = true, tmpName = '.tmp.pit') {
   if (!githubPath) {
     if (verbose) {
       githubPath = await q.path();
@@ -74,13 +74,14 @@ const register = async function (githubPath, verbose = true) {
   let name = null;
 
   try {
-    await (0, _downloadRepo2.default)(githubPath, undefined, verbose);
+    await (0, _rimraf2.default)(tmpName);
+    await (0, _downloadRepo2.default)(githubPath, undefined, verbose, tmpName);
 
-    const pitrc = require(_path2.default.join(_cwd2.default, '.tmp.pit', '.pitrc'));
+    const pitrc = require(_path2.default.join(_cwd2.default, tmpName, '.pitrc'));
 
     name = pitrc.name;
   } catch (err) {
-    await (0, _rimraf2.default)('.tmp.pit');
+    await (0, _rimraf2.default)(tmpName);
 
     if (verbose) {
       console.error('There was a problem reading your .pitrc file. Make sure it\'s written in valid node syntax.');
@@ -89,15 +90,17 @@ const register = async function (githubPath, verbose = true) {
     throw err;
   }
 
-  await (0, _rimraf2.default)('.tmp.pit');
+  await (0, _rimraf2.default)(tmpName);
 
   if (name in globalConfig.templates) {
     if (verbose) {
-      const confirmOverride = await q.path();
+      const confirmOverride = await q.override();
 
       if (!confirmOverride) {
         return;
       }
+    } else {
+      return;
     }
   }
 

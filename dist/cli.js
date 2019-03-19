@@ -7,8 +7,13 @@ var _yargs2 = _interopRequireDefault(_yargs);
 
 var _scripts = require("./scripts");
 
+var _figlet = require("figlet");
+
+var _figlet2 = _interopRequireDefault(_figlet);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+console.log('\nWelcome to Politico Interactive Templates (PIT)!');
 _yargs2.default // eslint-disable-line
 .help().scriptName('pit') // New
 .command('new [template] [directory]', 'Creates a new project from a template.', yargs => {
@@ -39,6 +44,7 @@ _yargs2.default // eslint-disable-line
     default: true
   });
 }, async function (argv) {
+  console.log('Looks like you want to register an existing template.');
   await (0, _scripts.register)(argv.path, argv.verbose);
 }) // Make
 .command('make [name]', 'Creates a template .pitrc file', yargs => {
@@ -52,5 +58,6 @@ _yargs2.default // eslint-disable-line
     default: true
   });
 }, async function (argv) {
+  console.log('Looks like you want to make a new template.');
   await (0, _scripts.make)(argv.name, argv.verbose);
 }).argv;

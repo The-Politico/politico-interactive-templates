@@ -7,7 +7,7 @@ import rimraf from 'Utils/rimraf';
 import cwd from 'Utils/cwd';
 import * as q from './questions';
 
-const register = async function(githubPath, verbose = true) {
+const register = async function(githubPath, verbose = true, tmpName = '.tmp.pit') {
   if (!githubPath) {
     if (verbose) {
       githubPath = await q.path();
@@ -37,11 +37,12 @@ const register = async function(githubPath, verbose = true) {
 
   let name = null;
   try {
-    await downloadRepo(githubPath, undefined, verbose);
-    const pitrc = require(path.join(cwd, '.tmp.pit', '.pitrc'));
+    await rimraf(tmpName);
+    await downloadRepo(githubPath, undefined, verbose, tmpName);
+    const pitrc = require(path.join(cwd, tmpName, '.pitrc'));
     name = pitrc.name;
   } catch (err) {
-    await rimraf('.tmp.pit');
+    await rimraf(tmpName);
 
     if (verbose) {
       console.error('There was a problem reading your .pitrc file. Make sure it\'s written in valid node syntax.');
@@ -50,12 +51,14 @@ const register = async function(githubPath, verbose = true) {
     throw err;
   }
 
-  await rimraf('.tmp.pit');
+  await rimraf(tmpName);
 
   if (name in globalConfig.templates) {
     if (verbose) {
-      const confirmOverride = await q.path();
+      const confirmOverride = await q.override();
       if (!confirmOverride) { return; }
+    } else {
+      return;
     }
   }
 
