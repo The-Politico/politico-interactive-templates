@@ -13,7 +13,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = () => _inquirer2.default.prompt([{
   type: 'input',
   name: 'answer',
-  message: `What should this template be named? `
+  message: `What do you want to call this template?`
 }]).then(({
   answer
 }) => answer);

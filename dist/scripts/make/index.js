@@ -23,16 +23,16 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const register = async function (name, verbose = true) {
+  if (await (0, _fsExtra.exists)('.pitrc')) {
+    throw new Error('.pitrc file already exists.');
+  }
+
   if (!name) {
     if (verbose) {
       name = await q.name();
     } else {
       throw new Error('Missing first argument: "name"');
     }
-  }
-
-  if (await (0, _fsExtra.exists)('.pitrc')) {
-    throw new Error('.pitrc file already exists.');
   }
 
   const config = (0, _assign2.default)({}, _default2.default, {
