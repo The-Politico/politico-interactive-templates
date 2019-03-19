@@ -6,15 +6,15 @@ Easy-bake templates from existing projects, backed by GitHub.
 
 ## Why this?
 
-At POLITICO, we're always looking for projects we can duplicate.
+At POLITICO, we're always looking for projects we can replicate.
 
-You might have used Yeoman, npm scripts or something else in the past to help create the boilerplate code similar projects start from. [We](https://github.com/The-Politico/generator-politico-django) [have](https://github.com/The-Politico/generator-politico-graphics), [too](https://github.com/The-Politico/generator-politico-interactives). These are powerful templating tools, but in some cases they're overkill and the overhead of building generators means only a few members of our team usually create them.
+You might have used [Yeoman](https://yeoman.io/), npm scripts or something else in the past to help create the boilerplate code similar projects start from. [We](https://github.com/The-Politico/generator-politico-django) [have](https://github.com/The-Politico/generator-politico-graphics), [too](https://github.com/The-Politico/generator-politico-interactives). These are powerful templating tools, but in some cases they're overkill and the overhead of building generators means only a few members of our team usually create them.
 
-POLITICO interactive templates, or PIT, is designed to make creating templates easy for anyone. It also fits seamlessly in the natural GitHub-focused workflow we use for projects.
+POLITICO interactive templates, or PIT, is designed to make creating templates easy for anyone. It also fits seamlessly in the GitHub-based workflow we use for projects.
 
 With PIT, anyone can easily create a reusable codebase and a simple interface for jump-starting new projects from old ones.
 
-PIT let's us quickly create templates at exactly the point where re-use makes sense. It's a Goldilocks tool for economy on our team.
+PIT let's us quickly create templates at exactly the point where reuse makes sense. It's a Goldilocks tool for easy replication on our team.
 
 ## How it works
 
