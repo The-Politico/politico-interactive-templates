@@ -25,7 +25,7 @@ Once a project is templatized, you register it with your PIT CLI to use it.
 You can customize the CLI for any project by adding prompts via [Inquire.js](https://github.com/SBoudrias/Inquirer.js/) and then use the answers to those questions to customize your template files with [EJS](https://ejs.co/) template rendering.
 
 
-## Quick Start
+## Quick start
 
 1. Install:
 

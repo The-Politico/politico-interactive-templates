@@ -1,6 +1,6 @@
 # Creating New Templates
 
-PIT is designed to easily turn an existing project into a template.
+PIT is designed to easily turn an existing project into a template. To see a finished example template check out our [Hello World](https://github.com/The-Politico/template_hello-world).
 
 
 ## Getting Started
