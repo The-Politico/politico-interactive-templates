@@ -14,4 +14,41 @@ Options can be configured by defining these keys in that `exports` object:
 | `rename`| Object | Values to replace when found in the names of directories or files.| [Link](templates.md#rename) |
 <em> * Required key </em>
 
-See a full example [here](templates#example-template).
+
+## Example
+```JavaScript
+// .pitrc
+module.exports = {
+  name: 'Your Template Name',
+  renderer: 'ejs',
+
+  args: [
+    {
+      type: 'input',
+      name: 'projectName',
+      message: 'Project Name: ',
+    },  
+  ],
+
+  context: {
+    credit: 'Andrew Briz'
+  },
+
+  ignore: [
+    'README.md'
+  ],
+
+  rename: {
+    "README_template.md": "README.md"
+    "projectName": d => d['projectName']
+  }
+}
+```
+
+See this example in action [here](templates#example-template).
+
+## The Global `.pitrc`
+
+If you've run `pit register` you may have noticed that there is a file in your user directory called `.pitrc` as well. That is not to be confused with the `.pitrc` files located in your template repos.
+
+That file simply holds user options for `pit` (such as what repos you've already registered), and there should be no reason to touch it unless you want to delete a registered template.

@@ -16,11 +16,11 @@ module.exports = {
 
 Change the `name` to the name of your template. This will have to be a unique name, so make sure to check the [README](../README.md) for a list of templates that already exist.
 
-Once PIT supports more than one rendering engine, you'll be able to replace that value as well, but for now `ejs` is the only supported value.
+Once PIT supports more than one rendering engine, you'll be able to replace the `renderer` value as well, but for now `ejs` is the only supported value.
 
 That's actually all you need to make your codebase a template, but you probably want to have some variable content.
 
-For a complete breakdown of `.pitrc` options check out [these docs](pitrc.md).
+For a quick breakdown of `.pitrc` options check out [these docs](pitrc.md). In this doc, we'll go through each option and provide a reasonable example of when you might use it. Remember, everything below this is optional.
 
 ## `args`
 PIT provides an easy way to prompt your users for input and use those answers in your codebase.
@@ -28,6 +28,8 @@ PIT provides an easy way to prompt your users for input and use those answers in
 Set the `args` key to an empty array in the `export` of your `.pitrc`.
 
 Each item in `args` should be an object the follows the [`inquirer` question format](https://www.npmjs.com/package/inquirer#question). The `name` key in each item will be added to your template context when a user creates a new instance of your template.
+
+**IMPORTANT: The `name` of your args must be in camelCase if using the `ejs` renderer. Any dashes or spaces will throw an error when a user runs `pit new`.**
 
 For example, you might want a user to provide a name for their project. Your `args` could look something like this:
 
@@ -132,7 +134,7 @@ module.exports = {
 ```
 
 ## Example Template
-So if you've followed all the examples in this guide your template should at least look like this:
+For example, consider a codebase that looks like this:
 
 ```
 YOUR_TEMPLATE
@@ -200,7 +202,7 @@ Template created by <%=credit%>.
 
 ## Example Usage
 
-When a user tries to make a new instance of your template they'll see this prompt (as we defined in our `args`'s `message`):
+When a user tries to make a new instance of the template above they'll see this prompt (as defined in the `args`'s `message`):
 
 ```
 $ Project Name:

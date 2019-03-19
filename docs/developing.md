@@ -25,6 +25,6 @@ $ yarn test
 
 Ship it:
 ```
-npm version patch
+npm version [patch|minor|major]
 npm publish
 ```
