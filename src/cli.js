@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 import yargs from 'yargs';
 import { newProject, register, make } from './scripts';
-import figlet from 'figlet';
+import healthChecks from 'Utils/healthChecks';
 
 console.log('\nWelcome to Politico Interactive Templates (PIT)!');
+
 yargs // eslint-disable-line
   .help()
   .scriptName('pit')
@@ -27,6 +28,7 @@ yargs // eslint-disable-line
         default: true,
       });
   }, async function(argv) {
+    await healthChecks();
     await newProject(argv.template, argv.directory, argv.verbose);
   })
 
@@ -44,6 +46,7 @@ yargs // eslint-disable-line
         default: true,
       });
   }, async function(argv) {
+    await healthChecks();
     console.log('Looks like you want to register an existing template.');
     await register(argv.path, argv.verbose);
   })
@@ -62,8 +65,17 @@ yargs // eslint-disable-line
         default: true,
       });
   }, async function(argv) {
+    await healthChecks();
     console.log('Looks like you want to make a new template.');
     await make(argv.name, argv.verbose);
+  })
+
+  // Info
+  .command('info', 'Runs health checks.', yargs => yargs, async function(argv) {
+    const health = await healthChecks();
+    if (health) {
+      console.log('Everything is up to date.');
+    }
   })
 
   .argv;

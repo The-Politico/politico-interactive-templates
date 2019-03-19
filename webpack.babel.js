@@ -5,6 +5,7 @@ module.exports = {
     alias: {
       Utils: path.resolve(__dirname, './src/utils'),
       Constants: path.resolve(__dirname, './src/constants'),
+      Meta: path.resolve(__dirname, 'package.json'),
     },
   },
 };

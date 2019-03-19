@@ -7,9 +7,9 @@ var _yargs2 = _interopRequireDefault(_yargs);
 
 var _scripts = require("./scripts");
 
-var _figlet = require("figlet");
+var _healthChecks = require("./utils/healthChecks");
 
-var _figlet2 = _interopRequireDefault(_figlet);
+var _healthChecks2 = _interopRequireDefault(_healthChecks);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31,6 +31,7 @@ _yargs2.default // eslint-disable-line
     default: true
   });
 }, async function (argv) {
+  await (0, _healthChecks2.default)();
   await (0, _scripts.newProject)(argv.template, argv.directory, argv.verbose);
 }) // Register
 .command('register [path]', 'Registers new templates for use.', yargs => {
@@ -44,6 +45,7 @@ _yargs2.default // eslint-disable-line
     default: true
   });
 }, async function (argv) {
+  await (0, _healthChecks2.default)();
   console.log('Looks like you want to register an existing template.');
   await (0, _scripts.register)(argv.path, argv.verbose);
 }) // Make
@@ -58,6 +60,14 @@ _yargs2.default // eslint-disable-line
     default: true
   });
 }, async function (argv) {
+  await (0, _healthChecks2.default)();
   console.log('Looks like you want to make a new template.');
   await (0, _scripts.make)(argv.name, argv.verbose);
+}) // Info
+.command('info', 'Runs health checks.', yargs => yargs, async function (argv) {
+  const health = await (0, _healthChecks2.default)();
+
+  if (health) {
+    console.log('Everything is up to date.');
+  }
 }).argv;
