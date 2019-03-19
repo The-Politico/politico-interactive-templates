@@ -136,7 +136,7 @@ module.exports = {
   ...
 
   rename: {
-    "renameAsProjectName": d => d['projectName']
+    "renameAsProjectName": context => context['projectName']
   }
 }
 ```
@@ -179,7 +179,7 @@ module.exports = {
 
   rename: {
     "README_template.md": "README.md"
-    "projectName": d => d['projectName']
+    "projectName": context => context['projectName']
   }
 }
 ```
