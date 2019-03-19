@@ -41,7 +41,7 @@ module.exports = {
       type: 'input',
       name: 'projectName',
       message: 'Project Name: ',
-    },  
+    },
   ]
 }
 ```
@@ -155,7 +155,7 @@ module.exports = {
       type: 'input',
       name: 'projectName',
       message: 'Project Name: ',
-    },  
+    },
   ],
 
   context: {
