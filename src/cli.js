@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import yargs from 'yargs';
-import { newProject, register } from './scripts';
+import { newProject, register, make } from './scripts';
 
 yargs // eslint-disable-line
   .help()
@@ -44,4 +44,22 @@ yargs // eslint-disable-line
   }, async function(argv) {
     await register(argv.path, argv.verbose);
   })
+
+  // Make
+  .command('make [name]', 'Creates a template .pitrc file', (yargs) => {
+    yargs
+      .positional('name', {
+        describe: 'The name of your template',
+        type: 'string',
+      })
+      .option('verbose', {
+        alias: 'v',
+        describe: 'Log to the console',
+        type: 'boolean',
+        default: true,
+      });
+  }, async function(argv) {
+    await make(argv.name, argv.verbose);
+  })
+
   .argv;

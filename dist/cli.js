@@ -40,4 +40,17 @@ _yargs2.default // eslint-disable-line
   });
 }, async function (argv) {
   await (0, _scripts.register)(argv.path, argv.verbose);
+}) // Make
+.command('make [name]', 'Creates a template .pitrc file', yargs => {
+  yargs.positional('name', {
+    describe: 'The name of your template',
+    type: 'string'
+  }).option('verbose', {
+    alias: 'v',
+    describe: 'Log to the console',
+    type: 'boolean',
+    default: true
+  });
+}, async function (argv) {
+  await (0, _scripts.make)(argv.name, argv.verbose);
 }).argv;

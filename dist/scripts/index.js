@@ -22,4 +22,13 @@ Object.defineProperty(exports, "register", {
   }
 });
 
+var _make = require("./make");
+
+Object.defineProperty(exports, "make", {
+  enumerable: true,
+  get: function () {
+    return _interopRequireDefault(_make).default;
+  }
+});
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

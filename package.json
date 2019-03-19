@@ -10,6 +10,7 @@
     "dev": "nodemon --ignore dist --exec npm run build",
     "build": "babel src --out-dir dist --copy-files",
     "test": "nyc mocha $(find src/**/**/test.js -name '*.js') --require \"@babel/register\" --timeout 30000",
+    "test-specific": "nyc mocha $(find src/**/**/test.js -name '*.js') --require \"@babel/register\" --timeout 30000 -g",
     "posttest": "rmdir example"
   },
   "devDependencies": {

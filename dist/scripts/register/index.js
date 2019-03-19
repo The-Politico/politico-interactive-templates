@@ -86,7 +86,7 @@ const register = async function (githubPath, verbose = true) {
       console.error('There was a problem reading your .pitrc file. Make sure it\'s written in valid node syntax.');
     }
 
-    throw new Error(err);
+    throw err;
   }
 
   await (0, _rimraf2.default)('.tmp.pit');
