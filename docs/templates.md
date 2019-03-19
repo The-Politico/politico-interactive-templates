@@ -178,7 +178,7 @@ module.exports = {
   ],
 
   rename: {
-    "README_template.md": "README.md"
+    "README_template.md": "README.md",
     "projectName": context => context['projectName']
   }
 }
