@@ -2,12 +2,15 @@ import expect from 'expect.js';
 import path from 'path';
 import fs from 'fs';
 import glob from 'glob';
+import run, { UP, DOWN, ENTER } from 'inquirer-test';
+
 import rimraf from 'Utils/rimraf';
 import { setup, build, cleanup } from './index';
 import getConfig from 'Utils/getConfig';
 import outputConfig from 'Utils/outputConfig';
 import { testTemplateName, testTemplateRepo, testSnippetTemplateName, testSnippetTemplateRepo } from 'Constants/testing';
-import register from '../register/index';
+
+import register from 'Scripts/register/index';
 
 const context = {
   'name': 'app',
@@ -151,6 +154,35 @@ describe('New - Snippets', () => {
     const config = await getConfig();
     delete config.templates[testSnippetTemplateName];
     await outputConfig(config);
-    rimraf(dir);
+    await rimraf(dir);
+  });
+});
+
+describe('New - CLI', () => {
+  const baseDir = 'example/newCLI';
+  const cliPath = path.join(process.cwd(), 'dist/cli.js');
+
+  before(async function() {
+    await register(testTemplateRepo, false);
+    await register(testSnippetTemplateRepo, false, '.tmp.pit.snippet');
+  });
+
+  it('Works', async function() {
+    const dir = `${baseDir}/category/Test`;
+    console.log(cliPath);
+
+    const output = await run([cliPath, 'new', `-d ${dir}`], [ENTER, ENTER, ENTER, 'test', ENTER, 'test', ENTER], 1000);
+    console.log(output);
+
+    const files = glob.sync(path.join(dir, '**'), { dot: true });
+    console.log(files);
+  });
+
+  after(async function() {
+    const config = await getConfig();
+    delete config.templates[testTemplateName];
+    delete config.templates[testSnippetTemplateName];
+    await outputConfig(config);
+    await rimraf(baseDir);
   });
 });

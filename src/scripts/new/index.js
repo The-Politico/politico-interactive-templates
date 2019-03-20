@@ -13,9 +13,9 @@ import * as renderMethods from 'Utils/renderer';
 import downloadRepo from 'Utils/downloadRepo';
 import renameFile from 'Utils/renameFile';
 import fileExists from 'Utils/fileExists';
-import alwaysIgnore from 'Constants/ignores';
+import getTemplate from 'Utils/getTemplate';
 
-import * as q from './questions';
+import alwaysIgnore from 'Constants/ignores';
 
 export const setup = async function(template, directory = '', verbose = true) {
   const globalConfig = await getConfig();
@@ -23,12 +23,16 @@ export const setup = async function(template, directory = '', verbose = true) {
   await fs.ensureDir(directory);
 
   if (!template) {
-    template = await q.template(globalConfig.templates);
+    template = await getTemplate(globalConfig.templates);
+    if (!template) {
+      return false;
+    }
   }
 
   const templatePath = globalConfig.templates[template].path;
 
   await downloadRepo(templatePath, directory, verbose);
+  return true;
 };
 
 export const build = async function(context, directory = '', verbose = true) {
@@ -88,7 +92,12 @@ export const cleanup = async function(directory = '', verbose = true) {
 };
 
 const newProject = async function(template, directory, verbose = true) {
-  await setup(template, directory, verbose);
+  const setupSuccessful = await setup(template, directory, verbose);
+
+  if (!setupSuccessful) {
+    return;
+  }
+
   await build(null, directory, verbose);
   await cleanup(directory, verbose);
 

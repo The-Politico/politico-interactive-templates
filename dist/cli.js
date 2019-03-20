@@ -18,9 +18,11 @@ _yargs2.default // eslint-disable-line
 .help().scriptName('pit') // New
 .command('new [template] [directory]', 'Creates a new project from a template.', yargs => {
   yargs.positional('template', {
+    alias: 't',
     describe: 'The template to use',
     type: 'string'
   }).positional('directory', {
+    alias: 'd',
     describe: 'A directory to put the new project',
     type: 'string',
     default: ''

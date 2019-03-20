@@ -36,11 +36,13 @@ const register = async function(githubPath, verbose = true, tmpName = '.tmp.pit'
   if (alreadyRegistered) { return; }
 
   let name = null;
+  let category = null;
   try {
     await rimraf(tmpName);
     await downloadRepo(githubPath, undefined, verbose, tmpName);
     const pitrc = require(path.join(cwd, tmpName, '.pitrc'));
-    name = pitrc.name;
+    name = pitrc.name ? pitrc.name : null;
+    category = pitrc.category ? pitrc.category : null;
   } catch (err) {
     await rimraf(tmpName);
 
@@ -62,7 +64,10 @@ const register = async function(githubPath, verbose = true, tmpName = '.tmp.pit'
     }
   }
 
-  globalConfig.templates[name] = { path: githubPath };
+  globalConfig.templates[name] = {
+    path: githubPath,
+    category,
+  };
   await outputConfig(globalConfig);
 
   if (verbose) {

@@ -16,6 +16,10 @@ var _glob = require("glob");
 
 var _glob2 = _interopRequireDefault(_glob);
 
+var _inquirerTest = require("inquirer-test");
+
+var _inquirerTest2 = _interopRequireDefault(_inquirerTest);
+
 var _rimraf = require("../../utils/rimraf");
 
 var _rimraf2 = _interopRequireDefault(_rimraf);
@@ -176,6 +180,35 @@ describe('New - Snippets', () => {
     const config = await (0, _getConfig2.default)();
     delete config.templates[_testing.testSnippetTemplateName];
     await (0, _outputConfig2.default)(config);
-    (0, _rimraf2.default)(dir);
+    await (0, _rimraf2.default)(dir);
+  });
+});
+describe('New - CLI', () => {
+  const baseDir = 'example/newCLI';
+
+  const cliPath = _path2.default.join(process.cwd(), 'dist/cli.js');
+
+  before(async function () {
+    await (0, _index3.default)(_testing.testTemplateRepo, false);
+    await (0, _index3.default)(_testing.testSnippetTemplateRepo, false, '.tmp.pit.snippet');
+  });
+  it('Works', async function () {
+    const dir = `${baseDir}/category/Test`;
+    console.log(cliPath);
+    const output = await (0, _inquirerTest2.default)([cliPath, 'new', `-d ${dir}`], [_inquirerTest.ENTER, _inquirerTest.ENTER, _inquirerTest.ENTER, 'test', _inquirerTest.ENTER, 'test', _inquirerTest.ENTER], 1000);
+    console.log(output);
+
+    const files = _glob2.default.sync(_path2.default.join(dir, '**'), {
+      dot: true
+    });
+
+    console.log(files);
+  });
+  after(async function () {
+    const config = await (0, _getConfig2.default)();
+    delete config.templates[_testing.testTemplateName];
+    delete config.templates[_testing.testSnippetTemplateName];
+    await (0, _outputConfig2.default)(config);
+    await (0, _rimraf2.default)(baseDir);
   });
 });

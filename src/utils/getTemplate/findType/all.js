@@ -1,7 +1,7 @@
 import inquirer from 'inquirer';
 import keys from 'lodash/keys';
 
-export default templates => {
+const q = templates => {
   const choices = keys(templates).map(k => ({
     name: k,
     value: k,
@@ -11,6 +11,10 @@ export default templates => {
     type: 'list',
     name: 'answer',
     choices: choices,
-    message: `What are you building today?`,
+    message: 'Choose a template:',
   }]).then(({ answer }) => answer);
+};
+
+export default async function(templates) {
+  return q(templates);
 };

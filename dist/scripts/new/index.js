@@ -59,13 +59,13 @@ var _fileExists = require("../../utils/fileExists");
 
 var _fileExists2 = _interopRequireDefault(_fileExists);
 
+var _getTemplate = require("../../utils/getTemplate");
+
+var _getTemplate2 = _interopRequireDefault(_getTemplate);
+
 var _ignores = require("../../constants/ignores");
 
 var _ignores2 = _interopRequireDefault(_ignores);
-
-var _questions = require("./questions");
-
-var q = _interopRequireWildcard(_questions);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
 
@@ -76,11 +76,16 @@ const setup = exports.setup = async function (template, directory = '', verbose 
   await _fsExtra2.default.ensureDir(directory);
 
   if (!template) {
-    template = await q.template(globalConfig.templates);
+    template = await (0, _getTemplate2.default)(globalConfig.templates);
+
+    if (!template) {
+      return false;
+    }
   }
 
   const templatePath = globalConfig.templates[template].path;
   await (0, _downloadRepo2.default)(templatePath, directory, verbose);
+  return true;
 };
 
 const build = exports.build = async function (context, directory = '', verbose = true) {
@@ -130,7 +135,12 @@ const cleanup = exports.cleanup = async function (directory = '', verbose = true
 };
 
 const newProject = async function (template, directory, verbose = true) {
-  await setup(template, directory, verbose);
+  const setupSuccessful = await setup(template, directory, verbose);
+
+  if (!setupSuccessful) {
+    return;
+  }
+
   await build(null, directory, verbose);
   await cleanup(directory, verbose);
 

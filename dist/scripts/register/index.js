@@ -72,6 +72,7 @@ const register = async function (githubPath, verbose = true, tmpName = '.tmp.pit
   }
 
   let name = null;
+  let category = null;
 
   try {
     await (0, _rimraf2.default)(tmpName);
@@ -79,7 +80,8 @@ const register = async function (githubPath, verbose = true, tmpName = '.tmp.pit
 
     const pitrc = require(_path2.default.join(_cwd2.default, tmpName, '.pitrc'));
 
-    name = pitrc.name;
+    name = pitrc.name ? pitrc.name : null;
+    category = pitrc.category ? pitrc.category : null;
   } catch (err) {
     await (0, _rimraf2.default)(tmpName);
 
@@ -105,7 +107,8 @@ const register = async function (githubPath, verbose = true, tmpName = '.tmp.pit
   }
 
   globalConfig.templates[name] = {
-    path: githubPath
+    path: githubPath,
+    category
   };
   await (0, _outputConfig2.default)(globalConfig);
 
