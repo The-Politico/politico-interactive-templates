@@ -38,7 +38,7 @@ Options can be configured by defining these keys in that `exports` object:
   <tr>
     <td>`prompts`</td>
     <td>Object[]</td>
-    <td>An array of <a href="https://www.npmjs.com/package/inquirer#question">`inquirer` question formated</a> objects</td>
+    <td>An array of <a href="https://www.npmjs.com/package/inquirer#question"><code>inquirer</code> question formated</a> objects</td>
     <td><a href="templates.md#prompts">Link</a></td>
   </tr>
   <tr>
@@ -52,7 +52,7 @@ Options can be configured by defining these keys in that `exports` object:
   <tr>
     <td>`ignore`</td>
     <td>String[] </td>
-    <td>File/directory <a href="https://www.npmjs.com/package/glob#glob-primer">`glob` strings</a> to ignore when rendering your template</td>
+    <td>File/directory <a href="https://www.npmjs.com/package/glob#glob-primer"><code>glob</code> strings</a> to ignore when rendering your template</td>
     <td><a href="templates.md#ignore">Link</a></td>
   </tr>
   <tr>
