@@ -16,19 +16,19 @@ Options can be configured by defining these keys in that `exports` object:
 <tbody>
   <tr><td colspan="4"><em>Required config</em></td></tr>
   <tr>
-    <td>`name`*</td>
+    <td><code>name</code>*</td>
     <td>String</td>
     <td>The name of your template</td>
     <td><a href="templates.md#getting-started">Link</a></td>
   </tr>
   <tr>
-    <td>`renderer`*</td>
+    <td><code>renderer</code>*</td>
     <td>String</td>
-    <td>The template renderer to use (only supports `ejs`)</td>
+    <td>The template renderer to use (only supports <code>ejs</code>)</td>
     <td><a href="templates.md#getting-started">Link</a></td>
   </tr>
   <tr>
-    <td>`category`</td>
+    <td><code>category</code></td>
     <td>String</td>
     <td>The category to put this template in (useful when creating a set of templates)</td>
     <td><a href="templates.md#category">Link</a></td>
@@ -36,13 +36,13 @@ Options can be configured by defining these keys in that `exports` object:
 
   <tr><td colspan="4"><em>Context creators</em></td></tr>
   <tr>
-    <td>`prompts`</td>
+    <td><code>prompts</code></td>
     <td>Object[]</td>
     <td>An array of <a href="https://www.npmjs.com/package/inquirer#question"><code>inquirer</code> question formated</a> objects</td>
     <td><a href="templates.md#prompts">Link</a></td>
   </tr>
   <tr>
-    <td>`statics`</td>
+    <td><code>statics</code></td>
     <td>Object</td>
     <td>Hard-coded data to provide to the template renderer</td>
     <td><a href="templates.md#statics">Link</a></td>
@@ -50,13 +50,13 @@ Options can be configured by defining these keys in that `exports` object:
 
   <tr><td colspan="4"><em>Path handlers</em></td></tr>
   <tr>
-    <td>`ignore`</td>
+    <td><code>ignore</code></td>
     <td>String[] </td>
     <td>File/directory <a href="https://www.npmjs.com/package/glob#glob-primer"><code>glob</code> strings</a> to ignore when rendering your template</td>
     <td><a href="templates.md#ignore">Link</a></td>
   </tr>
   <tr>
-    <td>`rename`</td>
+    <td><code>rename</code></td>
     <td>Object</td>
     <td>Values to replace when found in the names of directories or files</td>
     <td><a href="templates.md#rename">Link</a></td>
