@@ -26,15 +26,6 @@ const register = async function(githubPath, verbose = true, tmpName = '.tmp.pit'
     globalConfig.templates = {};
   }
 
-  const alreadyRegistered = keys(globalConfig.templates).some(t => {
-    if (globalConfig.templates[t].path === githubPath) {
-      if (verbose) {
-        console.log(`This template has already been registered as "${t}".`);
-      }
-    }
-  });
-  if (alreadyRegistered) { return; }
-
   let name = null;
   let category = null;
   try {
@@ -57,7 +48,7 @@ const register = async function(githubPath, verbose = true, tmpName = '.tmp.pit'
 
   if (name in globalConfig.templates) {
     if (verbose) {
-      const confirmOverride = await q.override();
+      const confirmOverride = await q.override(name);
       if (!confirmOverride) { return; }
     } else {
       return;

@@ -3,7 +3,7 @@ import { exists, outputFile } from 'fs-extra';
 import * as q from './questions';
 import defaultConfig from './default';
 
-const register = async function(name, verbose = true) {
+const make = async function(name, verbose = true) {
   if (await exists('.pitrc')) {
     throw new Error('.pitrc file already exists.');
   }
@@ -24,4 +24,4 @@ const register = async function(name, verbose = true) {
   }
 };
 
-export default register;
+export default make;

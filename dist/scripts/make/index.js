@@ -22,7 +22,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const register = async function (name, verbose = true) {
+const make = async function (name, verbose = true) {
   if (await (0, _fsExtra.exists)('.pitrc')) {
     throw new Error('.pitrc file already exists.');
   }
@@ -45,4 +45,4 @@ const register = async function (name, verbose = true) {
   }
 };
 
-exports.default = register;
+exports.default = make;

@@ -23,8 +23,12 @@ export const setup = async function(template, directory = '', verbose = true) {
   await fs.ensureDir(directory);
 
   if (!template) {
-    template = await getTemplate(globalConfig.templates);
-    if (!template) {
+    if (verbose) {
+      template = await getTemplate(globalConfig.templates);
+      if (!template) {
+        return false;
+      }
+    } else {
       return false;
     }
   }

@@ -13,7 +13,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = name => _inquirer2.default.prompt([{
   type: 'confirm',
   name: 'answer',
-  message: `You already have a template named ${name} with a different GitHub path. Would you like to override it?`
+  message: `You already have a template named "${name}". Would you like to override it?`
 }]).then(({
   answer
 }) => answer);

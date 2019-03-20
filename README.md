@@ -54,6 +54,14 @@ You can customize the CLI for any project by adding prompts via [Inquire.js](htt
 
 5. Select your project template, answer any prompts and then BUILD! 🚀
 
+## Updating templates
+
+One of the main goals of PIT is to make updating templates easy. Every time you run `pit new`, PIT will pull down the latest version of the codebase as it appears on GitHub. However, this isn't true for some of the configuration options of those templates.
+
+If the `category` of a template you have registered changes, you can `pit register` it again to update it.
+
+However, if the `name` changes and you `pit register` it again, you'll notice you'll have two registered templates pointing to the same template. To remove one, you can run `pit unregister` and select the old name.
+
 ## Read more
 - [Creating new PIT templates](docs/templates.md)
 - [.pitrc file specification](docs/pitrc.md)

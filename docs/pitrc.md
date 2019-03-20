@@ -16,15 +16,21 @@ Options can be configured by defining these keys in that `exports` object:
 <tbody>
   <tr><td colspan="4"><em>Required config</em></td></tr>
   <tr>
-    <td>`name`</td>
+    <td>`name`\*</td>
     <td>String</td>
     <td>The name of your template</td>
     <td>[Link](templates.md#getting-started)</td>
   </tr>
   <tr>
-    <td>`renderer`</td>
+    <td>`renderer`\*</td>
     <td>String</td>
     <td>The template renderer to use (only supports `ejs`)</td>
+    <td>[Link](templates.md#getting-started)</td>
+  </tr>
+  <tr>
+    <td>`category`\*</td>
+    <td>String</td>
+    <td>The category to put this template in (useful when creating a set of templates)</td>
     <td>[Link](templates.md#getting-started)</td>
   </tr>
 
@@ -57,6 +63,7 @@ Options can be configured by defining these keys in that `exports` object:
   </tr>
 </tbody>
 </table>
+<em>\*Required key</em>
 
 ## Example
 ```JavaScript
@@ -64,6 +71,7 @@ Options can be configured by defining these keys in that `exports` object:
 module.exports = {
   name: 'Your Template Name',
   renderer: 'ejs',
+  category: 'Test',
 
   prompts: [
     {

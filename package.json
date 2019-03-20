@@ -11,7 +11,7 @@
     "build": "babel src --out-dir dist --copy-files",
     "test": "nyc mocha $(find src/**/**/test.js -name '*.js') --require \"@babel/register\" --timeout 30000",
     "test-specific": "nyc mocha $(find src/**/**/test.js -name '*.js') --require \"@babel/register\" --timeout 30000 -g",
-    "posttest": "rm -rf example",
+    "posttest": "rmdir test 2>/dev/null ; exit 0;",
     "posttest-specific": "npm run posttest"
   },
   "devDependencies": {
@@ -50,5 +50,8 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:The-Politico/politico-interactive-templates.git"
+  },
+  "nyc": {
+    "include": "src"
   }
 }

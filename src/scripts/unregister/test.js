@@ -2,11 +2,12 @@ import expect from 'expect.js';
 import getConfig from 'Utils/getConfig';
 import outputConfig from 'Utils/outputConfig';
 import { testTemplateName, testTemplateRepo } from 'Constants/testing';
-import register from './index';
+
+import { register, unregister } from 'Scripts';
 
 const emptyConfig = { templates: {} };
 
-describe('Register', () => {
+describe('Unregister', () => {
   let globalConfig;
 
   before(async function() {
@@ -15,10 +16,13 @@ describe('Register', () => {
     await register(testTemplateRepo, false);
   });
 
-  it('Registers templates', async function() {
-    const newConfig = await getConfig();
-    expect(newConfig.templates).to.have.property(testTemplateName);
-    expect(newConfig.templates[testTemplateName].path).to.be(testTemplateRepo);
+  it('Unregisters templates', async function() {
+    let config = await getConfig();
+    expect(config.templates).to.have.property(testTemplateName);
+    await unregister(testTemplateName, false);
+
+    config = await getConfig();
+    expect(config.templates).to.not.have.property(testTemplateName);
   });
 
   after(async function() {

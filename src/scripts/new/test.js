@@ -17,10 +17,15 @@ const context = {
   'test': 'test',
 };
 
+const emptyConfig = { templates: {} };
+
 describe('New - Setup: Downloads Template Repo', () => {
-  const dir = 'example/setup';
+  let globalConfig;
+  const dir = 'test/setup';
 
   before(async function() {
+    globalConfig = await getConfig();
+    await outputConfig(emptyConfig);
     await register(testTemplateRepo, false);
     await setup(testTemplateName, dir, false);
   });
@@ -32,18 +37,19 @@ describe('New - Setup: Downloads Template Repo', () => {
   });
 
   after(async function() {
-    const config = await getConfig();
-    delete config.templates[testTemplateName];
-    await outputConfig(config);
+    await outputConfig(globalConfig);
     rimraf(dir);
   });
 });
 
 describe('New - Build: Builds Template Files', () => {
-  const dir = 'example/build';
+  let globalConfig;
+  const dir = 'test/build';
   let files;
 
   before(async function() {
+    globalConfig = await getConfig();
+    await outputConfig(emptyConfig);
     await register(testTemplateRepo, false);
     await setup(testTemplateName, dir, false);
     await build(context, dir, false);
@@ -91,17 +97,18 @@ describe('New - Build: Builds Template Files', () => {
   });
 
   after(async function() {
-    const config = await getConfig();
-    delete config.templates[testTemplateName];
-    await outputConfig(config);
+    await outputConfig(globalConfig);
     rimraf(dir);
   });
 });
 
 describe('New - Cleanup: Deletes Template Repo', () => {
-  const dir = 'example/cleanup';
+  let globalConfig;
+  const dir = 'test/cleanup';
 
   before(async function() {
+    globalConfig = await getConfig();
+    await outputConfig(emptyConfig);
     await register(testTemplateRepo, false);
     await setup(testTemplateName, dir, false);
     await build(context, dir, false);
@@ -114,17 +121,19 @@ describe('New - Cleanup: Deletes Template Repo', () => {
   });
 
   after(async function() {
-    const config = await getConfig();
-    delete config.templates[testTemplateName];
-    await outputConfig(config);
+    await outputConfig(globalConfig);
     rimraf(dir);
   });
 });
 
 describe('New - Snippets', () => {
-  const dir = 'example/snippets';
+  let globalConfig;
+  const dir = 'test/snippets';
 
   before(async function() {
+    globalConfig = await getConfig();
+    await outputConfig(emptyConfig);
+    await outputConfig(globalConfig);
     await register(testSnippetTemplateRepo, false, '.tmp.pit.snippet');
     await setup(testSnippetTemplateName, dir, false);
 
@@ -151,38 +160,57 @@ describe('New - Snippets', () => {
   });
 
   after(async function() {
-    const config = await getConfig();
-    delete config.templates[testSnippetTemplateName];
-    await outputConfig(config);
+    await outputConfig(globalConfig);
     await rimraf(dir);
   });
 });
 
 describe('New - CLI', () => {
-  const baseDir = 'example/newCLI';
+  let globalConfig;
+  const baseDir = 'test/newCLI';
   const cliPath = path.join(process.cwd(), 'dist/cli.js');
 
   before(async function() {
+    globalConfig = await getConfig();
+    await outputConfig(emptyConfig);
     await register(testTemplateRepo, false);
     await register(testSnippetTemplateRepo, false, '.tmp.pit.snippet');
   });
 
-  it('Works', async function() {
-    const dir = `${baseDir}/category/Test`;
-    console.log(cliPath);
+  it('Handles templates by category', async function() {
+    const dir = `${baseDir}/category/`;
 
-    const output = await run([cliPath, 'new', `-d ${dir}`], [ENTER, ENTER, ENTER, 'test', ENTER, 'test', ENTER], 1000);
-    console.log(output);
+    await run([cliPath, 'new', `-d=${dir}`], [ENTER, ENTER, ENTER, 'test', ENTER, 'test', ENTER], 1000);
 
     const files = glob.sync(path.join(dir, '**'), { dot: true });
-    console.log(files);
+
+    expect(files).to.contain(path.join(dir, 'README.md'));
+    expect(files).to.contain(path.join(dir, 'test/test_file.txt'));
+  });
+
+  it('Handles searching for templates', async function() {
+    const dir = `${baseDir}/search/`;
+
+    await run([cliPath, 'new', `-d=${dir}`], [DOWN, ENTER, 'Snippet', ENTER, 'test', ENTER, 'test', ENTER, 'test', ENTER], 1000);
+
+    const files = glob.sync(path.join(dir, '**'), { dot: true });
+
+    expect(files).to.contain(path.join(dir, 'src/components/test/touch'));
+  });
+
+  it('Handles getting all templates', async function() {
+    const dir = `${baseDir}/all/`;
+
+    await run([cliPath, 'new', `-d=${dir}`], [DOWN, DOWN, ENTER, ENTER, 'test', ENTER, 'test', ENTER], 1000);
+
+    const files = glob.sync(path.join(dir, '**'), { dot: true });
+
+    expect(files).to.contain(path.join(dir, 'README.md'));
+    expect(files).to.contain(path.join(dir, 'test/test_file.txt'));
   });
 
   after(async function() {
-    const config = await getConfig();
-    delete config.templates[testTemplateName];
-    delete config.templates[testSnippetTemplateName];
-    await outputConfig(config);
+    await outputConfig(globalConfig);
     await rimraf(baseDir);
   });
 });

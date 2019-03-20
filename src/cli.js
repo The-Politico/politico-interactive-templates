@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import yargs from 'yargs';
-import { newProject, register, make } from './scripts';
+import { newProject, register, unregister, make } from './scripts';
 import healthChecks from 'Utils/healthChecks';
 
-console.log('\nWelcome to Politico Interactive Templates (PIT)!');
+console.log('\nWelcome to Politico Interactive Templates!');
 
 yargs // eslint-disable-line
   .help()
@@ -29,9 +29,12 @@ yargs // eslint-disable-line
         type: 'boolean',
         default: true,
       });
-  }, async function(argv) {
-    await healthChecks();
-    await newProject(argv.template, argv.directory, argv.verbose);
+  }, async function({ template, directory, verbose }) {
+    if (verbose) {
+      await healthChecks();
+    }
+
+    await newProject(template, directory, verbose);
   })
 
   // Register
@@ -47,10 +50,36 @@ yargs // eslint-disable-line
         type: 'boolean',
         default: true,
       });
-  }, async function(argv) {
-    await healthChecks();
-    console.log('Looks like you want to register an existing template.');
-    await register(argv.path, argv.verbose);
+  }, async function({ path, verbose }) {
+    if (verbose) {
+      await healthChecks();
+      console.log('Looks like you want to register an existing template.');
+    }
+
+    await register(path, verbose);
+  })
+
+  // Unregister
+  .command('unregister [template]', 'Creates a new project from a template.', (yargs) => {
+    yargs
+      .positional('template', {
+        alias: 't',
+        describe: 'The template to remove',
+        type: 'string',
+      })
+      .option('verbose', {
+        alias: 'v',
+        describe: 'Log to the console',
+        type: 'boolean',
+        default: true,
+      });
+  }, async function({ template, verbose }) {
+    if (verbose) {
+      await healthChecks();
+      console.log('Looks like you want to unregister a template.');
+    }
+
+    await unregister(template, verbose);
   })
 
   // Make
@@ -66,17 +95,20 @@ yargs // eslint-disable-line
         type: 'boolean',
         default: true,
       });
-  }, async function(argv) {
-    await healthChecks();
-    console.log('Looks like you want to make a new template.');
-    await make(argv.name, argv.verbose);
+  }, async function({ name, verbose }) {
+    if (verbose) {
+      await healthChecks();
+      console.log('Looks like you want to make a new template.');
+    }
+
+    await make(name, verbose);
   })
 
   // Info
   .command('info', 'Runs health checks.', yargs => yargs, async function(argv) {
     const health = await healthChecks();
     if (health) {
-      console.log('Everything is up to date.');
+      console.log('\n...Everything is up to date.');
     }
   })
 

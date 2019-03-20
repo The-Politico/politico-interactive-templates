@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = {
   name: '',
   renderer: 'ejs',
+  category: null,
   prompts: [],
   statics: {},
   ignore: [],

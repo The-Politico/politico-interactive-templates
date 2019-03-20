@@ -14,26 +14,26 @@ var _outputConfig2 = _interopRequireDefault(_outputConfig);
 
 var _testing = require("../../constants/testing");
 
-var _index = require("./index");
-
-var _index2 = _interopRequireDefault(_index);
+var _Scripts = require("..");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const emptyConfig = {
   templates: {}
 };
-describe('Register', () => {
+describe('Unregister', () => {
   let globalConfig;
   before(async function () {
     globalConfig = await (0, _getConfig2.default)();
     await (0, _outputConfig2.default)(emptyConfig);
-    await (0, _index2.default)(_testing.testTemplateRepo, false);
+    await (0, _Scripts.register)(_testing.testTemplateRepo, false);
   });
-  it('Registers templates', async function () {
-    const newConfig = await (0, _getConfig2.default)();
-    (0, _expect2.default)(newConfig.templates).to.have.property(_testing.testTemplateName);
-    (0, _expect2.default)(newConfig.templates[_testing.testTemplateName].path).to.be(_testing.testTemplateRepo);
+  it('Unregisters templates', async function () {
+    let config = await (0, _getConfig2.default)();
+    (0, _expect2.default)(config.templates).to.have.property(_testing.testTemplateName);
+    await (0, _Scripts.unregister)(_testing.testTemplateName, false);
+    config = await (0, _getConfig2.default)();
+    (0, _expect2.default)(config.templates).to.not.have.property(_testing.testTemplateName);
   });
   after(async function () {
     await (0, _outputConfig2.default)(globalConfig);

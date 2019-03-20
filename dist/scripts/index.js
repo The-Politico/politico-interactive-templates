@@ -4,6 +4,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _make = require("./make");
+
+Object.defineProperty(exports, "make", {
+  enumerable: true,
+  get: function () {
+    return _interopRequireDefault(_make).default;
+  }
+});
+
 var _new = require("./new");
 
 Object.defineProperty(exports, "newProject", {
@@ -22,12 +31,12 @@ Object.defineProperty(exports, "register", {
   }
 });
 
-var _make = require("./make");
+var _unregister = require("./unregister");
 
-Object.defineProperty(exports, "make", {
+Object.defineProperty(exports, "unregister", {
   enumerable: true,
   get: function () {
-    return _interopRequireDefault(_make).default;
+    return _interopRequireDefault(_unregister).default;
   }
 });
 

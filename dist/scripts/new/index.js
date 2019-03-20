@@ -76,9 +76,13 @@ const setup = exports.setup = async function (template, directory = '', verbose 
   await _fsExtra2.default.ensureDir(directory);
 
   if (!template) {
-    template = await (0, _getTemplate2.default)(globalConfig.templates);
+    if (verbose) {
+      template = await (0, _getTemplate2.default)(globalConfig.templates);
 
-    if (!template) {
+      if (!template) {
+        return false;
+      }
+    } else {
       return false;
     }
   }
