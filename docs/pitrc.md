@@ -31,7 +31,7 @@ Options can be configured by defining these keys in that `exports` object:
     <td>`category`</td>
     <td>String</td>
     <td>The category to put this template in (useful when creating a set of templates)</td>
-    <td><a href="templates.md#categories">Link</a></td>
+    <td><a href="templates.md#category">Link</a></td>
   </tr>
 
   <tr><td colspan="4"><em>Context creators</em></td></tr>
