@@ -14,7 +14,6 @@ Options can be configured by defining these keys in that `exports` object:
   </tr>
 </thead>
 <tbody>
-  <tr><td colspan="4"><em>Required config</em></td></tr>
   <tr>
     <td><code>name</code>*</td>
     <td>String</td>
