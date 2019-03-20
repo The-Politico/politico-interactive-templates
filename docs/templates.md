@@ -26,7 +26,7 @@ That's actually all you need to make your codebase a template, but you probably 
 
 For a quick breakdown of `.pitrc` options check out [these docs](pitrc.md). In this doc, we'll go through each option and provide a reasonable example of when you might use it. Remember, everything below this is optional.
 
-## Categories
+## `category`
 
 Users may have dozens of templates registered at some point, so to help organize them PIT comes with a way to categorize your templates. When a user runs `pit new` they will be prompted to find the template they're looking for by first filtering through categories. If your template doesn't have a `category` designated in its `.pitrc` file, it will go in the `Other` category automatically.
 

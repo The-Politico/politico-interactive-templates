@@ -31,14 +31,14 @@ Options can be configured by defining these keys in that `exports` object:
     <td>`category`</td>
     <td>String</td>
     <td>The category to put this template in (useful when creating a set of templates)</td>
-    <td><a href="templates.md#Categories">Link</a></td>
+    <td><a href="templates.md#categories">Link</a></td>
   </tr>
 
   <tr><td colspan="4"><em>Context creators</em></td></tr>
   <tr>
     <td>`prompts`</td>
     <td>Object[]</td>
-    <td>An array of [`inquirer` question formated](https://www.npmjs.com/package/inquirer#question) objects</td>
+    <td>An array of <a href="https://www.npmjs.com/package/inquirer#question">`inquirer` question formated</a> objects</td>
     <td><a href="templates.md#prompts">Link</a></td>
   </tr>
   <tr>
@@ -52,7 +52,7 @@ Options can be configured by defining these keys in that `exports` object:
   <tr>
     <td>`ignore`</td>
     <td>String[] </td>
-    <td>File/directory [`glob` strings](https://www.npmjs.com/package/glob#glob-primer) to ignore when rendering your template</td>
+    <td>File/directory <a href="https://www.npmjs.com/package/glob#glob-primer">`glob` strings</a> to ignore when rendering your template</td>
     <td><a href="templates.md#ignore">Link</a></td>
   </tr>
   <tr>
