@@ -19,19 +19,19 @@ Options can be configured by defining these keys in that `exports` object:
     <td>`name`*</td>
     <td>String</td>
     <td>The name of your template</td>
-    <td>[Link](templates.md#getting-started)</td>
+    <td><a href="templates.md#getting-started">Link</a></td>
   </tr>
   <tr>
     <td>`renderer`*</td>
     <td>String</td>
     <td>The template renderer to use (only supports `ejs`)</td>
-    <td>[Link](templates.md#getting-started)</td>
+    <td><a href="templates.md#getting-started">Link</a></td>
   </tr>
   <tr>
-    <td>`category`\*</td>
+    <td>`category`</td>
     <td>String</td>
     <td>The category to put this template in (useful when creating a set of templates)</td>
-    <td>[Link](templates.md#getting-started)</td>
+    <td><a href="templates.md#Categories">Link</a></td>
   </tr>
 
   <tr><td colspan="4"><em>Context creators</em></td></tr>
@@ -39,13 +39,13 @@ Options can be configured by defining these keys in that `exports` object:
     <td>`prompts`</td>
     <td>Object[]</td>
     <td>An array of [`inquirer` question formated](https://www.npmjs.com/package/inquirer#question) objects</td>
-    <td>[Link](templates.md#prompts)</td>
+    <td><a href="templates.md#prompts">Link</a></td>
   </tr>
   <tr>
     <td>`statics`</td>
     <td>Object</td>
     <td>Hard-coded data to provide to the template renderer</td>
-    <td>[Link](templates.md#statics)</td>
+    <td><a href="templates.md#statics">Link</a></td>
   </tr>
 
   <tr><td colspan="4"><em>Path handlers</em></td></tr>
@@ -53,13 +53,13 @@ Options can be configured by defining these keys in that `exports` object:
     <td>`ignore`</td>
     <td>String[] </td>
     <td>File/directory [`glob` strings](https://www.npmjs.com/package/glob#glob-primer) to ignore when rendering your template</td>
-    <td>[Link](templates.md#ignore)</td>
+    <td><a href="templates.md#ignore">Link</a></td>
   </tr>
   <tr>
     <td>`rename`</td>
     <td>Object</td>
     <td>Values to replace when found in the names of directories or files</td>
-    <td>[Link](templates.md#rename)</td>
+    <td><a href="templates.md#rename">Link</a></td>
   </tr>
 </tbody>
 </table>
