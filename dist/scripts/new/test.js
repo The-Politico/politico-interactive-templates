@@ -92,7 +92,7 @@ describe('New - Build: Builds Template Files', () => {
   it('Writes context into files', async function () {
     const file = _fs2.default.readFileSync(_path2.default.join(dir, 'README.md')).toString('utf-8');
 
-    (0, _expect2.default)(file).to.be('# app\n');
+    (0, _expect2.default)(file.trim()).to.be('# app');
   });
   it('Uses project context', async function () {
     const file = _fs2.default.readFileSync(_path2.default.join(dir, 'extra.txt')).toString('utf-8');
@@ -116,6 +116,16 @@ describe('New - Build: Builds Template Files', () => {
   });
   it('Ignores project-specific ignore directories', async function () {
     (0, _expect2.default)(files).to.not.contain(_path2.default.join(dir, 'ignore'));
+  });
+  it('Doesn\'t render binary files', async function () {
+    (0, _expect2.default)(files).to.contain(_path2.default.join(dir, 'images/placeholder.png'));
+  });
+  it('Doesn\'t render justCopy files', async function () {
+    (0, _expect2.default)(files).to.contain(_path2.default.join(dir, 'justCopy/justCopy.txt'));
+
+    const file = _fs2.default.readFileSync(_path2.default.join(dir, 'justCopy/justCopy.txt')).toString('utf-8');
+
+    (0, _expect2.default)(file.trim()).to.be('This should <%=not%> be passed through render.');
   });
   after(async function () {
     await (0, _outputConfig2.default)(globalConfig);

@@ -64,7 +64,7 @@ describe('New - Build: Builds Template Files', () => {
 
   it('Writes context into files', async function() {
     const file = fs.readFileSync(path.join(dir, 'README.md')).toString('utf-8');
-    expect(file).to.be('# app\n');
+    expect(file.trim()).to.be('# app');
   });
 
   it('Uses project context', async function() {
@@ -94,6 +94,16 @@ describe('New - Build: Builds Template Files', () => {
 
   it('Ignores project-specific ignore directories', async function() {
     expect(files).to.not.contain(path.join(dir, 'ignore'));
+  });
+
+  it('Doesn\'t render binary files', async function() {
+    expect(files).to.contain(path.join(dir, 'images/placeholder.png'));
+  });
+
+  it('Doesn\'t render justCopy files', async function() {
+    expect(files).to.contain(path.join(dir, 'justCopy/justCopy.txt'));
+    const file = fs.readFileSync(path.join(dir, 'justCopy/justCopy.txt')).toString('utf-8');
+    expect(file.trim()).to.be('This should <%=not%> be passed through render.');
   });
 
   after(async function() {

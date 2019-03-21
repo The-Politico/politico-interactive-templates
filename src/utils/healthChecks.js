@@ -5,9 +5,12 @@ import chalk from 'chalk';
 export default async function() {
   const packagejson = await npm().repo('@politico/interactive-templates').package();
 
+  let inGoodHealth = true;
+
   if (meta.version !== packagejson.version) {
     console.log(chalk.yellow('\nIt looks like your version of PIT is out of date.\nYou should run "npm install -g @politico/interactive-templates" to update.\n'));
+    inGoodHealth = false;
   }
 
-  return true;
+  return inGoodHealth;
 }

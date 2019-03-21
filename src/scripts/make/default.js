@@ -7,5 +7,6 @@ export default {
   statics: {},
 
   ignore: [],
+  justCopy: [],
   rename: {},
 };

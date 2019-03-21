@@ -53,17 +53,28 @@ export const build = async function(context, directory = '', verbose = true) {
 
   context = merge({}, context, projectConfig.statics);
 
+  const templateGlob = path.join(directory, '.tmp.pit', '**');
+  const ignoredFiles = projectConfig.ignore ? projectConfig.ignore : [];
+  const justCopyFiles = projectConfig.justCopy ? projectConfig.justCopy : [];
+
+  const templateFiles = globSync(templateGlob, {
+    dot: true,
+    nodir: true,
+    ignore: [...alwaysIgnore, ...ignoredFiles],
+  });
+
+  const renderAndCopyFiles = globSync(templateGlob, {
+    dot: true,
+    nodir: true,
+    ignore: [...alwaysIgnore, ...ignoredFiles, ...justCopyFiles],
+  });
+
   const processConfig = {
     renderer,
     context,
     directory,
     rename: projectConfig.rename,
   };
-
-  const templateFiles = globSync(path.join(directory, '.tmp.pit', '**'), {
-    dot: true,
-    ignore: projectConfig.ignore.concat(alwaysIgnore),
-  });
 
   // Error if conflicts exist
   let conflictingFile = null;
@@ -88,7 +99,7 @@ export const build = async function(context, directory = '', verbose = true) {
     throw new Error(`"${conflictingFile}" already exists. Aborting template creation. No files were created.`);
   }
 
-  return Promise.all(templateFiles.map(filepath => processFile(filepath, processConfig)));
+  return Promise.all(templateFiles.map(filepath => processFile(filepath, processConfig, renderAndCopyFiles.includes(filepath))));
 };
 
 export const cleanup = async function(directory = '', verbose = true) {

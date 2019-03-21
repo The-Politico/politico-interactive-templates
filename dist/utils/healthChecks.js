@@ -6,12 +6,14 @@ Object.defineProperty(exports, "__esModule", {
 
 exports.default = async function () {
   const packagejson = await (0, _npmApi2.default)().repo('@politico/interactive-templates').package();
+  let inGoodHealth = true;
 
   if (_Meta2.default.version !== packagejson.version) {
     console.log(_chalk2.default.yellow('\nIt looks like your version of PIT is out of date.\nYou should run "npm install -g @politico/interactive-templates" to update.\n'));
+    inGoodHealth = false;
   }
 
-  return true;
+  return inGoodHealth;
 };
 
 var _Meta = require("../../package.json");

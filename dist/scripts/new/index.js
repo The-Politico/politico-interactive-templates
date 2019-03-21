@@ -106,16 +106,27 @@ const build = exports.build = async function (context, directory = '', verbose =
   }
 
   context = (0, _merge2.default)({}, context, projectConfig.statics);
+
+  const templateGlob = _path2.default.join(directory, '.tmp.pit', '**');
+
+  const ignoredFiles = projectConfig.ignore ? projectConfig.ignore : [];
+  const justCopyFiles = projectConfig.justCopy ? projectConfig.justCopy : [];
+  const templateFiles = (0, _globGitignore.sync)(templateGlob, {
+    dot: true,
+    nodir: true,
+    ignore: [..._ignores2.default, ...ignoredFiles]
+  });
+  const renderAndCopyFiles = (0, _globGitignore.sync)(templateGlob, {
+    dot: true,
+    nodir: true,
+    ignore: [..._ignores2.default, ...ignoredFiles, ...justCopyFiles]
+  });
   const processConfig = {
     renderer,
     context,
     directory,
     rename: projectConfig.rename
-  };
-  const templateFiles = (0, _globGitignore.sync)(_path2.default.join(directory, '.tmp.pit', '**'), {
-    dot: true,
-    ignore: projectConfig.ignore.concat(_ignores2.default)
-  }); // Error if conflicts exist
+  }; // Error if conflicts exist
 
   let conflictingFile = null;
   await Promise.all(templateFiles.map(filepath => (0, _renameFile2.default)(filepath, processConfig)).filter(f => f !== null).map(async function (fp) {
@@ -131,7 +142,7 @@ const build = exports.build = async function (context, directory = '', verbose =
     throw new Error(`"${conflictingFile}" already exists. Aborting template creation. No files were created.`);
   }
 
-  return Promise.all(templateFiles.map(filepath => (0, _processFile2.default)(filepath, processConfig)));
+  return Promise.all(templateFiles.map(filepath => (0, _processFile2.default)(filepath, processConfig, renderAndCopyFiles.includes(filepath))));
 };
 
 const cleanup = exports.cleanup = async function (directory = '', verbose = true) {

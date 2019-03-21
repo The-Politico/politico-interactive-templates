@@ -10,5 +10,6 @@ exports.default = {
   prompts: [],
   statics: {},
   ignore: [],
+  justCopy: [],
   rename: {}
 };

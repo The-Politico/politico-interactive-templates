@@ -60,6 +60,12 @@ Options can be configured by defining these keys in that `exports` object:
     <td>Values to replace when found in the names of directories or files</td>
     <td><a href="templates.md#rename">Link</a></td>
   </tr>
+  <tr>
+    <td><code>justCopy</code></td>
+    <td>String[] </td>
+    <td>File/directory <a href="https://www.npmjs.com/package/glob#glob-primer"><code>glob</code> strings</a> to copy from template as is (without passing the file through the renderer)</td>
+    <td><a href="templates.md#justCopy">Link</a></td>
+  </tr>
 </tbody>
 </table>
 <em>*Required key</em>

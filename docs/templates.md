@@ -98,7 +98,7 @@ _____
 ## Path handlers
 While the content of your files will be passed through your selected `renderer`, managing which and how files make it from your template to your user's instance can be managed through `ignore` and `rename` respectively.
 
-## `ignore`
+### `ignore`
 If you want files in your template's repo that shouldn't be downloaded and used in new instances of your template, you can define them using the `ignore` key in your `.pitrc`'s export. It should be an array of [`glob` strings](https://www.npmjs.com/package/glob#glob-primer).
 
 For example, you might want a README for your template repo with instructions on using the template. In this case, you don't want this file to appear every time a user uses your template. To do this, you could add it to your ignore:
@@ -114,14 +114,14 @@ module.exports = {
 }
 ```
 
-## `rename`
+### `rename`
 You may also want to rename directories, or files based with hard-coded rules or based on their input. That's where the `rename` key comes in which should be an object.
 
 The keys correspond to the name (or parts of the name) of the directory or file names that should should be replaced. For example if your key is `a` then any `a` in filenames will be replaced with your value. For this reason, it's advised that you make these replacements more unique than single letters.
 
 The value can either be a string which is the replacement value, or a function receiving the template context as the only argument and returning the replacement value as a string.
 
-### String Replacement
+#### String Replacement
 
 For example, if your template has it's own README you could ignore it in your templates output (see `ignore` above), and create a new file called `README_template.md` and fill that with the content of your user's template (see `prompts` above). Then in your `.pitrc` your can add this rename so that any files called `README_template.md` in your template will be called `README.md` when a user generates a new instance of your template:
 
@@ -136,7 +136,7 @@ module.exports = {
 }
 ```
 
-### Function Replacement
+#### Function Replacement
 
 For example, if your template has a folder that should be called the same as your user's project name you can use provide a function that returns the `projectName` of the template context:
 
@@ -151,12 +151,34 @@ module.exports = {
 }
 ```
 
+## `justCopy`
+There may be files that you want to copy as-is (i.e. without passing it through your render function). you can define them using the `justCopy` key in your `.pitrc`'s export. It should be an array of [`glob` strings](https://www.npmjs.com/package/glob#glob-primer).
+
+Files that are binary (such as images) will not be rendered in any case (only copied) and don't need to be specified with this option.
+
+**IMPORTANT: Any files that match an `ignore` glob and a `justCopy` glob will be ignored, NOT copied.**
+
+For example, if your codebase template itself includes `ejs` template files that you want to stay as template files. In this case, you could put them all in a directory named `templates` and then include that directory as a `justCopy`.
+
+```javascript
+// .pitrc
+module.exports = {
+  ...
+
+  justCopy: [
+    'templates'
+  ]
+}
+```
+
 ## Example Template
 For example, consider a codebase that looks like this:
 
 ```
 YOUR_TEMPLATE
 ├── projectName-src
+│  ├── templates
+│  │  └── index.html
 │  └── ...
 ├── README_template.md
 ├── README.md
@@ -191,8 +213,18 @@ module.exports = {
   rename: {
     "README_template.md": "README.md",
     "projectName": context => context['projectName']
-  }
+  },
+
+  justCopy: [
+    'templates'
+  ]
 }
+```
+<br/>
+
+```html
+<!-- projectName-src/templates/index.html -->
+<h1><%=projectName%></h1>
 ```
 <br/>
 
@@ -232,8 +264,16 @@ And if they answer `my-project`, their project will look like:
 ```
 ROOT
 ├── my-project-src
+│  ├── templates
+│  │  └── index.html
 │  └── ...
 └── README.md
+```
+<br/>
+
+```html
+<!-- my-project-src/templates/index.html -->
+<h1>my-project</h1>
 ```
 <br/>
 
