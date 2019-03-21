@@ -1,5 +1,4 @@
 import path from 'path';
-import keys from 'lodash/keys';
 import getConfig from 'Utils/getConfig';
 import outputConfig from 'Utils/outputConfig';
 import downloadRepo from 'Utils/downloadRepo';
@@ -7,6 +6,13 @@ import rimraf from 'Utils/rimraf';
 import cwd from 'Utils/cwd';
 import * as q from './questions';
 
+/**
+ * Registers a template in the user's global .pitrc file
+ * @param {string} [githubPath] - The path to a repo
+ * @param {boolean} [verbose=true] - Whether to log outputs and prompt for inputs
+ * @param {string} [tmpName] - The name of the directory to temporarily create in order to complete registration (mostly used for testing)
+ * @return {Promise} Resolves when the template is registered
+ */
 const register = async function(githubPath, verbose = true, tmpName = '.tmp.pit') {
   if (!githubPath) {
     if (verbose) {

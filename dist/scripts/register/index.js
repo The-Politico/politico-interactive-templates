@@ -8,10 +8,6 @@ var _path = require("path");
 
 var _path2 = _interopRequireDefault(_path);
 
-var _keys = require("lodash/keys");
-
-var _keys2 = _interopRequireDefault(_keys);
-
 var _getConfig = require("../../utils/getConfig");
 
 var _getConfig2 = _interopRequireDefault(_getConfig);
@@ -40,6 +36,13 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/**
+ * Registers a template in the user's global .pitrc file
+ * @param {string} [githubPath] - The path to a repo
+ * @param {boolean} [verbose=true] - Whether to log outputs and prompt for inputs
+ * @param {string} [tmpName] - The name of the directory to temporarily create in order to complete registration (mostly used for testing)
+ * @return {Promise} Resolves when the template is registered
+ */
 const register = async function (githubPath, verbose = true, tmpName = '.tmp.pit') {
   if (!githubPath) {
     if (verbose) {

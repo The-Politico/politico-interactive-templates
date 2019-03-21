@@ -18,6 +18,12 @@ var _getTemplate2 = _interopRequireDefault(_getTemplate);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/**
+ * Removes a template from the user's global .pitrc file
+ * @param {string} [name] - The name of the template to remove
+ * @param {boolean} [verbose=true] - Whether to log outputs and prompt for inputs
+ * @return {Promise} Resolves when the template is removed
+ */
 const unregister = async function (name, verbose = true) {
   const globalConfig = await (0, _getConfig2.default)();
 

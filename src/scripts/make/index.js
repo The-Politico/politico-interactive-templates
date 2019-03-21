@@ -3,6 +3,12 @@ import { exists, outputFile } from 'fs-extra';
 import * as q from './questions';
 import defaultConfig from './default';
 
+/**
+ * Creates a default .pitrc file in the current working directory
+ * @param {string} [name] - The name of the template
+ * @param {boolean} [verbose=true] - Whether to log outputs and prompt for inputs
+ * @return {Promise} Resolves when .pitrc is built
+ */
 const make = async function(name, verbose = true) {
   if (await exists('.pitrc')) {
     throw new Error('.pitrc file already exists.');
