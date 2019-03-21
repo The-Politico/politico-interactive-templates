@@ -36,7 +36,15 @@ const processFile = async function (filepath, options) {
   }
 
   const fileText = await _fsExtra2.default.readFile(filepath, 'utf8');
-  const renderedFile = config.renderer(fileText, config.context);
+  let renderedFile = '';
+
+  try {
+    renderedFile = config.renderer(fileText, config.context);
+  } catch (err) {
+    console.error(`There was a problem rendering ${filepath}`);
+    throw err;
+  }
+
   const renderedFilepath = (0, _renameFile2.default)(filepath, config);
   await _fsExtra2.default.outputFile(_path2.default.join(config.directory, renderedFilepath), renderedFile, {
     flag: 'w'

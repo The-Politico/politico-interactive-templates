@@ -20,7 +20,13 @@ const processFile = async function(filepath, options) {
 
   const fileText = await fs.readFile(filepath, 'utf8');
 
-  const renderedFile = config.renderer(fileText, config.context);
+  let renderedFile = '';
+  try {
+    renderedFile = config.renderer(fileText, config.context);
+  } catch (err) {
+    console.error(`There was a problem rendering ${filepath}`);
+    throw err;
+  }
 
   const renderedFilepath = renameFile(filepath, config);
 
