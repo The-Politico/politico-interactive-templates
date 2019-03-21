@@ -16,6 +16,8 @@ const processFile = async function(filepath, options, shouldRender = true) {
 
   const renderedFilepath = path.join(config.directory, renameFile(filepath, config));
 
+  await fs.ensureDir(config.directory);
+
   if (shouldRender && !isBinary(filepath)) {
     const fileText = await fs.readFile(filepath, 'utf8');
     let renderedFile = '';

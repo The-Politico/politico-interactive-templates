@@ -2,7 +2,7 @@ import expect from 'expect.js';
 import path from 'path';
 import fs from 'fs';
 import glob from 'glob';
-import run, { UP, DOWN, ENTER } from 'inquirer-test';
+import run, { DOWN, ENTER } from 'inquirer-test';
 
 import rimraf from 'Utils/rimraf';
 import { setup, build, cleanup } from './index';
@@ -52,7 +52,7 @@ describe('New - Build: Builds Template Files', () => {
     await outputConfig(emptyConfig);
     await register(testTemplateRepo, false);
     await setup(testTemplateName, dir, false);
-    await build(context, dir, false);
+    await build(context, path.join(dir, '.tmp.pit'), dir, false);
 
     files = glob.sync(path.join(dir, '**'), { dot: true });
   });
@@ -121,7 +121,7 @@ describe('New - Cleanup: Deletes Template Repo', () => {
     await outputConfig(emptyConfig);
     await register(testTemplateRepo, false);
     await setup(testTemplateName, dir, false);
-    await build(context, dir, false);
+    await build(context, path.join(dir, '.tmp.pit'), dir, false);
     await cleanup(dir, false);
   });
 
@@ -147,8 +147,8 @@ describe('New - Snippets', () => {
     await register(testSnippetTemplateRepo, false, '.tmp.pit.snippet');
     await setup(testSnippetTemplateName, dir, false);
 
-    await build({ name: 'one', content: 'good' }, dir, false);
-    await build({ name: 'two', content: 'good' }, dir, false);
+    await build({ name: 'one', content: 'good' }, path.join(dir, '.tmp.pit'), dir, false);
+    await build({ name: 'two', content: 'good' }, path.join(dir, '.tmp.pit'), dir, false);
     await cleanup(dir, false);
   });
 
@@ -160,7 +160,7 @@ describe('New - Snippets', () => {
 
   it('Fails if conflicts appear', async function() {
     try {
-      await build({ name: 'one', content: 'bad' }, dir, false);
+      await build({ name: 'one', content: 'bad' }, path.join(dir, '.tmp.pit'), dir, false);
     } catch (err) {
       expect(err.message).to.be(`"src/components/one/touch" already exists. Aborting template creation. No files were created.`);
     }

@@ -1,111 +1,15 @@
-import fs from 'fs-extra';
 import path from 'path';
-import keys from 'lodash/keys';
-import merge from 'lodash/merge';
-import inquirer from 'inquirer';
-import { sync as globSync } from 'glob-gitignore';
+import setup from './setup';
+import build from './build';
+import cleanup from './cleanup';
 
-import getConfig from 'Utils/getConfig';
-import rimraf from 'Utils/rimraf';
-import cwd from 'Utils/cwd';
-import processFile from 'Utils/processFile';
-import * as renderMethods from 'Utils/renderer';
-import downloadRepo from 'Utils/downloadRepo';
-import renameFile from 'Utils/renameFile';
-import fileExists from 'Utils/fileExists';
-import getTemplate from 'Utils/getTemplate';
-
-import alwaysIgnore from 'Constants/ignores';
-
-export const setup = async function(template, directory = '', verbose = true) {
-  const globalConfig = await getConfig();
-
-  await fs.ensureDir(directory);
-
-  if (!template) {
-    if (verbose) {
-      template = await getTemplate(globalConfig.templates);
-      if (!template) {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-
-  const templatePath = globalConfig.templates[template].path;
-
-  await downloadRepo(templatePath, directory, verbose);
-  return true;
-};
-
-export const build = async function(context, directory = '', verbose = true) {
-  const projectConfig = require(path.join(cwd, directory, '.tmp.pit', '.pitrc'));
-
-  const renderer = renderMethods[projectConfig.renderer];
-  if (renderer === undefined) {
-    throw new Error(`${projectConfig.renderer} is an invalid rendering method. Available methods are ${keys(renderMethods).join(', ')}`);
-  }
-
-  if (!context) {
-    context = await inquirer.prompt(projectConfig.prompts);
-  }
-
-  context = merge({}, context, projectConfig.statics);
-
-  const templateGlob = path.join(directory, '.tmp.pit', '**');
-  const ignoredFiles = projectConfig.ignore ? projectConfig.ignore : [];
-  const justCopyFiles = projectConfig.justCopy ? projectConfig.justCopy : [];
-
-  const templateFiles = globSync(templateGlob, {
-    dot: true,
-    nodir: true,
-    ignore: [...alwaysIgnore, ...ignoredFiles],
-  });
-
-  const renderAndCopyFiles = globSync(templateGlob, {
-    dot: true,
-    nodir: true,
-    ignore: [...alwaysIgnore, ...ignoredFiles, ...justCopyFiles],
-  });
-
-  const processConfig = {
-    renderer,
-    context,
-    directory,
-    rename: projectConfig.rename,
-  };
-
-  // Error if conflicts exist
-  let conflictingFile = null;
-  await Promise.all(
-    templateFiles
-      .map(
-        filepath => renameFile(filepath, processConfig)
-      ).filter(
-        f => f !== null
-      ).map(
-        async function(fp) {
-          if (await fileExists(fp, directory)) {
-            conflictingFile = fp;
-            return true;
-          }
-          return false;
-        }
-      )
-  );
-
-  if (conflictingFile) {
-    throw new Error(`"${conflictingFile}" already exists. Aborting template creation. No files were created.`);
-  }
-
-  return Promise.all(templateFiles.map(filepath => processFile(filepath, processConfig, renderAndCopyFiles.includes(filepath))));
-};
-
-export const cleanup = async function(directory = '', verbose = true) {
-  await rimraf(path.join(directory, '.tmp.pit'));
-};
-
+/**
+ * Creates a new project.
+ * @param {string} [template] - The name of the template
+ * @param {string} [directory=""] - The directory in which to build the template
+ * @param {boolean} [verbose=true] - Whether to log outputs and prompt for inputs
+ * @return {Promise} Resolves when files are built
+ */
 const newProject = async function(template, directory, verbose = true) {
   const setupSuccessful = await setup(template, directory, verbose);
 
@@ -113,7 +17,7 @@ const newProject = async function(template, directory, verbose = true) {
     return;
   }
 
-  await build(null, directory, verbose);
+  await build(null, path.join(directory, '.tmp.pit'), directory, verbose);
   await cleanup(directory, verbose);
 
   if (verbose) {
@@ -122,3 +26,5 @@ const newProject = async function(template, directory, verbose = true) {
 };
 
 export default newProject;
+
+export { setup, build, cleanup };

@@ -35,6 +35,8 @@ const processFile = async function (filepath, options, shouldRender = true) {
 
   const renderedFilepath = _path2.default.join(config.directory, (0, _renameFile2.default)(filepath, config));
 
+  await _fsExtra2.default.ensureDir(config.directory);
+
   if (shouldRender && !(0, _istextorbinary.isBinary)(filepath)) {
     const fileText = await _fsExtra2.default.readFile(filepath, 'utf8');
     let renderedFile = '';

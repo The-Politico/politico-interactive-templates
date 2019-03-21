@@ -80,7 +80,7 @@ describe('New - Build: Builds Template Files', () => {
     await (0, _outputConfig2.default)(emptyConfig);
     await (0, _index3.default)(_testing.testTemplateRepo, false);
     await (0, _index.setup)(_testing.testTemplateName, dir, false);
-    await (0, _index.build)(context, dir, false);
+    await (0, _index.build)(context, _path2.default.join(dir, '.tmp.pit'), dir, false);
     files = _glob2.default.sync(_path2.default.join(dir, '**'), {
       dot: true
     });
@@ -140,7 +140,7 @@ describe('New - Cleanup: Deletes Template Repo', () => {
     await (0, _outputConfig2.default)(emptyConfig);
     await (0, _index3.default)(_testing.testTemplateRepo, false);
     await (0, _index.setup)(_testing.testTemplateName, dir, false);
-    await (0, _index.build)(context, dir, false);
+    await (0, _index.build)(context, _path2.default.join(dir, '.tmp.pit'), dir, false);
     await (0, _index.cleanup)(dir, false);
   });
   it('Deletes files', async function () {
@@ -167,11 +167,11 @@ describe('New - Snippets', () => {
     await (0, _index.build)({
       name: 'one',
       content: 'good'
-    }, dir, false);
+    }, _path2.default.join(dir, '.tmp.pit'), dir, false);
     await (0, _index.build)({
       name: 'two',
       content: 'good'
-    }, dir, false);
+    }, _path2.default.join(dir, '.tmp.pit'), dir, false);
     await (0, _index.cleanup)(dir, false);
   });
   it('Merges existing file structure with new files', async function () {
@@ -187,7 +187,7 @@ describe('New - Snippets', () => {
       await (0, _index.build)({
         name: 'one',
         content: 'bad'
-      }, dir, false);
+      }, _path2.default.join(dir, '.tmp.pit'), dir, false);
     } catch (err) {
       (0, _expect2.default)(err.message).to.be(`"src/components/one/touch" already exists. Aborting template creation. No files were created.`);
     }
