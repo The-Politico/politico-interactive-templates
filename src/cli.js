@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import yargs from 'yargs';
+import { readJSON } from 'fs-extra';
 import { newProject, register, unregister, make, test } from './scripts';
 import healthChecks from 'Utils/healthChecks';
 
@@ -105,8 +106,12 @@ yargs // eslint-disable-line
   })
 
   // Test
-  .command('test [templateDirectory] [outputDirectory]', 'Tests a template', (yargs) => {
+  .command('test [context] [templateDirectory] [outputDirectory]', 'Tests a template', (yargs) => {
     yargs
+      .positional('context', {
+        describe: 'The path to a JSON file with context for your test',
+        type: 'string',
+      })
       .positional('templateDirectory', {
         alias: 't',
         describe: 'The directory containing template files',
@@ -129,13 +134,18 @@ yargs // eslint-disable-line
         type: 'boolean',
         default: true,
       });
-  }, async function({ templateDirectory, outputDirectory, cleanup, verbose }) {
+  }, async function({ context: contextPath, templateDirectory, outputDirectory, cleanup, verbose }) {
     if (verbose) {
       await healthChecks();
       console.log('Looks like you want to test your new template.');
     }
 
-    await test(null, templateDirectory, outputDirectory, cleanup, verbose);
+    let context;
+    if (contextPath) {
+      context = await readJSON(contextPath);
+    }
+
+    await test(context, templateDirectory, outputDirectory, cleanup, verbose);
   })
 
   // Info

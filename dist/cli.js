@@ -5,6 +5,8 @@ var _yargs = require("yargs");
 
 var _yargs2 = _interopRequireDefault(_yargs);
 
+var _fsExtra = require("fs-extra");
+
 var _scripts = require("./scripts");
 
 var _healthChecks = require("./utils/healthChecks");
@@ -107,8 +109,11 @@ _yargs2.default // eslint-disable-line
 
   await (0, _scripts.make)(name, verbose);
 }) // Test
-.command('test [templateDirectory] [outputDirectory]', 'Tests a template', yargs => {
-  yargs.positional('templateDirectory', {
+.command('test [context] [templateDirectory] [outputDirectory]', 'Tests a template', yargs => {
+  yargs.positional('context', {
+    describe: 'The path to a JSON file with context for your test',
+    type: 'string'
+  }).positional('templateDirectory', {
     alias: 't',
     describe: 'The directory containing template files',
     type: 'string'
@@ -128,6 +133,7 @@ _yargs2.default // eslint-disable-line
     default: true
   });
 }, async function ({
+  context: contextPath,
   templateDirectory,
   outputDirectory,
   cleanup,
@@ -138,7 +144,13 @@ _yargs2.default // eslint-disable-line
     console.log('Looks like you want to test your new template.');
   }
 
-  await (0, _scripts.test)(null, templateDirectory, outputDirectory, cleanup, verbose);
+  let context;
+
+  if (contextPath) {
+    context = await (0, _fsExtra.readJSON)(contextPath);
+  }
+
+  await (0, _scripts.test)(context, templateDirectory, outputDirectory, cleanup, verbose);
 }) // Info
 .command('info', 'Runs health checks.', yargs => yargs, async function (argv) {
   const health = await (0, _healthChecks2.default)();

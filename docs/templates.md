@@ -176,6 +176,8 @@ Once you have your template ready to go, run `pit test` (make sure you're at the
 
 If you want to inspect the files produced by that test you can run `pit test --no-cleanup`. This will build the files in a directory named `.tmp.pit` in your template directory. You can then open it and make sure everything rendered correctly.
 
+Finally, if you want to be able to test your template with a set of dummy user-input data you can create a JSON file in your directory and then pass the path to this file as the first argument. For example, you can call it `test-data.json` and then run `pit test test-data.json`. Remember, you probably don't want this dummy data to be in the final template, so add it to your `ignore` files in your `.pitrc`.
+
 ## Example Template
 For example, consider a codebase that looks like this:
 
