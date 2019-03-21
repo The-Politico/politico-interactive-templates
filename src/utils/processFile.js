@@ -24,7 +24,7 @@ const processFile = async function(filepath, options) {
   try {
     renderedFile = config.renderer(fileText, config.context);
   } catch (err) {
-    console.error(`There was a problem rendering ${filepath}`);
+    console.error(`There was a problem rendering ${filepath}.`);
     throw err;
   }
 
