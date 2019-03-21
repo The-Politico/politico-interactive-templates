@@ -171,6 +171,11 @@ module.exports = {
 }
 ```
 
+## Testing your template
+Once you have your template ready to go, run `pit test` (make sure you're at the root of your template directory when you do). If the test completes, that means your template works!
+
+If you want to inspect the files produced by that test you can run `pit test --no-cleanup`. This will build the files in a directory named `.tmp.pit` in your template directory. You can then open it and make sure everything rendered correctly.
+
 ## Example Template
 For example, consider a codebase that looks like this:
 

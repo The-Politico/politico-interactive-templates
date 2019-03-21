@@ -53,13 +53,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Builds files from a template directory into an output directory
  * @param {Object} [context] - Data to pass to the template renderer
- * @param {string} [templateDirectory=".tmp.pit"] - The directory holding the template files
+ * @param {string} [templateDirectory=".tmp.pit"] - The directory containing template files
  * @param {string} [outputDirectory=""] - The directory in which to save the new template
  * @param {boolean} [verbose=true] - Whether to log outputs and prompt for inputs
  * @return {Promise} Resolves when files are built
  */
 const build = async function (context, templateDirectory, outputDirectory = '', verbose = true) {
-  if (!templateDirectory) {
+  if (!templateDirectory && templateDirectory !== '') {
     templateDirectory = '.tmp.pit';
   }
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import yargs from 'yargs';
-import { newProject, register, unregister, make } from './scripts';
+import { newProject, register, unregister, make, test } from './scripts';
 import healthChecks from 'Utils/healthChecks';
 
 console.log('\nWelcome to Politico Interactive Templates!');
@@ -102,6 +102,40 @@ yargs // eslint-disable-line
     }
 
     await make(name, verbose);
+  })
+
+  // Test
+  .command('test [templateDirectory] [outputDirectory]', 'Tests a template', (yargs) => {
+    yargs
+      .positional('templateDirectory', {
+        alias: 't',
+        describe: 'The directory containing template files',
+        type: 'string',
+      })
+      .positional('outputDirectory', {
+        alias: 'o',
+        describe: 'The directory to save the template test files',
+        type: 'string',
+      })
+      .option('cleanup', {
+        alias: 'c',
+        describe: 'Delete template files after test is complete',
+        type: 'boolean',
+        default: true,
+      })
+      .option('verbose', {
+        alias: 'v',
+        describe: 'Log to the console',
+        type: 'boolean',
+        default: true,
+      });
+  }, async function({ templateDirectory, outputDirectory, cleanup, verbose }) {
+    if (verbose) {
+      await healthChecks();
+      console.log('Looks like you want to test your new template.');
+    }
+
+    await test(null, templateDirectory, outputDirectory, cleanup, verbose);
   })
 
   // Info

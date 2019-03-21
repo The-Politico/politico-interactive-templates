@@ -106,6 +106,39 @@ _yargs2.default // eslint-disable-line
   }
 
   await (0, _scripts.make)(name, verbose);
+}) // Test
+.command('test [templateDirectory] [outputDirectory]', 'Tests a template', yargs => {
+  yargs.positional('templateDirectory', {
+    alias: 't',
+    describe: 'The directory containing template files',
+    type: 'string'
+  }).positional('outputDirectory', {
+    alias: 'o',
+    describe: 'The directory to save the template test files',
+    type: 'string'
+  }).option('cleanup', {
+    alias: 'c',
+    describe: 'Delete template files after test is complete',
+    type: 'boolean',
+    default: true
+  }).option('verbose', {
+    alias: 'v',
+    describe: 'Log to the console',
+    type: 'boolean',
+    default: true
+  });
+}, async function ({
+  templateDirectory,
+  outputDirectory,
+  cleanup,
+  verbose
+}) {
+  if (verbose) {
+    await (0, _healthChecks2.default)();
+    console.log('Looks like you want to test your new template.');
+  }
+
+  await (0, _scripts.test)(null, templateDirectory, outputDirectory, cleanup, verbose);
 }) // Info
 .command('info', 'Runs health checks.', yargs => yargs, async function (argv) {
   const health = await (0, _healthChecks2.default)();

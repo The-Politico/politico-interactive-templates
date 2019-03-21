@@ -40,4 +40,13 @@ Object.defineProperty(exports, "unregister", {
   }
 });
 
+var _test = require("./test");
+
+Object.defineProperty(exports, "test", {
+  enumerable: true,
+  get: function () {
+    return _interopRequireDefault(_test).default;
+  }
+});
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

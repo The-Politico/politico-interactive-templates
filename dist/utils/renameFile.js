@@ -15,10 +15,10 @@ var _replaceFilepath2 = _interopRequireDefault(_replaceFilepath);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = (filepath, config) => {
-  const unrenderedFilepath = filepath.split('.tmp.pit/')[1];
+  let unrenderedFilepath = filepath.split('.tmp.pit/')[1];
 
   if (!unrenderedFilepath) {
-    return null;
+    unrenderedFilepath = filepath;
   }
 
   let renderedFilepath = unrenderedFilepath;
