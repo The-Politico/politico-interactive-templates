@@ -169,7 +169,7 @@ module.exports = {
 }
 ```
 
-Now a file in your template at `src/RENAME_ME/index.html` with a context of `projectName: 'myProject'` will be renamed to `src/myProject/index.html`.
+Now a file in your template at `src/RENAME_ME/index.html` with a context of `{ projectName: 'myProject' }` will be renamed to `src/myProject/index.html`.
 
 ## `justCopy`
 There may be files that you want to copy as-is, without passing it through your render function. You can define them using the `justCopy` key in your `.pitrc` file. You can specify individual files or files matching a pattern using [`glob` strings](https://www.npmjs.com/package/glob#glob-primer).
