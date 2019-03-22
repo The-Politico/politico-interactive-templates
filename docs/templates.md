@@ -112,7 +112,7 @@ You can manage which and how files make it from your template to your user's new
 ### `ignore`
 If you want to ignore certain files in your template's repo, you can add them to an array at an `ignore` key in your `.pitrc` file. You can ignore a specific file or any number of files by using [`glob` strings](https://www.npmjs.com/package/glob#glob-primer).
 
-For example, you have a README in your template's repo with instructions on using it with PIT to create a new project. That's good, but you don't necessarily want _that_ README copied into new projects.  To do ignore it when copying over template files, add it to your `ignore` array:
+For example, you have a README in your template's repo with instructions on using it with PIT to create a new project. That's good, but you don't necessarily want _that_ README copied into new projects.  To ignore it when copying over template files, add it to your `ignore` array:
 
 ```javascript
 // .pitrc
