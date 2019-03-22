@@ -2,7 +2,7 @@
 
 The `.pitrc` file should be written in es5 JavaScript and export a single object, i.e., `module.exports = {}`.
 
-You can configured your template by defining the following keys on the `exports` object:
+You can configure your template by defining the following keys on the `exports` object:
 
 <table>
 <thead>
