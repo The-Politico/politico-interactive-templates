@@ -1,16 +1,21 @@
 # Creating New Templates
 
-PIT is designed to easily turn an existing project into a template. To see a finished example template check out our [Hello World](https://github.com/The-Politico/template_hello-world).
+PIT is designed to easily turn an existing project into a template. To see an example, check out our [Hello World](https://github.com/The-Politico/template_hello-world) template.
 
 
 ## Getting Started
-You may want to duplicate your entire project before doing this to keep your template separate from your original project. To start, delete the `.git` folder in your template's project folder. Then use THE CLI to create a `.pitrc` file in the root of your directory:
+
+We'll assume you're starting from a working project you'd like to turn into a template.
+
+To begin, you may want to separate your template from your project version control. You can simply copy your project files to a new directory. At POLITICO, we often take a shortcut: If you've already committed your project to GitHub, you can just delete the `.git` folder at your project's root directory and re-initialize your repo with `git init`.
+
+Next use THE CLI to create a `.pitrc` file in the root of your directory:
 
 ```
 $ pit make
 ```
 
-OR you can create the file manually, paste the following, and change the `name` to the name of your template:
+You can also create the file manually, paste the following, and change the `name` to the name of your template:
 
 ```javascript
 // .pitrc
@@ -22,30 +27,34 @@ module.exports = {
 
 Once PIT supports more than one rendering engine, you'll be able to replace the `renderer` value as well, but for now `ejs` is the only supported value.
 
-That's actually all you need to make your codebase a template, but you probably want to have some variable content.
+That's actually all you need to make your codebase a template, but you probably want to let your users customize parts of your codebase for their own projects. PIT makes that easy.
 
-For a quick breakdown of `.pitrc` options check out [these docs](pitrc.md). In this doc, we'll go through each option and provide a reasonable example of when you might use it. Remember, everything below this is optional.
+For a quick breakdown of `.pitrc` options check out [these docs](pitrc.md). For now, we'll go through some additional options to customize your template.
 
 ## `category`
 
-Users may have dozens of templates registered at some point, so to help organize them PIT comes with a way to categorize your templates. When a user runs `pit new` they will be prompted to find the template they're looking for by first filtering through categories. If your template doesn't have a `category` designated in its `.pitrc` file, it will go in the `Other` category automatically.
+If you're like us, your team will register dozens of templates. To help organize them, PIT lets you categorize your templates. Just set a `category` prop in your template's `.pitrc` file with the name of the category your template fits under.
 
-Note that if you change the category of your template, all your users will have to re-register your template to see that change.
+Now when users run `pit new`, PIT will ask them which category of template they'd like first. If your template doesn't have a `category` designated in its `.pitrc` file, it will go in a default `Other` category automatically.
+
+(Note that if you change the category of your template, all your users will have to re-register your template to see that change.)
 
 ## Context creators
 
 The context passed to your `renderer` will be a combination of the answers to user `prompts` and `statics` context defined by the developer of the template.
 
+You can use that context to customize your template files by using [EJS variables](https://ejs.co/#docs).
+
 ### `prompts`
 PIT provides an easy way to prompt your users for input and use those answers in your codebase.
 
-Set the `prompts` key to an empty array in the `export` of your `.pitrc`.
+Set the `prompts` key to an array in your template's `.pitrc`.
 
-Each item in `prompts` should be an object the follows the [`inquirer` question format](https://www.npmjs.com/package/inquirer#question). The `name` key in each item will be added to your template context when a user creates a new instance of your template.
+Each object in that `prompts` array should follow the [`inquirer` question format](https://www.npmjs.com/package/inquirer#question). The `name` key in each item will be part of your template context whenever a user creates a new project from your template.
 
 **IMPORTANT: The `name` of your prompts must be in camelCase if using the `ejs` renderer. Any dashes or spaces will throw an error when a user runs `pit new`.**
 
-For example, you might want a user to provide a name for their project. Your `prompts` could look something like this:
+Let's look at an example: You might want a user to provide a name for their project. Your `prompts` could look something like this:
 
 ```javascript
 // .pitrc
@@ -62,46 +71,48 @@ module.exports = {
 }
 ```
 
-Using the example above, `projectName` will be a variable available to you when writing your templates.
+Now when a user starts a new project from your template, they will be asked to provide a `projectName`. Once they give one, that variable will be available for rendering out new files from the template.
 
-For example, you might want the user's provided name to appear in their `README.md`. Make a file named `README.md` in your template and paste the following:
+For example, here's how you might that variable in a `README.md` file in your template:
 
 ```markdown
 # <%=projectName%>
 
-*Documentation coming soon...*
+*My new project documentation...*
 ```
 
 ### `statics`
-You can also provide variables that all instances of your template have available with the `statics` key in your `.pitrc` file. It should be an object with various keys and values. Those keys will then be variables when writing your templates. Remember that this is a JavaScript file, so any valid JavaScript values are acceptable.
 
-For example, you can add a `copyright` value and `year`:
+You can also provide variables that don't require any user input. Add these to a `statics` key in your `.pitrc` file.
+
+These keys will then be part of your context. Remember that this is a JavaScript file, so any valid JavaScript values are acceptable!
+
+For example, let's calculate the current `year` for use in a copyright:
 ```javascript
 // .pitrc
 module.exports = {
   ...
 
   statics: {
-    copyright: 'POLITICO',
     year: new Date().getFullYear()
   }
 }
 ```
 
-Then in your template's `README.md` you can use this like any other variable:
+Now in our template's `README.md` we can use that value:
 ```markdown
 
 _____
-© <%=copyright%> <%=year%>
+© POLITICO <%=year%>
 ```
 
 ## Path handlers
-While the content of your files will be passed through your selected `renderer`, managing which and how files make it from your template to your user's instance can be managed through `ignore` and `rename` respectively.
+You can manage which and how files make it from your template to your user's new project through a couple special path handler properties.
 
 ### `ignore`
-If you want files in your template's repo that shouldn't be downloaded and used in new instances of your template, you can define them using the `ignore` key in your `.pitrc`'s export. It should be an array of [`glob` strings](https://www.npmjs.com/package/glob#glob-primer).
+If you want to ignore certain files in your template's repo, you can add them to an array at an `ignore` key in your `.pitrc` file. You can ignore a specific file or any number of files by using [`glob` strings](https://www.npmjs.com/package/glob#glob-primer).
 
-For example, you might want a README for your template repo with instructions on using the template. In this case, you don't want this file to appear every time a user uses your template. To do this, you could add it to your ignore:
+For example, you have a README in your template's repo with instructions on using it with PIT to create a new project. That's good, but you don't necessarily want _that_ README copied into new projects.  To ignore it when copying over template files, add it to your `ignore` array:
 
 ```javascript
 // .pitrc
@@ -115,21 +126,28 @@ module.exports = {
 ```
 
 ### `rename`
-You may also want to rename directories, or files based with hard-coded rules or based on their input. That's where the `rename` key comes in which should be an object.
+You may also want to rename directories or files when copying them over to a new project. You can use the `rename` key.
 
-The keys correspond to the name (or parts of the name) of the directory or file names that should should be replaced. For example if your key is `a` then any `a` in filenames will be replaced with your value. For this reason, it's advised that you make these replacements more unique than single letters.
+Each key represents the file path _or part of a file path_ that should be replaced.
 
-The value can either be a string which is the replacement value, or a function receiving the template context as the only argument and returning the replacement value as a string.
+For example, if your key is the string `PROJECT` then any file with that string in its path will replace it with a new value.
+
+The value can either be a string or a function receiving the template context as the only argument and returning the replacement value as a string.
 
 #### String Replacement
 
-For example, if your template has it's own README you could ignore it in your templates output (see `ignore` above), and create a new file called `README_template.md` and fill that with the content of your user's template (see `prompts` above). Then in your `.pitrc` your can add this rename so that any files called `README_template.md` in your template will be called `README.md` when a user generates a new instance of your template:
+Let's revisit the example from `ignore` section. Your template has its own README but you'd like to copy a different template as the README in new projects.
+
+Let's say you put _that_ template in a file called `README_template.md`.
+
+Now, you can specify ignoring the template's README, and copying and renaming your project README in your `.pitrc`.
 
 ```javascript
 // .pitrc
 module.exports = {
   ...
 
+  ignore: ['README.md']
   rename: {
     "README_template.md": "README.md"
   }
@@ -138,7 +156,7 @@ module.exports = {
 
 #### Function Replacement
 
-For example, if your template has a folder that should be called the same as your user's project name you can use provide a function that returns the `projectName` of the template context:
+Let's say your template has a folder that should be renamed to whatever the `projectName` is. You can use your template's context to rename that file path.
 
 ```javascript
 // .pitrc
@@ -146,19 +164,19 @@ module.exports = {
   ...
 
   rename: {
-    "renameAsProjectName": context => context['projectName']
+    "RENAME_ME": context => context['projectName']
   }
 }
 ```
 
+Now a file in your template at `src/RENAME_ME/index.html` with a context of `{ projectName: 'myProject' }` will be renamed to `src/myProject/index.html`.
+
 ## `justCopy`
-There may be files that you want to copy as-is (i.e. without passing it through your render function). you can define them using the `justCopy` key in your `.pitrc`'s export. It should be an array of [`glob` strings](https://www.npmjs.com/package/glob#glob-primer).
+There may be files that you want to copy as-is, without passing it through your render function. You can define them using the `justCopy` key in your `.pitrc` file. You can specify individual files or files matching a pattern using [`glob` strings](https://www.npmjs.com/package/glob#glob-primer).
 
-Files that are binary (such as images) will not be rendered in any case (only copied) and don't need to be specified with this option.
+By default, PIT already "just copies" binary files like images.
 
-**IMPORTANT: Any files that match an `ignore` glob and a `justCopy` glob will be ignored, NOT copied.**
-
-For example, if your codebase template itself includes `ejs` template files that you want to stay as template files. In this case, you could put them all in a directory named `templates` and then include that directory as a `justCopy`.
+For example, let's say your template includes `ejs` template files that you don't want rendered when starting a new project. In that case, you could put them all in a directory named `templates` and then include that directory as a `justCopy`.
 
 ```javascript
 // .pitrc
@@ -172,14 +190,20 @@ module.exports = {
 ```
 
 ## Testing your template
-Once you have your template ready to go, run `pit test` (make sure you're at the root of your template directory when you do). If the test completes, that means your template works!
+Once you have your template ready to go, run `pit test` from the root of your template directory. If the test completes, that means your template is configured correctly!
 
 If you want to inspect the files produced by that test you can run `pit test --no-cleanup`. This will build the files in a directory named `.tmp.pit` in your template directory. You can then open it and make sure everything rendered correctly.
 
-Finally, if you want to be able to test your template with a set of dummy user-input data you can create a JSON file in your directory and then pass the path to this file as the first argument. For example, you can call it `test-data.json` and then run `pit test test-data.json`. Remember, you probably don't want this dummy data to be in the final template, so add it to your `ignore` files in your `.pitrc`.
+Finally, if you want to be able to test your template with context data, you can create a JSON file in your directory and then pass its path as the first argument to the test method.
 
-## Example template
-For example, consider a codebase that looks like this:
+```
+$ pit test test-context.json
+```
+
+(Remember, you probably don't want this test data to be in the final template, so add it to your `ignore` files in your `.pitrc`.)
+
+## Putting it all together
+Let's look at a complete example. Say your template looks like this:
 
 ```
 YOUR_TEMPLATE
@@ -296,3 +320,13 @@ _____
 © POLITICO 2019
 ```
 <br/>
+
+## Updating templates
+
+One of the main goals of PIT is to make updating templates easy. Every time you run `pit new`, PIT will pull down the latest version of the codebase from GitHub.
+
+That said, some of the configuration options set when a user first registers your template don't follow that rule.
+
+If your template's `category` changes, users will need to `pit register` the template again to catch that change.
+
+If you change your template's `name` and you `pit register` it again, you'll notice you  have two registered templates pointing to the same template. To remove one, you can simply run `pit unregister` and select the old name.
