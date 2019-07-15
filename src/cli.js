@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import yargs from 'yargs';
 import { readJSON } from 'fs-extra';
 import { newProject, register, unregister, make, test } from './scripts';
@@ -11,16 +10,16 @@ yargs // eslint-disable-line
   .scriptName('pit')
 
   // New
-  .command('new [template] [directory]', 'Creates a new project from a template.', (yargs) => {
+  .command('new [template] [destination]', 'Creates a new project from a template.', (yargs) => {
     yargs
       .positional('template', {
         alias: 't',
         describe: 'The template to use',
         type: 'string',
       })
-      .positional('directory', {
+      .positional('destination', {
         alias: 'd',
-        describe: 'A directory to put the new project',
+        describe: 'A destination to put the new project',
         type: 'string',
         default: '',
       })
@@ -30,12 +29,12 @@ yargs // eslint-disable-line
         type: 'boolean',
         default: true,
       });
-  }, async function({ template, directory, verbose }) {
+  }, async function({ template, destination, verbose }) {
     if (verbose) {
       await healthChecks();
     }
 
-    await newProject(template, directory, verbose);
+    await newProject(template, destination, verbose);
   })
 
   // Register
@@ -114,12 +113,12 @@ yargs // eslint-disable-line
       })
       .positional('templateDirectory', {
         alias: 't',
-        describe: 'The directory containing template files',
+        describe: 'The destination containing template files',
         type: 'string',
       })
       .positional('outputDirectory', {
         alias: 'o',
-        describe: 'The directory to save the template test files',
+        describe: 'The destination to save the template test files',
         type: 'string',
       })
       .option('cleanup', {

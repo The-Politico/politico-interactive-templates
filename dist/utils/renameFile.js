@@ -15,13 +15,7 @@ var _replaceFilepath2 = _interopRequireDefault(_replaceFilepath);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = (filepath, config) => {
-  let unrenderedFilepath = filepath.split('.tmp.pit/')[1];
-
-  if (!unrenderedFilepath) {
-    unrenderedFilepath = filepath;
-  }
-
-  let renderedFilepath = unrenderedFilepath;
+  let renderedFilepath = filepath;
   (0, _keys2.default)(config.rename).forEach(replace => {
     const replaceWith = config.rename[replace];
     renderedFilepath = (0, _replaceFilepath2.default)(renderedFilepath, replace, replaceWith, config.context);

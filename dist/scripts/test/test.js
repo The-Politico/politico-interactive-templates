@@ -16,13 +16,13 @@ var _rimraf = require("../../utils/rimraf");
 
 var _rimraf2 = _interopRequireDefault(_rimraf);
 
-var _getConfig = require("../../utils/getConfig");
+var _getGlobalConfig = require("../../utils/getGlobalConfig");
 
-var _getConfig2 = _interopRequireDefault(_getConfig);
+var _getGlobalConfig2 = _interopRequireDefault(_getGlobalConfig);
 
-var _outputConfig = require("../../utils/outputConfig");
+var _outputGlobalConfig = require("../../utils/outputGlobalConfig");
 
-var _outputConfig2 = _interopRequireDefault(_outputConfig);
+var _outputGlobalConfig2 = _interopRequireDefault(_outputGlobalConfig);
 
 var _testing = require("../../constants/testing");
 
@@ -43,8 +43,8 @@ describe('Test - No Cleanup', () => {
   let globalConfig;
   const dir = 'test/test-no-cleanup';
   before(async function () {
-    globalConfig = await (0, _getConfig2.default)();
-    await (0, _outputConfig2.default)(emptyConfig);
+    globalConfig = await (0, _getGlobalConfig2.default)();
+    await (0, _outputGlobalConfig2.default)(emptyConfig);
     await (0, _Scripts.register)(_testing.testTemplateRepo, false);
     await (0, _new.setup)(_testing.testTemplateName, dir, false);
   });
@@ -58,7 +58,7 @@ describe('Test - No Cleanup', () => {
     (0, _expect2.default)(files).to.contain('test/test-no-cleanup/README.md');
   });
   after(async function () {
-    await (0, _outputConfig2.default)(globalConfig);
+    await (0, _outputGlobalConfig2.default)(globalConfig);
     await (0, _rimraf2.default)(dir);
   });
 });
@@ -66,8 +66,8 @@ describe('Test - With Cleanup', () => {
   let globalConfig;
   const dir = 'test/test-with-cleanup';
   before(async function () {
-    globalConfig = await (0, _getConfig2.default)();
-    await (0, _outputConfig2.default)(emptyConfig);
+    globalConfig = await (0, _getGlobalConfig2.default)();
+    await (0, _outputGlobalConfig2.default)(emptyConfig);
     await (0, _Scripts.register)(_testing.testTemplateRepo, false);
     await (0, _new.setup)(_testing.testTemplateName, dir, false);
   });
@@ -81,7 +81,7 @@ describe('Test - With Cleanup', () => {
     (0, _expect2.default)(files).to.not.contain('test/test/README.md');
   });
   after(async function () {
-    await (0, _outputConfig2.default)(globalConfig);
+    await (0, _outputGlobalConfig2.default)(globalConfig);
     await (0, _rimraf2.default)(dir);
   });
 });

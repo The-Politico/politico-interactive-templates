@@ -1,4 +1,4 @@
-import meta from 'Meta';
+import meta from '../../package.json';
 import npm from 'npm-api';
 import chalk from 'chalk';
 

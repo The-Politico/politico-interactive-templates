@@ -4,13 +4,13 @@ var _expect = require("expect.js");
 
 var _expect2 = _interopRequireDefault(_expect);
 
-var _getConfig = require("../../utils/getConfig");
+var _getGlobalConfig = require("../../utils/getGlobalConfig");
 
-var _getConfig2 = _interopRequireDefault(_getConfig);
+var _getGlobalConfig2 = _interopRequireDefault(_getGlobalConfig);
 
-var _outputConfig = require("../../utils/outputConfig");
+var _outputGlobalConfig = require("../../utils/outputGlobalConfig");
 
-var _outputConfig2 = _interopRequireDefault(_outputConfig);
+var _outputGlobalConfig2 = _interopRequireDefault(_outputGlobalConfig);
 
 var _testing = require("../../constants/testing");
 
@@ -24,18 +24,18 @@ const emptyConfig = {
 describe('Unregister', () => {
   let globalConfig;
   before(async function () {
-    globalConfig = await (0, _getConfig2.default)();
-    await (0, _outputConfig2.default)(emptyConfig);
-    await (0, _Scripts.register)(_testing.testTemplateRepo, false);
+    globalConfig = await (0, _getGlobalConfig2.default)();
+    await (0, _outputGlobalConfig2.default)(emptyConfig);
+    await (0, _Scripts.register)(_testing.testTemplatePath, false);
   });
   it('Unregisters templates', async function () {
-    let config = await (0, _getConfig2.default)();
+    let config = await (0, _getGlobalConfig2.default)();
     (0, _expect2.default)(config.templates).to.have.property(_testing.testTemplateName);
     await (0, _Scripts.unregister)(_testing.testTemplateName, false);
-    config = await (0, _getConfig2.default)();
+    config = await (0, _getGlobalConfig2.default)();
     (0, _expect2.default)(config.templates).to.not.have.property(_testing.testTemplateName);
   });
   after(async function () {
-    await (0, _outputConfig2.default)(globalConfig);
+    await (0, _outputGlobalConfig2.default)(globalConfig);
   });
 });

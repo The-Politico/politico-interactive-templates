@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 "use strict";
 
 var _yargs = require("yargs");
@@ -18,14 +17,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 console.log('\nWelcome to Politico Interactive Templates!');
 _yargs2.default // eslint-disable-line
 .help().scriptName('pit') // New
-.command('new [template] [directory]', 'Creates a new project from a template.', yargs => {
+.command('new [template] [destination]', 'Creates a new project from a template.', yargs => {
   yargs.positional('template', {
     alias: 't',
     describe: 'The template to use',
     type: 'string'
-  }).positional('directory', {
+  }).positional('destination', {
     alias: 'd',
-    describe: 'A directory to put the new project',
+    describe: 'A destination to put the new project',
     type: 'string',
     default: ''
   }).option('verbose', {
@@ -36,14 +35,14 @@ _yargs2.default // eslint-disable-line
   });
 }, async function ({
   template,
-  directory,
+  destination,
   verbose
 }) {
   if (verbose) {
     await (0, _healthChecks2.default)();
   }
 
-  await (0, _scripts.newProject)(template, directory, verbose);
+  await (0, _scripts.newProject)(template, destination, verbose);
 }) // Register
 .command('register [path]', 'Registers new templates for use.', yargs => {
   yargs.positional('path', {
@@ -115,11 +114,11 @@ _yargs2.default // eslint-disable-line
     type: 'string'
   }).positional('templateDirectory', {
     alias: 't',
-    describe: 'The directory containing template files',
+    describe: 'The destination containing template files',
     type: 'string'
   }).positional('outputDirectory', {
     alias: 'o',
-    describe: 'The directory to save the template test files',
+    describe: 'The destination to save the template test files',
     type: 'string'
   }).option('cleanup', {
     alias: 'c',

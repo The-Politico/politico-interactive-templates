@@ -10,6 +10,8 @@ var _path2 = _interopRequireDefault(_path);
 
 var _new = require("../new");
 
+var _new2 = _interopRequireDefault(_new);
+
 var _cwd = require("../../utils/cwd");
 
 var _cwd2 = _interopRequireDefault(_cwd);
@@ -34,14 +36,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @return {Promise} Resolves when files are built
  */
 const test = async function (context, templateDirectory = '', outputDirectory = '.tmp.pit', cleanup = true, verbose = true) {
+  let templateConfig;
+
   try {
-    require(_path2.default.join(_cwd2.default, templateDirectory, '.pitrc'));
+    templateConfig = require(_path2.default.join(_cwd2.default, templateDirectory, '.pitrc'));
   } catch (err) {
     console.error(_chalk2.default.yellow(`Looks like there's something wrong with your ".pitrc" file`));
     throw err;
   }
 
-  await (0, _new.build)(context, templateDirectory, outputDirectory, verbose);
+  await (0, _new2.default)('', outputDirectory, true, context, templateConfig);
 
   if (cleanup) {
     await (0, _rimraf2.default)(outputDirectory);

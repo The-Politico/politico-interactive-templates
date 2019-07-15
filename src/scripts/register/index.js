@@ -1,9 +1,9 @@
-import path from 'path';
-import getConfig from 'Utils/getConfig';
-import outputConfig from 'Utils/outputConfig';
-import downloadRepo from 'Utils/downloadRepo';
-import rimraf from 'Utils/rimraf';
-import cwd from 'Utils/cwd';
+import chalk from 'chalk';
+import parseRepoPath from 'Utils/parseRepoPath';
+import getGlobalConfig from 'Utils/getGlobalConfig';
+import getRepoConfig from 'Utils/getRepoConfig';
+import outputGlobalConfig from 'Utils/outputGlobalConfig';
+import { Logger } from 'Utils/console';
 import * as q from './questions';
 
 /**
@@ -14,6 +14,11 @@ import * as q from './questions';
  * @return {Promise} Resolves when the template is registered
  */
 const register = async function(githubPath, verbose = true, tmpName = '.tmp.pit') {
+  // Set up logger
+  const logger = new Logger({ verbose });
+  const log = logger.log;
+
+  // Check for required args
   if (!githubPath) {
     if (verbose) {
       githubPath = await q.path();
@@ -22,35 +27,20 @@ const register = async function(githubPath, verbose = true, tmpName = '.tmp.pit'
     }
   }
 
-  let globalConfig = await getConfig();
-
+  // Get/make the global config file
+  let globalConfig = await getGlobalConfig();
   if (globalConfig === undefined) {
     globalConfig = {};
   }
-
   if (!('templates' in globalConfig)) {
     globalConfig.templates = {};
   }
 
-  let name = null;
-  let category = null;
-  try {
-    await rimraf(tmpName);
-    await downloadRepo(githubPath, undefined, verbose, tmpName);
-    const pitrc = require(path.join(cwd, tmpName, '.pitrc'));
-    name = pitrc.name ? pitrc.name : null;
-    category = pitrc.category ? pitrc.category : null;
-  } catch (err) {
-    await rimraf(tmpName);
-
-    if (verbose) {
-      console.error('There was a problem reading your .pitrc file. Make sure it\'s written in valid node syntax.');
-    }
-
-    throw err;
-  }
-
-  await rimraf(tmpName);
+  // Get the name/category from the repo's config
+  const repoInfo = parseRepoPath(githubPath);
+  const pitrc = await getRepoConfig(repoInfo);
+  const name = pitrc.name ? pitrc.name : null;
+  const category = pitrc.category ? pitrc.category : null;
 
   if (name in globalConfig.templates) {
     if (verbose) {
@@ -62,14 +52,13 @@ const register = async function(githubPath, verbose = true, tmpName = '.tmp.pit'
   }
 
   globalConfig.templates[name] = {
-    path: githubPath,
+    owner: repoInfo.owner,
+    repo: repoInfo.repo,
     category,
   };
-  await outputConfig(globalConfig);
+  await outputGlobalConfig(globalConfig);
 
-  if (verbose) {
-    console.log(`Success! Your template, ${name}, has been registered. Run "pit new" to generate a new project.`);
-  }
+  log(`Your template, ${name}, has been registered. Run "pit new" to generate a new project.`, 'success');
 };
 
 export default register;

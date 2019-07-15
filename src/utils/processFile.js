@@ -1,36 +1,51 @@
 import path from 'path';
-import fs from 'fs-extra';
-import merge from 'lodash/merge';
-import { isBinary } from 'istextorbinary';
+import includes from 'lodash/includes';
+import ignore from 'ignore';
+import globalIgnores from 'Constants/ignores';
 import renameFile from './renameFile';
 
-const processFile = async function(filepath, options, shouldRender = true) {
-  const defaults = {
-    renderer: () => '',
-    directory: '',
-    context: {},
-    rename: {},
-  };
+const BINARY_EXTENSIONS = ['png', 'jpg', 'tiff', 'wav', 'mp3', 'doc', 'pdf', 'ai'];
 
-  const config = merge({}, defaults, options);
+function hasBinaryExtension(filename) {
+  return BINARY_EXTENSIONS.some(ext => includes(filename, `.${ext}`));
+}
 
-  const renderedFilepath = path.join(config.directory, renameFile(filepath, config));
+export async function toFile(data, opts) {
+  const { content, encoding, name, path: repoFilePath } = data;
+  const { destination, templateConfig, renderer, context } = opts;
 
-  await fs.ensureDir(config.directory);
-
-  if (shouldRender && !isBinary(filepath)) {
-    const fileText = await fs.readFile(filepath, 'utf8');
-    let renderedFile = '';
-    try {
-      renderedFile = config.renderer(fileText, config.context);
-    } catch (err) {
-      console.error(`There was a problem rendering ${filepath}.`);
-      throw err;
-    }
-    await fs.outputFile(renderedFilepath, renderedFile, { flag: 'w' });
-  } else {
-    await fs.copy(filepath, renderedFilepath);
+  // Ignore ignored files
+  const ig = ignore().add(
+    Array.isArray(templateConfig.ignore) ? [...globalIgnores, ...templateConfig.ignore] : globalIgnores
+  );
+  if (ig.ignores(repoFilePath)) {
+    return null;
   }
-};
 
-export default processFile;
+  // Set up justCopy ignored files
+  const jc = ignore().add(templateConfig.justCopy || []);
+
+  let file;
+  if (hasBinaryExtension(name)) {
+    file = Buffer.from(content, encoding);
+  } else {
+    file = Buffer.from(content, encoding).toString('utf8');
+    if (!jc.ignores(repoFilePath)) { // not ignoring means the file should be processed:
+      try {
+        file = renderer(file, context);
+      } catch (err) {
+        console.error(`There was a problem rendering ${repoFilePath}.`);
+        throw err;
+      }
+    }
+  }
+
+  const renderedFilepath = path.join(destination, renameFile(repoFilePath, { rename: templateConfig.rename, context }));
+
+  return { path: renderedFilepath, content: file };
+}
+
+export async function toString(data) {
+  const text = Buffer.from(data.content, data.encoding).toString('utf8');
+  return text;
+}

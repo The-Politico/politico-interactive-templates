@@ -2,11 +2,11 @@ import expect from 'expect.js';
 import path from 'path';
 import glob from 'glob';
 import rimraf from 'Utils/rimraf';
-import getConfig from 'Utils/getConfig';
-import outputConfig from 'Utils/outputConfig';
-import { testTemplateName, testTemplateRepo } from 'Constants/testing';
+import getGlobalConfig from 'Utils/getGlobalConfig';
+import outputGlobalConfig from 'Utils/outputGlobalConfig';
+import spawn from 'Utils/spawn';
+import { testTemplateName, testTemplatePath } from 'Constants/testing';
 import { register, test } from 'Scripts';
-import { setup } from 'Scripts/new';
 
 const emptyConfig = { templates: {} };
 
@@ -16,14 +16,10 @@ const context = {
 };
 
 describe('Test - No Cleanup', () => {
-  let globalConfig;
   const dir = 'test/test-no-cleanup';
 
   before(async function() {
-    globalConfig = await getConfig();
-    await outputConfig(emptyConfig);
-    await register(testTemplateRepo, false);
-    await setup(testTemplateName, dir, false);
+    await spawn('git', ['clone', testTemplatePath, path.join(dir, '.tmp.pit')], false);
   });
 
   it('Tests templates', async function() {
@@ -34,20 +30,15 @@ describe('Test - No Cleanup', () => {
   });
 
   after(async function() {
-    await outputConfig(globalConfig);
     await rimraf(dir);
   });
 });
 
 describe('Test - With Cleanup', () => {
-  let globalConfig;
   const dir = 'test/test-with-cleanup';
 
   before(async function() {
-    globalConfig = await getConfig();
-    await outputConfig(emptyConfig);
-    await register(testTemplateRepo, false);
-    await setup(testTemplateName, dir, false);
+    await spawn('git', ['clone', testTemplatePath, path.join(dir, '.tmp.pit')], false);
   });
 
   it('Cleans up once the test finishes', async function() {
@@ -58,7 +49,6 @@ describe('Test - With Cleanup', () => {
   });
 
   after(async function() {
-    await outputConfig(globalConfig);
     await rimraf(dir);
   });
 });

@@ -3,20 +3,24 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.toFile = toFile;
+exports.toString = toString;
 
 var _path = require("path");
 
 var _path2 = _interopRequireDefault(_path);
 
-var _fsExtra = require("fs-extra");
+var _includes = require("lodash/includes");
 
-var _fsExtra2 = _interopRequireDefault(_fsExtra);
+var _includes2 = _interopRequireDefault(_includes);
 
-var _merge = require("lodash/merge");
+var _ignore = require("ignore");
 
-var _merge2 = _interopRequireDefault(_merge);
+var _ignore2 = _interopRequireDefault(_ignore);
 
-var _istextorbinary = require("istextorbinary");
+var _ignores = require("../constants/ignores");
+
+var _ignores2 = _interopRequireDefault(_ignores);
 
 var _renameFile = require("./renameFile");
 
@@ -24,36 +28,64 @@ var _renameFile2 = _interopRequireDefault(_renameFile);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const processFile = async function (filepath, options, shouldRender = true) {
-  const defaults = {
-    renderer: () => '',
-    directory: '',
-    context: {},
-    rename: {}
-  };
-  const config = (0, _merge2.default)({}, defaults, options);
+const BINARY_EXTENSIONS = ['png', 'jpg', 'tiff', 'wav', 'mp3', 'doc', 'pdf', 'ai'];
 
-  const renderedFilepath = _path2.default.join(config.directory, (0, _renameFile2.default)(filepath, config));
+function hasBinaryExtension(filename) {
+  return BINARY_EXTENSIONS.some(ext => (0, _includes2.default)(filename, `.${ext}`));
+}
 
-  await _fsExtra2.default.ensureDir(config.directory);
+async function toFile(data, opts) {
+  const {
+    content,
+    encoding,
+    name,
+    path: repoFilePath
+  } = data;
+  const {
+    destination,
+    templateConfig,
+    renderer,
+    context
+  } = opts; // Ignore ignored files
 
-  if (shouldRender && !(0, _istextorbinary.isBinary)(filepath)) {
-    const fileText = await _fsExtra2.default.readFile(filepath, 'utf8');
-    let renderedFile = '';
+  const ig = (0, _ignore2.default)().add(Array.isArray(templateConfig.ignore) ? [..._ignores2.default, ...templateConfig.ignore] : _ignores2.default);
 
-    try {
-      renderedFile = config.renderer(fileText, config.context);
-    } catch (err) {
-      console.error(`There was a problem rendering ${filepath}.`);
-      throw err;
-    }
+  if (ig.ignores(repoFilePath)) {
+    return null;
+  } // Set up justCopy ignored files
 
-    await _fsExtra2.default.outputFile(renderedFilepath, renderedFile, {
-      flag: 'w'
-    });
+
+  const jc = (0, _ignore2.default)().add(templateConfig.justCopy || []);
+  let file;
+
+  if (hasBinaryExtension(name)) {
+    file = Buffer.from(content, encoding);
   } else {
-    await _fsExtra2.default.copy(filepath, renderedFilepath);
-  }
-};
+    file = Buffer.from(content, encoding).toString('utf8');
 
-exports.default = processFile;
+    if (!jc.ignores(repoFilePath)) {
+      // not ignoring means the file should be processed:
+      try {
+        file = renderer(file, context);
+      } catch (err) {
+        console.error(`There was a problem rendering ${repoFilePath}.`);
+        throw err;
+      }
+    }
+  }
+
+  const renderedFilepath = _path2.default.join(destination, (0, _renameFile2.default)(repoFilePath, {
+    rename: templateConfig.rename,
+    context
+  }));
+
+  return {
+    path: renderedFilepath,
+    content: file
+  };
+}
+
+async function toString(data) {
+  const text = Buffer.from(data.content, data.encoding).toString('utf8');
+  return text;
+}

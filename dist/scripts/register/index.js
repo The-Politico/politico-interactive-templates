@@ -4,29 +4,27 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _path = require("path");
+var _chalk = require("chalk");
 
-var _path2 = _interopRequireDefault(_path);
+var _chalk2 = _interopRequireDefault(_chalk);
 
-var _getConfig = require("../../utils/getConfig");
+var _parseRepoPath = require("../../utils/parseRepoPath");
 
-var _getConfig2 = _interopRequireDefault(_getConfig);
+var _parseRepoPath2 = _interopRequireDefault(_parseRepoPath);
 
-var _outputConfig = require("../../utils/outputConfig");
+var _getGlobalConfig = require("../../utils/getGlobalConfig");
 
-var _outputConfig2 = _interopRequireDefault(_outputConfig);
+var _getGlobalConfig2 = _interopRequireDefault(_getGlobalConfig);
 
-var _downloadRepo = require("../../utils/downloadRepo");
+var _getRepoConfig = require("../../utils/getRepoConfig");
 
-var _downloadRepo2 = _interopRequireDefault(_downloadRepo);
+var _getRepoConfig2 = _interopRequireDefault(_getRepoConfig);
 
-var _rimraf = require("../../utils/rimraf");
+var _outputGlobalConfig = require("../../utils/outputGlobalConfig");
 
-var _rimraf2 = _interopRequireDefault(_rimraf);
+var _outputGlobalConfig2 = _interopRequireDefault(_outputGlobalConfig);
 
-var _cwd = require("../../utils/cwd");
-
-var _cwd2 = _interopRequireDefault(_cwd);
+var _console = require("../../utils/console");
 
 var _questions = require("./questions");
 
@@ -44,15 +42,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @return {Promise} Resolves when the template is registered
  */
 const register = async function (githubPath, verbose = true, tmpName = '.tmp.pit') {
+  // Set up logger
+  const logger = new _console.Logger({
+    verbose
+  });
+  const log = logger.log; // Check for required args
+
   if (!githubPath) {
     if (verbose) {
       githubPath = await q.path();
     } else {
       throw new Error('Missing first argument: "githubPath"');
     }
-  }
+  } // Get/make the global config file
 
-  let globalConfig = await (0, _getConfig2.default)();
+
+  let globalConfig = await (0, _getGlobalConfig2.default)();
 
   if (globalConfig === undefined) {
     globalConfig = {};
@@ -60,30 +65,13 @@ const register = async function (githubPath, verbose = true, tmpName = '.tmp.pit
 
   if (!('templates' in globalConfig)) {
     globalConfig.templates = {};
-  }
+  } // Get the name/category from the repo's config
 
-  let name = null;
-  let category = null;
 
-  try {
-    await (0, _rimraf2.default)(tmpName);
-    await (0, _downloadRepo2.default)(githubPath, undefined, verbose, tmpName);
-
-    const pitrc = require(_path2.default.join(_cwd2.default, tmpName, '.pitrc'));
-
-    name = pitrc.name ? pitrc.name : null;
-    category = pitrc.category ? pitrc.category : null;
-  } catch (err) {
-    await (0, _rimraf2.default)(tmpName);
-
-    if (verbose) {
-      console.error('There was a problem reading your .pitrc file. Make sure it\'s written in valid node syntax.');
-    }
-
-    throw err;
-  }
-
-  await (0, _rimraf2.default)(tmpName);
+  const repoInfo = (0, _parseRepoPath2.default)(githubPath);
+  const pitrc = await (0, _getRepoConfig2.default)(repoInfo);
+  const name = pitrc.name ? pitrc.name : null;
+  const category = pitrc.category ? pitrc.category : null;
 
   if (name in globalConfig.templates) {
     if (verbose) {
@@ -98,14 +86,12 @@ const register = async function (githubPath, verbose = true, tmpName = '.tmp.pit
   }
 
   globalConfig.templates[name] = {
-    path: githubPath,
+    owner: repoInfo.owner,
+    repo: repoInfo.repo,
     category
   };
-  await (0, _outputConfig2.default)(globalConfig);
-
-  if (verbose) {
-    console.log(`Success! Your template, ${name}, has been registered. Run "pit new" to generate a new project.`);
-  }
+  await (0, _outputGlobalConfig2.default)(globalConfig);
+  log(`Your template, ${name}, has been registered. Run "pit new" to generate a new project.`, 'success');
 };
 
 exports.default = register;

@@ -1,7 +1,7 @@
 import expect from 'expect.js';
-import getConfig from 'Utils/getConfig';
-import outputConfig from 'Utils/outputConfig';
-import { testTemplateName, testTemplateRepo } from 'Constants/testing';
+import getGlobalConfig from 'Utils/getGlobalConfig';
+import outputGlobalConfig from 'Utils/outputGlobalConfig';
+import { testTemplateName, testTemplatePath } from 'Constants/testing';
 
 import { register, unregister } from 'Scripts';
 
@@ -11,21 +11,21 @@ describe('Unregister', () => {
   let globalConfig;
 
   before(async function() {
-    globalConfig = await getConfig();
-    await outputConfig(emptyConfig);
-    await register(testTemplateRepo, false);
+    globalConfig = await getGlobalConfig();
+    await outputGlobalConfig(emptyConfig);
+    await register(testTemplatePath, false);
   });
 
   it('Unregisters templates', async function() {
-    let config = await getConfig();
+    let config = await getGlobalConfig();
     expect(config.templates).to.have.property(testTemplateName);
     await unregister(testTemplateName, false);
 
-    config = await getConfig();
+    config = await getGlobalConfig();
     expect(config.templates).to.not.have.property(testTemplateName);
   });
 
   after(async function() {
-    await outputConfig(globalConfig);
+    await outputGlobalConfig(globalConfig);
   });
 });

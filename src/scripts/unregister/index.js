@@ -1,6 +1,6 @@
-import getConfig from 'Utils/getConfig';
-import outputConfig from 'Utils/outputConfig';
-import getTemplate from 'Utils/getTemplate';
+import getGlobalConfig from 'Utils/getGlobalConfig';
+import outputGlobalConfig from 'Utils/outputGlobalConfig';
+import promptTemplate from 'Utils/promptTemplate/index.js';
 
 /**
  * Removes a template from the user's global .pitrc file
@@ -9,11 +9,11 @@ import getTemplate from 'Utils/getTemplate';
  * @return {Promise} Resolves when the template is removed
  */
 const unregister = async function(name, verbose = true) {
-  const globalConfig = await getConfig();
+  const globalConfig = await getGlobalConfig();
 
   if (!name) {
     if (verbose) {
-      name = await getTemplate(globalConfig.templates);
+      name = await promptTemplate(globalConfig.templates);
       if (!name) {
         return false;
       }
@@ -24,7 +24,7 @@ const unregister = async function(name, verbose = true) {
 
   if (name in globalConfig.templates) {
     delete globalConfig.templates[name];
-    await outputConfig(globalConfig);
+    await outputGlobalConfig(globalConfig);
 
     if (verbose) {
       console.log(`Success! Your template, "${name}", has been unregistered.`);

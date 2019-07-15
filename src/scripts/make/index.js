@@ -1,5 +1,6 @@
 import assign from 'lodash/assign';
 import { exists, outputFile } from 'fs-extra';
+import { Logger } from 'Utils/console';
 import * as q from './questions';
 import defaultConfig from './default';
 
@@ -9,7 +10,11 @@ import defaultConfig from './default';
  * @param {boolean} [verbose=true] - Whether to log outputs and prompt for inputs
  * @return {Promise} Resolves when .pitrc is built
  */
-const make = async function(name, verbose = true) {
+export default async function(name, verbose = true) {
+  // Set up logger
+  const logger = new Logger({ verbose });
+  const log = logger.log;
+
   if (await exists('.pitrc')) {
     throw new Error('.pitrc file already exists.');
   }
@@ -26,8 +31,6 @@ const make = async function(name, verbose = true) {
   await outputFile('.pitrc', `module.exports = ${JSON.stringify(config, null, 2)}`);
 
   if (verbose) {
-    console.log(`New .pitrc file created.`);
+    log(`New .pitrc file created.`);
   }
 };
-
-export default make;

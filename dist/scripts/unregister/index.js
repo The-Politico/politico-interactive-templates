@@ -4,17 +4,17 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _getConfig = require("../../utils/getConfig");
+var _getGlobalConfig = require("../../utils/getGlobalConfig");
 
-var _getConfig2 = _interopRequireDefault(_getConfig);
+var _getGlobalConfig2 = _interopRequireDefault(_getGlobalConfig);
 
-var _outputConfig = require("../../utils/outputConfig");
+var _outputGlobalConfig = require("../../utils/outputGlobalConfig");
 
-var _outputConfig2 = _interopRequireDefault(_outputConfig);
+var _outputGlobalConfig2 = _interopRequireDefault(_outputGlobalConfig);
 
-var _getTemplate = require("../../utils/getTemplate");
+var _index = require("../../utils/promptTemplate/index.js");
 
-var _getTemplate2 = _interopRequireDefault(_getTemplate);
+var _index2 = _interopRequireDefault(_index);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -25,11 +25,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @return {Promise} Resolves when the template is removed
  */
 const unregister = async function (name, verbose = true) {
-  const globalConfig = await (0, _getConfig2.default)();
+  const globalConfig = await (0, _getGlobalConfig2.default)();
 
   if (!name) {
     if (verbose) {
-      name = await (0, _getTemplate2.default)(globalConfig.templates);
+      name = await (0, _index2.default)(globalConfig.templates);
 
       if (!name) {
         return false;
@@ -41,7 +41,7 @@ const unregister = async function (name, verbose = true) {
 
   if (name in globalConfig.templates) {
     delete globalConfig.templates[name];
-    await (0, _outputConfig2.default)(globalConfig);
+    await (0, _outputGlobalConfig2.default)(globalConfig);
 
     if (verbose) {
       console.log(`Success! Your template, "${name}", has been unregistered.`);

@@ -5,10 +5,15 @@ import glob from 'glob';
 import run, { DOWN, ENTER } from 'inquirer-test';
 
 import rimraf from 'Utils/rimraf';
-import { setup, build, cleanup } from './index';
-import getConfig from 'Utils/getConfig';
-import outputConfig from 'Utils/outputConfig';
-import { testTemplateName, testTemplateRepo, testSnippetTemplateName, testSnippetTemplateRepo } from 'Constants/testing';
+import newProject from './index';
+import getGlobalConfig from 'Utils/getGlobalConfig';
+import outputGlobalConfig from 'Utils/outputGlobalConfig';
+import {
+  testTemplateName,
+  testTemplatePath,
+  testSnippetTemplatePath,
+  testSnippetTemplateName
+} from 'Constants/testing';
 
 import register from 'Scripts/register/index';
 
@@ -19,47 +24,23 @@ const context = {
 
 const emptyConfig = { templates: {} };
 
-describe('New - Setup: Downloads Template Repo', () => {
-  let globalConfig;
-  const dir = 'test/setup';
-
-  before(async function() {
-    globalConfig = await getConfig();
-    await outputConfig(emptyConfig);
-    await register(testTemplateRepo, false);
-    await setup(testTemplateName, dir, false);
-  });
-
-  it('Downloads files', async function() {
-    const files = glob.sync(path.join(dir, '.tmp.pit', '**'), { dot: true });
-    expect(files.length).to.be.greaterThan(0);
-    expect(files).to.contain(path.join(dir, '.tmp.pit/README.md'));
-  });
-
-  after(async function() {
-    await outputConfig(globalConfig);
-    rimraf(dir);
-  });
-});
-
 describe('New - Build: Builds Template Files', () => {
   let globalConfig;
   const dir = 'test/build';
   let files;
 
   before(async function() {
-    globalConfig = await getConfig();
-    await outputConfig(emptyConfig);
-    await register(testTemplateRepo, false);
-    await setup(testTemplateName, dir, false);
-    await build(context, path.join(dir, '.tmp.pit'), dir, false);
+    globalConfig = await getGlobalConfig();
+    await rimraf(dir);
+    await outputGlobalConfig(emptyConfig);
+    await register(testTemplatePath, false);
+    await newProject(testTemplateName, dir, false, context);
 
     files = glob.sync(path.join(dir, '**'), { dot: true });
   });
 
   it('Makes files', async function() {
     expect(files.length).to.be.greaterThan(0);
-    expect(files).to.contain(path.join(dir, '.tmp.pit/README.md'));
   });
 
   it('Writes context into files', async function() {
@@ -107,31 +88,7 @@ describe('New - Build: Builds Template Files', () => {
   });
 
   after(async function() {
-    await outputConfig(globalConfig);
-    rimraf(dir);
-  });
-});
-
-describe('New - Cleanup: Deletes Template Repo', () => {
-  let globalConfig;
-  const dir = 'test/cleanup';
-
-  before(async function() {
-    globalConfig = await getConfig();
-    await outputConfig(emptyConfig);
-    await register(testTemplateRepo, false);
-    await setup(testTemplateName, dir, false);
-    await build(context, path.join(dir, '.tmp.pit'), dir, false);
-    await cleanup(dir, false);
-  });
-
-  it('Deletes files', async function() {
-    const files = glob.sync(path.join(dir, '.tmp.pit', '**'), { dot: true });
-    expect(files.length).to.be(0);
-  });
-
-  after(async function() {
-    await outputConfig(globalConfig);
+    await outputGlobalConfig(globalConfig);
     rimraf(dir);
   });
 });
@@ -141,15 +98,13 @@ describe('New - Snippets', () => {
   const dir = 'test/snippets';
 
   before(async function() {
-    globalConfig = await getConfig();
-    await outputConfig(emptyConfig);
-    await outputConfig(globalConfig);
-    await register(testSnippetTemplateRepo, false, '.tmp.pit.snippet');
-    await setup(testSnippetTemplateName, dir, false);
+    globalConfig = await getGlobalConfig();
+    await outputGlobalConfig(emptyConfig);
+    await outputGlobalConfig(globalConfig);
+    await register(testSnippetTemplatePath, false);
 
-    await build({ name: 'one', content: 'good' }, path.join(dir, '.tmp.pit'), dir, false);
-    await build({ name: 'two', content: 'good' }, path.join(dir, '.tmp.pit'), dir, false);
-    await cleanup(dir, false);
+    await newProject(testSnippetTemplateName, dir, false, { name: 'one', content: 'good' });
+    await newProject(testSnippetTemplateName, dir, false, { name: 'two', content: 'good' });
   });
 
   it('Merges existing file structure with new files', async function() {
@@ -160,9 +115,9 @@ describe('New - Snippets', () => {
 
   it('Fails if conflicts appear', async function() {
     try {
-      await build({ name: 'one', content: 'bad' }, path.join(dir, '.tmp.pit'), dir, false);
+      await newProject(testSnippetTemplateName, dir, false, { name: 'one', content: 'bad' });
     } catch (err) {
-      expect(err.message).to.be(`"src/components/one/touch" already exists. Aborting template creation. No files were created.`);
+      expect(err.message).to.be(`"${path.join(dir, 'src/components/one/touch')}" already exists. Aborting template creation. No files were created.`);
     }
 
     const file = fs.readFileSync(path.join(dir, 'src/components/one/touch')).toString('utf-8');
@@ -170,7 +125,7 @@ describe('New - Snippets', () => {
   });
 
   after(async function() {
-    await outputConfig(globalConfig);
+    await outputGlobalConfig(globalConfig);
     await rimraf(dir);
   });
 });
@@ -181,10 +136,10 @@ describe('New - CLI', () => {
   const cliPath = path.join(process.cwd(), 'dist/cli.js');
 
   before(async function() {
-    globalConfig = await getConfig();
-    await outputConfig(emptyConfig);
-    await register(testTemplateRepo, false);
-    await register(testSnippetTemplateRepo, false, '.tmp.pit.snippet');
+    globalConfig = await getGlobalConfig();
+    await outputGlobalConfig(emptyConfig);
+    await register(testTemplatePath, false);
+    await register(testSnippetTemplatePath, false);
   });
 
   it('Handles templates by category', async function() {
@@ -220,7 +175,7 @@ describe('New - CLI', () => {
   });
 
   after(async function() {
-    await outputConfig(globalConfig);
+    await outputGlobalConfig(globalConfig);
     await rimraf(baseDir);
   });
 });
