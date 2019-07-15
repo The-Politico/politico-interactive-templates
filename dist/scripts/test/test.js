@@ -16,37 +16,24 @@ var _rimraf = require("../../utils/rimraf");
 
 var _rimraf2 = _interopRequireDefault(_rimraf);
 
-var _getGlobalConfig = require("../../utils/getGlobalConfig");
+var _spawn = require("../../utils/spawn");
 
-var _getGlobalConfig2 = _interopRequireDefault(_getGlobalConfig);
-
-var _outputGlobalConfig = require("../../utils/outputGlobalConfig");
-
-var _outputGlobalConfig2 = _interopRequireDefault(_outputGlobalConfig);
+var _spawn2 = _interopRequireDefault(_spawn);
 
 var _testing = require("../../constants/testing");
 
 var _Scripts = require("..");
 
-var _new = require("../new");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const emptyConfig = {
-  templates: {}
-};
 const context = {
   'name': 'app',
   'test': 'test'
 };
 describe('Test - No Cleanup', () => {
-  let globalConfig;
   const dir = 'test/test-no-cleanup';
   before(async function () {
-    globalConfig = await (0, _getGlobalConfig2.default)();
-    await (0, _outputGlobalConfig2.default)(emptyConfig);
-    await (0, _Scripts.register)(_testing.testTemplateRepo, false);
-    await (0, _new.setup)(_testing.testTemplateName, dir, false);
+    await (0, _spawn2.default)('git', ['clone', _testing.testTemplatePath, _path2.default.join(dir, '.tmp.pit')], false);
   });
   it('Tests templates', async function () {
     await (0, _Scripts.test)(context, _path2.default.join(dir, '.tmp.pit'), dir, false, false);
@@ -58,18 +45,13 @@ describe('Test - No Cleanup', () => {
     (0, _expect2.default)(files).to.contain('test/test-no-cleanup/README.md');
   });
   after(async function () {
-    await (0, _outputGlobalConfig2.default)(globalConfig);
     await (0, _rimraf2.default)(dir);
   });
 });
 describe('Test - With Cleanup', () => {
-  let globalConfig;
   const dir = 'test/test-with-cleanup';
   before(async function () {
-    globalConfig = await (0, _getGlobalConfig2.default)();
-    await (0, _outputGlobalConfig2.default)(emptyConfig);
-    await (0, _Scripts.register)(_testing.testTemplateRepo, false);
-    await (0, _new.setup)(_testing.testTemplateName, dir, false);
+    await (0, _spawn2.default)('git', ['clone', _testing.testTemplatePath, _path2.default.join(dir, '.tmp.pit')], false);
   });
   it('Cleans up once the test finishes', async function () {
     await (0, _Scripts.test)(context, _path2.default.join(dir, '.tmp.pit'), dir, true, false);
@@ -81,7 +63,6 @@ describe('Test - With Cleanup', () => {
     (0, _expect2.default)(files).to.not.contain('test/test/README.md');
   });
   after(async function () {
-    await (0, _outputGlobalConfig2.default)(globalConfig);
     await (0, _rimraf2.default)(dir);
   });
 });

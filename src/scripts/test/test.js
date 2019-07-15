@@ -2,13 +2,9 @@ import expect from 'expect.js';
 import path from 'path';
 import glob from 'glob';
 import rimraf from 'Utils/rimraf';
-import getGlobalConfig from 'Utils/getGlobalConfig';
-import outputGlobalConfig from 'Utils/outputGlobalConfig';
 import spawn from 'Utils/spawn';
-import { testTemplateName, testTemplatePath } from 'Constants/testing';
-import { register, test } from 'Scripts';
-
-const emptyConfig = { templates: {} };
+import { testTemplatePath } from 'Constants/testing';
+import { test } from 'Scripts';
 
 const context = {
   'name': 'app',

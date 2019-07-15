@@ -8,7 +8,7 @@ exports.default = async function (template, destination, verbose = true, context
   // Get global configuration
   const globalConfig = await (0, _getGlobalConfig2.default)(); // Check/prompt for required args
 
-  if (!template) {
+  if (!template && !override) {
     if (verbose) {
       template = await (0, _index2.default)(globalConfig.templates);
 

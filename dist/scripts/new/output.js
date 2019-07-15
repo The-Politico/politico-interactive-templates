@@ -4,7 +4,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-exports.default = async function (files, logger) {
+exports.default = async function (files, verbose) {
+  // Set up logger
+  const logger = new _console.Logger({
+    verbose
+  });
   const anyFilesExist = (await Promise.all(files.map(async function (f) {
     return {
       exists: await (0, _fsExtra.exists)(f.path),
@@ -28,6 +32,8 @@ var _path = require("path");
 var _path2 = _interopRequireDefault(_path);
 
 var _fsExtra = require("fs-extra");
+
+var _console = require("../../utils/console");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

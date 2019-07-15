@@ -34,7 +34,7 @@ exports.default = async function (template, destination, verbose = true, default
     context
   }));
   log(`\n[3/3] 💾  Saving files...`);
-  await (0, _output2.default)(files, logger);
+  await (0, _output2.default)(files, verbose);
   log('');
   log(`New ${_chalk2.default.bold(template)} saved to ${_chalk2.default.bold(destination)}.`, 'success');
 };

@@ -4,13 +4,70 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+exports.default = async function (baseContext, templateDirectory = '', outputDirectory = '.tmp.pit', cleanup = true, verbose = true) {
+  const absoluteTemplateDir = _path2.default.join(_cwd2.default, templateDirectory);
+
+  let templateConfig;
+
+  try {
+    templateConfig = require(_path2.default.join(absoluteTemplateDir, '.pitrc'));
+  } catch (err) {
+    console.error(_chalk2.default.yellow(`Looks like there's something wrong with your ".pitrc" file`));
+    throw err;
+  }
+
+  let conf;
+
+  try {
+    conf = await (0, _setup2.default)('', outputDirectory, verbose, baseContext, templateConfig);
+  } catch (e) {
+    throw e;
+  }
+
+  const {
+    renderer,
+    context
+  } = conf;
+  const files = await processLocalRepo(absoluteTemplateDir, {
+    destination: outputDirectory,
+    templateConfig,
+    renderer,
+    context
+  });
+  await (0, _output2.default)(files, verbose);
+
+  if (cleanup) {
+    await (0, _rimraf2.default)(outputDirectory);
+  }
+
+  if (verbose) {
+    console.log('Test complete. Looks like your template is good to go!');
+  }
+};
+
 var _path = require("path");
 
 var _path2 = _interopRequireDefault(_path);
 
-var _new = require("../new");
+var _chalk = require("chalk");
 
-var _new2 = _interopRequireDefault(_new);
+var _chalk2 = _interopRequireDefault(_chalk);
+
+var _glob = require("glob");
+
+var _glob2 = _interopRequireDefault(_glob);
+
+var _fsExtra = require("fs-extra");
+
+var _setup = require("../new/setup");
+
+var _setup2 = _interopRequireDefault(_setup);
+
+var _output = require("../new/output");
+
+var _output2 = _interopRequireDefault(_output);
+
+var _processFile = require("../../utils/processFile");
 
 var _cwd = require("../../utils/cwd");
 
@@ -19,10 +76,6 @@ var _cwd2 = _interopRequireDefault(_cwd);
 var _rimraf = require("../../utils/rimraf");
 
 var _rimraf2 = _interopRequireDefault(_rimraf);
-
-var _chalk = require("chalk");
-
-var _chalk2 = _interopRequireDefault(_chalk);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -35,25 +88,25 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @param {boolean} [verbose=true] - Whether to log outputs and prompt for inputs
  * @return {Promise} Resolves when files are built
  */
-const test = async function (context, templateDirectory = '', outputDirectory = '.tmp.pit', cleanup = true, verbose = true) {
-  let templateConfig;
+;
 
-  try {
-    templateConfig = require(_path2.default.join(_cwd2.default, templateDirectory, '.pitrc'));
-  } catch (err) {
-    console.error(_chalk2.default.yellow(`Looks like there's something wrong with your ".pitrc" file`));
-    throw err;
-  }
+async function processLocalRepo(dir, opts) {
+  const files = _glob2.default.sync(_path2.default.join(dir, '**'), {
+    dot: true
+  });
 
-  await (0, _new2.default)('', outputDirectory, true, context, templateConfig);
-
-  if (cleanup) {
-    await (0, _rimraf2.default)(outputDirectory);
-  }
-
-  if (verbose) {
-    console.log('Test complete. Looks like your template is good to go!');
-  }
-};
-
-exports.default = test;
+  let filesData = await Promise.all(files.map(async function (f) {
+    if ((await (0, _fsExtra.lstat)(f)).isFile()) {
+      const data = {
+        content: await (0, _fsExtra.readFile)(f),
+        encoding: 'base64',
+        name: _path2.default.basename(f),
+        path: f.split(dir)[1]
+      };
+      return (0, _processFile.toFile)(data, opts);
+    } else {
+      return null;
+    }
+  }));
+  return filesData.filter(f => f);
+}
