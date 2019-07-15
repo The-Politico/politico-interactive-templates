@@ -1,8 +1,8 @@
 # PIT RC Configuration
 
-The `.pitrc` file should be written in es5 JavaScript as it will be `require`d by PIT when the `new` command is run. As such it should export an object using the `module.exports = {};` syntax.
+The `.pitrc` file should be written in es5 JavaScript and export a single object, i.e., `module.exports = {}`.
 
-Options can be configured by defining these keys in that `exports` object:
+You can configure your template by defining the following keys on the `exports` object:
 
 <table>
 <thead>
@@ -83,7 +83,7 @@ module.exports = {
       type: 'input',
       name: 'projectName',
       message: 'Project Name: ',
-    },  
+    },
   ],
 
   statics: {
@@ -106,6 +106,4 @@ See this example in action [here](templates#example-template).
 
 ## The Global `.pitrc`
 
-If you've run `pit register` your CLI made a file in your user directory called `.pitrc` as well. That is not to be confused with the `.pitrc` files located in your template repos.
-
-That file simply holds user options for `pit` (such as what repos you've already registered), and there should be no reason to open/edit it.
+If you've run `pit register` your CLI made a file in your user directory at `~/.pitrc`. That is not to be confused with the `.pitrc` files located in individual template repos. It holds user options for `pit` (such as what repos you've already registered), and there should be no reason to ever open or edit it.

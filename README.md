@@ -2,27 +2,29 @@
 
 # @politico/interactive-templates
 
-Easy-bake templates from existing projects, backed by GitHub.
+Easy-bake templates from existing projects, stored on GitHub.
 
 ## Why this?
 
 At POLITICO, we're always looking for projects we can replicate.
 
-You might have used [Yeoman](https://yeoman.io/), npm scripts or something else in the past to help create the boilerplate code similar projects start from. [We](https://github.com/The-Politico/generator-politico-django) [have](https://github.com/The-Politico/generator-politico-graphics), [too](https://github.com/The-Politico/generator-politico-interactives). These are powerful templating tools, but in some cases they're overkill and the overhead of building generators means only a few members of our team usually create them.
+You might have used [Yeoman](https://yeoman.io/), npm scripts or something else in the past to help create the boilerplate code similar projects start from. [We](https://github.com/The-Politico/generator-politico-django) [have](https://github.com/The-Politico/generator-politico-graphics), [too](https://github.com/The-Politico/generator-politico-interactives). These are powerful templating tools, but in some cases they're overkill, and the overhead of building generators means only a few members of our team usually create them.
 
-POLITICO interactive templates, or PIT, is designed to make creating templates easy for anyone. It also fits seamlessly in the GitHub-based workflow we use for projects.
+POLITICO interactive templates, or PIT, is designed to make creating templates easy for anyone. It also fits seamlessly in our GitHub-based workflow.
 
-With PIT, anyone can easily create a reusable codebase and a simple interface for jump-starting new projects from old ones.
-
-PIT let's us quickly create templates at exactly the point where reuse makes sense. It's a Goldilocks tool for easy replication on our team.
+With PIT, anyone can easily create a reusable codebase and a simple interface for jump-starting new projects from old ones. PIT let's us quickly create templates at exactly the point where reuse makes sense. It's a Goldilocks tool for easy replication on our team.
 
 ## How it works
 
-PIT is a local CLI tool for scaffolding a new project directory from a template hosted on GitHub. You can turn any existing project hosted on GitHub into a PIT template by simply adding a `.pitrc` configuration file.
+PIT is a local CLI tool for scaffolding a new project directory from a template hosted on GitHub.
 
-Once a project is templatized, you register it with your PIT CLI to use it.
+You can turn any existing project hosted on GitHub into a PIT template by simply adding a `.pitrc` configuration file.
 
-You can customize the CLI for any project by adding prompts via [Inquire.js](https://github.com/SBoudrias/Inquirer.js/) and then use the answers to those questions to customize your template files with [EJS](https://ejs.co/) template rendering.
+Once a project is templatized, you register it with your PIT CLI and start using it.
+
+You can customize the CLI for any project by adding [Inquire.js](https://github.com/SBoudrias/Inquirer.js/) prompts and then use your user's answers to those questions to customize template files with [EJS](https://ejs.co/) template rendering.
+
+Because your templates are always pulled down from GitHub, you can be sure your users always have the latest version whenever they start a new project.
 
 
 ## Quick start
@@ -54,13 +56,7 @@ You can customize the CLI for any project by adding prompts via [Inquire.js](htt
 
 5. Select your project template, answer any prompts and then BUILD! 🚀
 
-## Updating templates
 
-One of the main goals of PIT is to make updating templates easy. Every time you run `pit new`, PIT will pull down the latest version of the codebase as it appears on GitHub. However, this isn't true for some of the configuration options of those templates.
-
-If the `category` of a template you have registered changes, you can `pit register` it again to update it.
-
-However, if the `name` changes and you `pit register` it again, you'll notice you'll have two registered templates pointing to the same template. To remove one, you can run `pit unregister` and select the old name.
 
 ## Read more
 - [Creating new PIT templates](docs/templates.md)
