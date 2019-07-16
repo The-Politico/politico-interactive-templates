@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import yargs from 'yargs';
 import { readJSON } from 'fs-extra';
 import { newProject, register, unregister, make, test } from './scripts';
