@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import parseRepoPath from 'Utils/parseRepoPath';
 import getGlobalConfig from 'Utils/getGlobalConfig';
 import getRepoConfig from 'Utils/getRepoConfig';
@@ -17,6 +16,7 @@ const register = async function(githubPath, verbose = true, tmpName = '.tmp.pit'
   // Set up logger
   const logger = new Logger({ verbose });
   const log = logger.log;
+  log(`🧱 PIT: Registering a new template.`);
 
   // Check for required args
   if (!githubPath) {

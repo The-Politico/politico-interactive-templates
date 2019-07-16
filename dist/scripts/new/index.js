@@ -10,38 +10,64 @@ exports.default = async function (template, destination, verbose = true, default
     verbose
   });
   const log = logger.log;
-  log(`🧱  Creating a new template in ${_chalk2.default.bold(destination)}.`);
-  log(`\n[1/3] ⏳  Loading template configurion...`);
+  log(`🧱 PIT: Creating a new template in ${_chalk2.default.bold(_path2.default.join(_cwd2.default, destination))}.`);
+  log(`\n[1/3] ⏳  Loading template configuration...`);
   let conf;
 
   try {
-    conf = await (0, _setup2.default)(template, destination, verbose, defaultContext, setupOverride);
+    conf = await (0, _setup2.default)({
+      template,
+      destination,
+      verbose,
+      context: defaultContext,
+      override: setupOverride
+    });
   } catch (e) {
+    log(e.message, 'error');
+    process.exitCode = 1;
+    e.handled = true;
     throw e;
   }
 
   const {
-    templateOptions,
-    templateConfig,
+    repos,
+    config,
     renderer,
     context
   } = conf;
   log(`\n[2/3] ✏️  Rendering template...`);
-  const files = await (0, _build2.default)((0, _assign2.default)({}, templateOptions, {
+  const files = (0, _flattenDeep2.default)((await Promise.all(repos.map(d => (0, _build2.default)((0, _assign2.default)({}, d, {
     destination,
-    templateConfig,
+    config,
     renderer,
     context
-  }));
+  }))))));
   log(`\n[3/3] 💾  Saving files...`);
-  await (0, _output2.default)(files, verbose);
+
+  try {
+    await (0, _output2.default)(files, verbose);
+  } catch (e) {
+    log(e.message, 'error');
+    process.exitCode = 1;
+    e.handled = true;
+    throw e;
+  }
+
   log('');
-  log(`New ${_chalk2.default.bold(template)} saved to ${_chalk2.default.bold(destination)}.`, 'success');
+  log(`New ${_chalk2.default.bold(config.name)} saved to ${_chalk2.default.bold(_path2.default.join(_cwd2.default, destination))}.`, 'success');
 };
+
+var _path = require("path");
+
+var _path2 = _interopRequireDefault(_path);
 
 var _assign = require("lodash/assign");
 
 var _assign2 = _interopRequireDefault(_assign);
+
+var _flattenDeep = require("lodash/flattenDeep");
+
+var _flattenDeep2 = _interopRequireDefault(_flattenDeep);
 
 var _setup = require("./setup");
 
@@ -58,6 +84,10 @@ var _output2 = _interopRequireDefault(_output);
 var _chalk = require("chalk");
 
 var _chalk2 = _interopRequireDefault(_chalk);
+
+var _cwd = require("../../utils/cwd");
+
+var _cwd2 = _interopRequireDefault(_cwd);
 
 var _console = require("../../utils/console");
 

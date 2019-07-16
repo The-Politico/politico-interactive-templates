@@ -14,7 +14,6 @@ var _healthChecks2 = _interopRequireDefault(_healthChecks);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-console.log('\nWelcome to Politico Interactive Templates!');
 _yargs2.default // eslint-disable-line
 .help().scriptName('pit') // New
 .command('new [template] [destination]', 'Creates a new project from a template.', yargs => {
@@ -42,7 +41,13 @@ _yargs2.default // eslint-disable-line
     await (0, _healthChecks2.default)();
   }
 
-  await (0, _scripts.newProject)(template, destination, verbose);
+  try {
+    await (0, _scripts.newProject)(template, destination, verbose);
+  } catch (e) {
+    if (!e.handled) {
+      throw e;
+    }
+  }
 }) // Register
 .command('register [path]', 'Registers new templates for use.', yargs => {
   yargs.positional('path', {
@@ -60,7 +65,6 @@ _yargs2.default // eslint-disable-line
 }) {
   if (verbose) {
     await (0, _healthChecks2.default)();
-    console.log('Looks like you want to register an existing template.');
   }
 
   await (0, _scripts.register)(path, verbose);
@@ -103,7 +107,6 @@ _yargs2.default // eslint-disable-line
 }) {
   if (verbose) {
     await (0, _healthChecks2.default)();
-    console.log('Looks like you want to make a new template.');
   }
 
   await (0, _scripts.make)(name, verbose);
@@ -140,7 +143,6 @@ _yargs2.default // eslint-disable-line
 }) {
   if (verbose) {
     await (0, _healthChecks2.default)();
-    console.log('Looks like you want to test your new template.');
   }
 
   let context;

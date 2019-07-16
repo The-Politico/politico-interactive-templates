@@ -1,5 +1,6 @@
 import expect from 'expect.js';
 import path from 'path';
+import fs from 'fs';
 import glob from 'glob';
 import rimraf from 'Utils/rimraf';
 import spawn from 'Utils/spawn';
@@ -7,8 +8,10 @@ import { testTemplatePath } from 'Constants/testing';
 import { test } from 'Scripts';
 
 const context = {
-  'name': 'app',
+  'name': 'test_app',
   'test': 'test',
+  'dependentText': 'valid',
+  'content': 'A1',
 };
 
 describe('Test - No Cleanup', () => {
@@ -22,7 +25,10 @@ describe('Test - No Cleanup', () => {
     await test(context, path.join(dir, '.tmp.pit'), dir, false, false);
 
     const files = glob.sync(path.join(dir, '**'), { dot: true });
-    expect(files).to.contain('test/test-no-cleanup/README.md');
+    expect(files).to.contain(path.join(dir, 'README.md'));
+
+    const file = fs.readFileSync(path.join(dir, 'README.md')).toString('utf-8');
+    expect(file.trim()).to.be('# test_app');
   });
 
   after(async function() {
@@ -41,7 +47,7 @@ describe('Test - With Cleanup', () => {
     await test(context, path.join(dir, '.tmp.pit'), dir, true, false);
 
     const files = glob.sync(path.join(dir, '**'), { dot: true });
-    expect(files).to.not.contain('test/test/README.md');
+    expect(files).to.not.contain(path.join(dir, 'README.md'));
   });
 
   after(async function() {

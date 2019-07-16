@@ -12,14 +12,18 @@ import {
   testTemplateName,
   testTemplatePath,
   testSnippetTemplatePath,
-  testSnippetTemplateName
+  testSnippetTemplateName,
+  testVersionTemplateName,
+  testVersionTemplatePath
 } from 'Constants/testing';
 
 import register from 'Scripts/register/index';
 
 const context = {
-  'name': 'app',
+  'name': 'test_app',
   'test': 'test',
+  'dependentText': 'valid',
+  'content': 'A1',
 };
 
 const emptyConfig = { templates: {} };
@@ -45,12 +49,17 @@ describe('New - Build: Builds Template Files', () => {
 
   it('Writes context into files', async function() {
     const file = fs.readFileSync(path.join(dir, 'README.md')).toString('utf-8');
-    expect(file.trim()).to.be('# app');
+    expect(file.trim()).to.be('# test_app');
   });
 
   it('Uses project context', async function() {
     const file = fs.readFileSync(path.join(dir, 'extra.txt')).toString('utf-8');
-    expect(file).to.be('context field\n');
+    expect(file.trim()).to.be('context field');
+  });
+
+  it('Resolves promises in statics configuration', async function() {
+    const file = fs.readFileSync(path.join(dir, 'promises/promise.txt')).toString('utf-8');
+    expect(file.trim()).to.be('resolution');
   });
 
   it('Renames files with strings', async function() {
@@ -58,7 +67,7 @@ describe('New - Build: Builds Template Files', () => {
   });
 
   it('Renames files with functions', async function() {
-    expect(files).to.contain(path.join(dir, 'app/app_file.txt'));
+    expect(files).to.contain(path.join(dir, 'test_app/test_app_file.txt'));
   });
 
   it('Ignores global ignore files', async function() {
@@ -87,6 +96,16 @@ describe('New - Build: Builds Template Files', () => {
     expect(file.trim()).to.be('This should <%=not%> be passed through render.');
   });
 
+  it('Traverses a dependency graph', async function() {
+    expect(files).to.contain(path.join(dir, 'dependent.txt'));
+    const fileOne = fs.readFileSync(path.join(dir, 'dependent.txt')).toString('utf-8');
+    expect(fileOne.trim()).to.be('valid');
+
+    expect(files).to.contain(path.join(dir, 'src/components/test_app/touch'));
+    const fileTwo = fs.readFileSync(path.join(dir, 'src/components/test_app/touch')).toString('utf-8');
+    expect(fileTwo.trim()).to.be('A1');
+  });
+
   after(async function() {
     await outputGlobalConfig(globalConfig);
     rimraf(dir);
@@ -100,7 +119,6 @@ describe('New - Snippets', () => {
   before(async function() {
     globalConfig = await getGlobalConfig();
     await outputGlobalConfig(emptyConfig);
-    await outputGlobalConfig(globalConfig);
     await register(testSnippetTemplatePath, false);
 
     await newProject(testSnippetTemplateName, dir, false, { name: 'one', content: 'good' });
@@ -122,6 +140,30 @@ describe('New - Snippets', () => {
 
     const file = fs.readFileSync(path.join(dir, 'src/components/one/touch')).toString('utf-8');
     expect(file.trim()).to.be('good');
+  });
+
+  after(async function() {
+    await outputGlobalConfig(globalConfig);
+    await rimraf(dir);
+  });
+});
+
+describe('New - Version', () => {
+  let globalConfig;
+  const dir = 'test/version';
+
+  before(async function() {
+    globalConfig = await getGlobalConfig();
+    await outputGlobalConfig(emptyConfig);
+    await register(testVersionTemplatePath, false);
+  });
+
+  it('Fails if incorrect version', async function() {
+    try {
+      await newProject(testVersionTemplateName, dir, false, {});
+    } catch (err) {
+      expect(err.message).to.contain('This template requires version:');
+    }
   });
 
   after(async function() {

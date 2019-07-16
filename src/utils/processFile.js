@@ -12,18 +12,18 @@ function hasBinaryExtension(filename) {
 
 export async function toFile(data, opts) {
   const { content, encoding, name, path: repoFilePath } = data;
-  const { destination, templateConfig, renderer, context } = opts;
+  const { destination, config, renderer, context } = opts;
 
   // Ignore ignored files
   const ig = ignore().add(
-    Array.isArray(templateConfig.ignore) ? [...globalIgnores, ...templateConfig.ignore] : globalIgnores
+    Array.isArray(config.ignore) ? [...globalIgnores, ...config.ignore] : globalIgnores
   );
   if (ig.ignores(repoFilePath)) {
     return null;
   }
 
   // Set up justCopy ignored files
-  const jc = ignore().add(templateConfig.justCopy || []);
+  const jc = ignore().add(config.justCopy || []);
 
   let file;
   if (hasBinaryExtension(name)) {
@@ -40,7 +40,7 @@ export async function toFile(data, opts) {
     }
   }
 
-  const renderedFilepath = path.join(destination, renameFile(repoFilePath, { rename: templateConfig.rename, context }));
+  const renderedFilepath = path.join(destination, renameFile(repoFilePath, { rename: config.rename, context }));
 
   return { path: renderedFilepath, content: file };
 }

@@ -15,15 +15,21 @@ export default async function(name, verbose = true) {
   const logger = new Logger({ verbose });
   const log = logger.log;
 
+  log(`🧱 PIT: Making a new template configuration file.`);
+
   if (await exists('.pitrc')) {
-    throw new Error('.pitrc file already exists.');
+    log(`.pitrc file already exists.`, 'error');
+    process.exitCode = 1;
+    return;
   }
 
   if (!name) {
     if (verbose) {
       name = await q.name();
     } else {
-      throw new Error('Missing first argument: "name"');
+      log('Missing first argument: "name"', 'error');
+      process.exitCode = 1;
+      return;
     }
   }
 
@@ -31,6 +37,6 @@ export default async function(name, verbose = true) {
   await outputFile('.pitrc', `module.exports = ${JSON.stringify(config, null, 2)}`);
 
   if (verbose) {
-    log(`New .pitrc file created.`);
+    log(`New .pitrc file created.`, 'success');
   }
 };

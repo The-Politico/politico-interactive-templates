@@ -3,8 +3,6 @@ import { readJSON } from 'fs-extra';
 import { newProject, register, unregister, make, test } from './scripts';
 import healthChecks from 'Utils/healthChecks';
 
-console.log('\nWelcome to Politico Interactive Templates!');
-
 yargs // eslint-disable-line
   .help()
   .scriptName('pit')
@@ -34,7 +32,13 @@ yargs // eslint-disable-line
       await healthChecks();
     }
 
-    await newProject(template, destination, verbose);
+    try {
+      await newProject(template, destination, verbose);
+    } catch (e) {
+      if (!e.handled) {
+        throw e;
+      }
+    }
   })
 
   // Register
@@ -53,7 +57,6 @@ yargs // eslint-disable-line
   }, async function({ path, verbose }) {
     if (verbose) {
       await healthChecks();
-      console.log('Looks like you want to register an existing template.');
     }
 
     await register(path, verbose);
@@ -98,7 +101,6 @@ yargs // eslint-disable-line
   }, async function({ name, verbose }) {
     if (verbose) {
       await healthChecks();
-      console.log('Looks like you want to make a new template.');
     }
 
     await make(name, verbose);
@@ -136,7 +138,6 @@ yargs // eslint-disable-line
   }, async function({ context: contextPath, templateDirectory, outputDirectory, cleanup, verbose }) {
     if (verbose) {
       await healthChecks();
-      console.log('Looks like you want to test your new template.');
     }
 
     let context;

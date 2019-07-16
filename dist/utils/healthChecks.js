@@ -8,17 +8,21 @@ exports.default = async function () {
   const packagejson = await (0, _npmApi2.default)().repo('@politico/interactive-templates').package();
   let inGoodHealth = true;
 
-  if (_package2.default.version !== packagejson.version) {
-    console.log(_chalk2.default.yellow('\nIt looks like your version of PIT is out of date.\nYou should run "npm install -g @politico/interactive-templates" to update.\n'));
+  if (_semver2.default.lt(_Meta2.default.version, packagejson.version)) {
+    console.log(_chalk2.default.yellow(`\nIt looks like your version of PIT is out of date.\nYou should run "npm install -g @politico/interactive-templates" to update to version ${_chalk2.default.bold(packagejson.version)}.\n`));
     inGoodHealth = false;
   }
 
   return inGoodHealth;
 };
 
-var _package = require("../../package.json");
+var _Meta = require("../../package.json");
 
-var _package2 = _interopRequireDefault(_package);
+var _Meta2 = _interopRequireDefault(_Meta);
+
+var _semver = require("semver");
+
+var _semver2 = _interopRequireDefault(_semver);
 
 var _npmApi = require("npm-api");
 

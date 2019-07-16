@@ -23,10 +23,19 @@ var _downloadFile2 = _interopRequireDefault(_downloadFile);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 async function processRepo(opts) {
+  if (!opts) {
+    return [];
+  }
+
   const {
     owner,
     repo
   } = opts;
+
+  if (!owner || !repo) {
+    return [];
+  }
+
   const repoPath = opts.path || '';
   const files = await _git2.default.repos.getContents({
     owner,

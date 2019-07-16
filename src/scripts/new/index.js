@@ -1,8 +1,11 @@
+import path from 'path';
 import assign from 'lodash/assign';
+import flattenDeep from 'lodash/flattenDeep';
 import setup from './setup';
 import build from './build';
 import output from './output';
 import chalk from 'chalk';
+import cwd from 'Utils/cwd';
 import { Logger } from 'Utils/console';
 
 /**
@@ -16,28 +19,40 @@ export default async function(template, destination, verbose = true, defaultCont
   // Set up logger
   const logger = new Logger({ verbose });
   const log = logger.log;
-  log(`🧱  Creating a new template in ${chalk.bold(destination)}.`);
+  log(`🧱 PIT: Creating a new template in ${chalk.bold(path.join(cwd, destination))}.`);
 
-  log(`\n[1/3] ⏳  Loading template configurion...`);
+  log(`\n[1/3] ⏳  Loading template configuration...`);
   let conf;
   try {
-    conf = await setup(template, destination, verbose, defaultContext, setupOverride);
+    conf = await setup({ template, destination, verbose, context: defaultContext, override: setupOverride });
   } catch (e) {
+    log(e.message, 'error');
+    process.exitCode = 1;
+    e.handled = true;
     throw e;
   }
-  const { templateOptions, templateConfig, renderer, context } = conf;
+  const { repos, config, renderer, context } = conf;
 
   log(`\n[2/3] ✏️  Rendering template...`);
-  const files = await build(assign({}, templateOptions, {
-    destination,
-    templateConfig,
-    renderer,
-    context,
-  }));
+  const files = flattenDeep(await Promise.all(repos.map(d =>
+    build(assign({}, d, {
+      destination,
+      config,
+      renderer,
+      context,
+    }))
+  )));
 
   log(`\n[3/3] 💾  Saving files...`);
-  await output(files, verbose);
+  try {
+    await output(files, verbose);
+  } catch (e) {
+    log(e.message, 'error');
+    process.exitCode = 1;
+    e.handled = true;
+    throw e;
+  }
 
   log('');
-  log(`New ${chalk.bold(template)} saved to ${chalk.bold(destination)}.`, 'success');
+  log(`New ${chalk.bold(config.name)} saved to ${chalk.bold(path.join(cwd, destination))}.`, 'success');
 };

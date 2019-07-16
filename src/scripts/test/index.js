@@ -1,12 +1,18 @@
 import path from 'path';
-import chalk from 'chalk';
 import glob from 'glob';
+import chalk from 'chalk';
+import flattenDeep from 'lodash/flattenDeep';
+import assign from 'lodash/assign';
 import { lstat, readFile } from 'fs-extra';
 import setup from 'Scripts/new/setup';
+import build from 'Scripts/new/build';
 import output from 'Scripts/new/output';
 import { toFile } from 'Utils/processFile';
 import cwd from 'Utils/cwd';
+import getRepoConfig from 'Utils/getRepoConfig';
+import getRepoDependencies from 'Utils/getRepoDependencies';
 import rimraf from 'Utils/rimraf';
+import { Logger } from 'Utils/console';
 
 /**
  * Tests a tempalte directory
@@ -18,40 +24,71 @@ import rimraf from 'Utils/rimraf';
  * @return {Promise} Resolves when files are built
  */
 export default async function(baseContext, templateDirectory = '', outputDirectory = '.tmp.pit', cleanup = true, verbose = true) {
-  const absoluteTemplateDir = path.join(cwd, templateDirectory);
+  // Set up logger
+  const logger = new Logger({ verbose });
+  const log = logger.log;
 
-  let templateConfig;
-  try {
-    templateConfig = require(path.join(absoluteTemplateDir, '.pitrc'));
-  } catch (err) {
-    console.error(chalk.yellow(`Looks like there's something wrong with your ".pitrc" file`));
-    throw err;
-  }
+  const absoluteTemplateDir = path.join(cwd, templateDirectory);
+  log(`🧱 PIT: Testing your template in ${chalk.bold(absoluteTemplateDir)}.`);
+
+  log(`\n[1/5] ⏳  Loading your local template configuration...`);
+  const templateConfig = await getRepoConfig(absoluteTemplateDir, true);
 
   let conf;
   try {
-    conf = await setup('', outputDirectory, verbose, baseContext, templateConfig);
+    const setupOverride = {
+      config: templateConfig,
+      dependencies: await getRepoDependencies(absoluteTemplateDir, true),
+    };
+    conf = await setup({
+      template: '',
+      destination: outputDirectory,
+      verbose,
+      context: baseContext,
+      override: setupOverride,
+      validateVersion: false,
+    });
   } catch (e) {
     throw e;
   }
-  const { renderer, context } = conf;
+  const { repos, renderer, context, config } = conf;
 
-  const files = await processLocalRepo(absoluteTemplateDir, {
+  log(`\n[2/5] ✏️  Rendering template dependencies...`);
+  const dependencyFiles = await Promise.all(repos.map(d =>
+    build(assign({}, d, {
+      destination: outputDirectory,
+      config,
+      renderer,
+      context,
+    }))
+  ));
+
+  log(`\n[3/5] ✏️  Rendering local template...`);
+  const localFiles = await processLocalRepo(absoluteTemplateDir, {
     destination: outputDirectory,
-    templateConfig,
+    config,
     renderer,
     context,
   });
 
+  const files = flattenDeep([...dependencyFiles, localFiles]);
+
+  log(`\n[4/5] 💾  Saving files...`);
   await output(files, verbose);
 
   if (cleanup) {
+    log(`\n[5/5] 🗑️  Cleaning up test files...`);
     await rimraf(outputDirectory);
+  } else {
+    log(`\n[5/5] 🗑️  Skipping cleanup...`);
   }
 
   if (verbose) {
-    console.log('Test complete. Looks like your template is good to go!');
+    console.log();
   }
+
+  log('');
+  log('Test complete. Looks like your template is good to go!', 'success');
 };
 
 async function processLocalRepo(dir, opts) {

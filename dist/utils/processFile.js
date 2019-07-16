@@ -43,19 +43,19 @@ async function toFile(data, opts) {
   } = data;
   const {
     destination,
-    templateConfig,
+    config,
     renderer,
     context
   } = opts; // Ignore ignored files
 
-  const ig = (0, _ignore2.default)().add(Array.isArray(templateConfig.ignore) ? [..._ignores2.default, ...templateConfig.ignore] : _ignores2.default);
+  const ig = (0, _ignore2.default)().add(Array.isArray(config.ignore) ? [..._ignores2.default, ...config.ignore] : _ignores2.default);
 
   if (ig.ignores(repoFilePath)) {
     return null;
   } // Set up justCopy ignored files
 
 
-  const jc = (0, _ignore2.default)().add(templateConfig.justCopy || []);
+  const jc = (0, _ignore2.default)().add(config.justCopy || []);
   let file;
 
   if (hasBinaryExtension(name)) {
@@ -75,7 +75,7 @@ async function toFile(data, opts) {
   }
 
   const renderedFilepath = _path2.default.join(destination, (0, _renameFile2.default)(repoFilePath, {
-    rename: templateConfig.rename,
+    rename: config.rename,
     context
   }));
 

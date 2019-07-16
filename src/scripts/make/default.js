@@ -1,4 +1,7 @@
+import meta from 'Meta';
+
 export default {
+  version: `^${meta.version}`,
   name: '',
   renderer: 'ejs',
   category: null,
@@ -9,4 +12,6 @@ export default {
   ignore: [],
   justCopy: [],
   rename: {},
+
+  dependencies: [],
 };

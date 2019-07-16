@@ -45,8 +45,10 @@ var _index4 = _interopRequireDefault(_index3);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const context = {
-  'name': 'app',
-  'test': 'test'
+  'name': 'test_app',
+  'test': 'test',
+  'dependentText': 'valid',
+  'content': 'A1'
 };
 const emptyConfig = {
   templates: {}
@@ -71,18 +73,23 @@ describe('New - Build: Builds Template Files', () => {
   it('Writes context into files', async function () {
     const file = _fs2.default.readFileSync(_path2.default.join(dir, 'README.md')).toString('utf-8');
 
-    (0, _expect2.default)(file.trim()).to.be('# app');
+    (0, _expect2.default)(file.trim()).to.be('# test_app');
   });
   it('Uses project context', async function () {
     const file = _fs2.default.readFileSync(_path2.default.join(dir, 'extra.txt')).toString('utf-8');
 
-    (0, _expect2.default)(file).to.be('context field\n');
+    (0, _expect2.default)(file.trim()).to.be('context field');
+  });
+  it('Resolves promises in statics configuration', async function () {
+    const file = _fs2.default.readFileSync(_path2.default.join(dir, 'promises/promise.txt')).toString('utf-8');
+
+    (0, _expect2.default)(file.trim()).to.be('resolution');
   });
   it('Renames files with strings', async function () {
     (0, _expect2.default)(files).to.contain(_path2.default.join(dir, 'renamed.txt'));
   });
   it('Renames files with functions', async function () {
-    (0, _expect2.default)(files).to.contain(_path2.default.join(dir, 'app/app_file.txt'));
+    (0, _expect2.default)(files).to.contain(_path2.default.join(dir, 'test_app/test_app_file.txt'));
   });
   it('Ignores global ignore files', async function () {
     (0, _expect2.default)(files).to.not.contain(_path2.default.join(dir, '.pitrc'));
@@ -106,6 +113,18 @@ describe('New - Build: Builds Template Files', () => {
 
     (0, _expect2.default)(file.trim()).to.be('This should <%=not%> be passed through render.');
   });
+  it('Traverses a dependency graph', async function () {
+    (0, _expect2.default)(files).to.contain(_path2.default.join(dir, 'dependent.txt'));
+
+    const fileOne = _fs2.default.readFileSync(_path2.default.join(dir, 'dependent.txt')).toString('utf-8');
+
+    (0, _expect2.default)(fileOne.trim()).to.be('valid');
+    (0, _expect2.default)(files).to.contain(_path2.default.join(dir, 'src/components/test_app/touch'));
+
+    const fileTwo = _fs2.default.readFileSync(_path2.default.join(dir, 'src/components/test_app/touch')).toString('utf-8');
+
+    (0, _expect2.default)(fileTwo.trim()).to.be('A1');
+  });
   after(async function () {
     await (0, _outputGlobalConfig2.default)(globalConfig);
     (0, _rimraf2.default)(dir);
@@ -117,7 +136,6 @@ describe('New - Snippets', () => {
   before(async function () {
     globalConfig = await (0, _getGlobalConfig2.default)();
     await (0, _outputGlobalConfig2.default)(emptyConfig);
-    await (0, _outputGlobalConfig2.default)(globalConfig);
     await (0, _index4.default)(_testing.testSnippetTemplatePath, false);
     await (0, _index2.default)(_testing.testSnippetTemplateName, dir, false, {
       name: 'one',
@@ -149,6 +167,26 @@ describe('New - Snippets', () => {
     const file = _fs2.default.readFileSync(_path2.default.join(dir, 'src/components/one/touch')).toString('utf-8');
 
     (0, _expect2.default)(file.trim()).to.be('good');
+  });
+  after(async function () {
+    await (0, _outputGlobalConfig2.default)(globalConfig);
+    await (0, _rimraf2.default)(dir);
+  });
+});
+describe('New - Version', () => {
+  let globalConfig;
+  const dir = 'test/version';
+  before(async function () {
+    globalConfig = await (0, _getGlobalConfig2.default)();
+    await (0, _outputGlobalConfig2.default)(emptyConfig);
+    await (0, _index4.default)(_testing.testVersionTemplatePath, false);
+  });
+  it('Fails if incorrect version', async function () {
+    try {
+      await (0, _index2.default)(_testing.testVersionTemplateName, dir, false, {});
+    } catch (err) {
+      (0, _expect2.default)(err.message).to.contain('This template requires version:');
+    }
   });
   after(async function () {
     await (0, _outputGlobalConfig2.default)(globalConfig);

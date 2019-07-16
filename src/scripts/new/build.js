@@ -4,10 +4,18 @@ import client from 'Utils/git';
 import downloadFile from 'Utils/downloadFile';
 
 async function processRepo(opts) {
+  if (!opts) {
+    return [];
+  }
+
   const {
     owner,
     repo,
   } = opts;
+
+  if (!owner || !repo) {
+    return [];
+  }
 
   const repoPath = opts.path || '';
 

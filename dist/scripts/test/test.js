@@ -8,6 +8,10 @@ var _path = require("path");
 
 var _path2 = _interopRequireDefault(_path);
 
+var _fs = require("fs");
+
+var _fs2 = _interopRequireDefault(_fs);
+
 var _glob = require("glob");
 
 var _glob2 = _interopRequireDefault(_glob);
@@ -27,8 +31,10 @@ var _Scripts = require("..");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const context = {
-  'name': 'app',
-  'test': 'test'
+  'name': 'test_app',
+  'test': 'test',
+  'dependentText': 'valid',
+  'content': 'A1'
 };
 describe('Test - No Cleanup', () => {
   const dir = 'test/test-no-cleanup';
@@ -42,7 +48,11 @@ describe('Test - No Cleanup', () => {
       dot: true
     });
 
-    (0, _expect2.default)(files).to.contain('test/test-no-cleanup/README.md');
+    (0, _expect2.default)(files).to.contain(_path2.default.join(dir, 'README.md'));
+
+    const file = _fs2.default.readFileSync(_path2.default.join(dir, 'README.md')).toString('utf-8');
+
+    (0, _expect2.default)(file.trim()).to.be('# test_app');
   });
   after(async function () {
     await (0, _rimraf2.default)(dir);
@@ -60,7 +70,7 @@ describe('Test - With Cleanup', () => {
       dot: true
     });
 
-    (0, _expect2.default)(files).to.not.contain('test/test/README.md');
+    (0, _expect2.default)(files).to.not.contain(_path2.default.join(dir, 'README.md'));
   });
   after(async function () {
     await (0, _rimraf2.default)(dir);

@@ -4,10 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _chalk = require("chalk");
-
-var _chalk2 = _interopRequireDefault(_chalk);
-
 var _parseRepoPath = require("../../utils/parseRepoPath");
 
 var _parseRepoPath2 = _interopRequireDefault(_parseRepoPath);
@@ -46,7 +42,8 @@ const register = async function (githubPath, verbose = true, tmpName = '.tmp.pit
   const logger = new _console.Logger({
     verbose
   });
-  const log = logger.log; // Check for required args
+  const log = logger.log;
+  log(`🧱 PIT: Registering a new template.`); // Check for required args
 
   if (!githubPath) {
     if (verbose) {
