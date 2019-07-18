@@ -29,32 +29,38 @@ Because your templates are always pulled down from GitHub, you can be sure your 
 
 ## Quick start
 
-1. Install:
+1. Export a GitHub personal access with the `repo` scope token as `GITHUB_TOKEN`. You can learn more about acquiring a GitHub access token [here](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line).
+
+  ```
+  $ export GITHUB_TOKEN = [PERSONAL_ACCESS_TOKEN_HERE]
+  ```
+
+2. Install:
 
   ```
   $ npm install -g @politico/interactive-templates
   ```
 
-2. Register a [PIT-configured template](docs/templates.md) hosted on GitHub by using the HTTPS URL for the repo:
+3. Register a [PIT-configured template](docs/templates.md) hosted on GitHub by using the HTTPS URL for the repo:
 
   ```
   $ pit register GIT_URL_HERE
   ```
 
-3. To start a new project, make an empty directory:
+4. To start a new project, make an empty directory:
 
   ```
   $ mkdir MY_PROJECT_NAME
   $ cd MY_PROJECT_NAME
   ```
 
-4. Then run PIT's new project command:
+5. Then run PIT's new project command:
 
   ```
   $ pit new
   ```
 
-5. Select your project template, answer any prompts and then BUILD! 🚀
+6. Select your project template, answer any prompts and then BUILD! 🚀
 
 
 
