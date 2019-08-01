@@ -1,3 +1,10 @@
-export default async function() {
-  console.log('hello');
-}
+export { default as make } from './scripts/make';
+export { default as newProject } from './scripts/new';
+export { default as register } from './scripts/register';
+export { default as unregister } from './scripts/unregister';
+export { default as test } from './scripts/test';
+export { default as downloadFile } from './utils/downloadFile';
+export { default as git } from './utils/git';
+export { default as getGlobalConfig } from './utils/getGlobalConfig';
+export { default as getRepoConfig } from './utils/getRepoConfig';
+export { default as outputGlobalConfig } from './utils/outputGlobalConfig';

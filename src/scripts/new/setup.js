@@ -11,7 +11,7 @@ import getRepoDependencies from 'Utils/getRepoDependencies';
 import parseRepoPath from 'Utils/parseRepoPath';
 import * as renderMethods from 'Utils/renderer/index.js';
 import validateTemplateVersion from 'Utils/validateTemplateVersion';
-import meta from 'Meta';
+import meta from 'Root/package.json';
 
 export default async function({ template, destination, verbose = true, context, override = {}, validateVersion = true }) {
   // Get global configuration

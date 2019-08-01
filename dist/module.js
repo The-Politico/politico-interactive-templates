@@ -1,38 +1,30 @@
-#!/usr/bin/env node
-'use strict';
-
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-var _regeneratorRuntime = _interopDefault(require('@babel/runtime/regenerator'));
-var _asyncToGenerator = _interopDefault(require('@babel/runtime/helpers/asyncToGenerator'));
-var yargs = _interopDefault(require('yargs'));
-var fs = require('fs-extra');
-var fs__default = _interopDefault(fs);
-var assign = _interopDefault(require('lodash/assign'));
-var _classCallCheck = _interopDefault(require('@babel/runtime/helpers/classCallCheck'));
-var _defineProperty = _interopDefault(require('@babel/runtime/helpers/defineProperty'));
-var chalk = _interopDefault(require('chalk'));
-var cli = _interopDefault(require('cli-progress'));
-var inquirer = _interopDefault(require('inquirer'));
-var path$1 = _interopDefault(require('path'));
-var flattenDeep = _interopDefault(require('lodash/flattenDeep'));
-var _toConsumableArray = _interopDefault(require('@babel/runtime/helpers/toConsumableArray'));
-var zipObject = _interopDefault(require('lodash/zipObject'));
-var keys = _interopDefault(require('lodash/keys'));
-var merge = _interopDefault(require('lodash/merge'));
-var mergeWith = _interopDefault(require('lodash/mergeWith'));
-var os = _interopDefault(require('os'));
-var requireFromString = _interopDefault(require('require-from-string'));
-require('@politico/interactive-bin/dist/scripts/env');
-var Octokit = _interopDefault(require('@octokit/rest'));
-var includes = _interopDefault(require('lodash/includes'));
-var ignore = _interopDefault(require('ignore'));
-var find = _interopDefault(require('lodash/find'));
-var ejs$1 = _interopDefault(require('ejs'));
-var semver = _interopDefault(require('semver'));
-var glob = _interopDefault(require('glob'));
-var rimraf$1 = _interopDefault(require('rimraf'));
-var npm = _interopDefault(require('npm-api'));
+import _regeneratorRuntime from '@babel/runtime/regenerator';
+import _asyncToGenerator from '@babel/runtime/helpers/asyncToGenerator';
+import assign from 'lodash/assign';
+import fs, { exists, outputFile, ensureDir, writeFile, lstat, readFile } from 'fs-extra';
+import _classCallCheck from '@babel/runtime/helpers/classCallCheck';
+import _defineProperty from '@babel/runtime/helpers/defineProperty';
+import chalk from 'chalk';
+import cli from 'cli-progress';
+import inquirer from 'inquirer';
+import path$1 from 'path';
+import flattenDeep from 'lodash/flattenDeep';
+import _toConsumableArray from '@babel/runtime/helpers/toConsumableArray';
+import zipObject from 'lodash/zipObject';
+import keys from 'lodash/keys';
+import merge from 'lodash/merge';
+import mergeWith from 'lodash/mergeWith';
+import os from 'os';
+import requireFromString from 'require-from-string';
+import '@politico/interactive-bin/dist/scripts/env';
+import Octokit from '@octokit/rest';
+import includes from 'lodash/includes';
+import ignore from 'ignore';
+import find from 'lodash/find';
+import ejs$1 from 'ejs';
+import semver from 'semver';
+import glob from 'glob';
+import rimraf$1 from 'rimraf';
 
 var Logger = function Logger() {
   var _this = this;
@@ -110,7 +102,7 @@ var name$1 = "@politico/interactive-templates";
 var version = "1.1.0";
 var description = "Templating engine for generating codebases.";
 var main = "dist/index.js";
-var module$1 = "dist/module.js";
+var module = "dist/module.js";
 var bin = {
 	pit: "dist/cli.js"
 };
@@ -187,7 +179,7 @@ var meta = {
 	version: version,
 	description: description,
 	main: main,
-	module: module$1,
+	module: module,
 	bin: bin,
 	scripts: scripts,
 	devDependencies: devDependencies,
@@ -219,7 +211,7 @@ var defaultConfig = {
  * @return {Promise} Resolves when .pitrc is built
  */
 
-function make (_x) {
+function index (_x) {
   return _ref.apply(this, arguments);
 }
 
@@ -244,7 +236,7 @@ function _ref() {
             log = logger.log;
             log("\uD83E\uDDF1 PIT: Making a new template configuration file.");
             _context.next = 6;
-            return fs.exists('.pitrc');
+            return exists('.pitrc');
 
           case 6:
             if (!_context.sent) {
@@ -285,7 +277,7 @@ function _ref() {
               name: name$1
             });
             _context.next = 23;
-            return fs.outputFile('.pitrc', "module.exports = ".concat(JSON.stringify(config, null, 2)));
+            return outputFile('.pitrc', "module.exports = ".concat(JSON.stringify(config, null, 2)));
 
           case 23:
             if (verbose) {
@@ -306,7 +298,7 @@ var configFilePath = path$1.join(os.homedir(), ".pitrc");
 
 var getGlobalConfig = (function () {
   return new Promise(function (resolve, reject) {
-    fs__default.readJson(configFilePath).then(function (d) {
+    fs.readJson(configFilePath).then(function (d) {
       resolve(d);
     })["catch"](function (e) {
       if (e.message.endsWith('Unexpected end of JSON input')) {
@@ -1258,7 +1250,7 @@ function _ref$3() {
                     switch (_context.prev = _context.next) {
                       case 0:
                         _context.next = 2;
-                        return fs.exists(f.path);
+                        return exists(f.path);
 
                       case 2:
                         _context.t0 = _context.sent;
@@ -1308,11 +1300,11 @@ function _ref$3() {
                     switch (_context2.prev = _context2.next) {
                       case 0:
                         _context2.next = 2;
-                        return fs.ensureDir(path$1.dirname(f.path));
+                        return ensureDir(path$1.dirname(f.path));
 
                       case 2:
                         _context2.next = 4;
-                        return fs.writeFile(f.path, f.content);
+                        return writeFile(f.path, f.content);
 
                       case 4:
                         logger.log(f.path, 'info');
@@ -1350,7 +1342,7 @@ var cwd = process.cwd();
  * @return {Promise} Resolves when files are built
  */
 
-function newProject (_x, _x2) {
+function index$1 (_x, _x2) {
   return _ref$4.apply(this, arguments);
 }
 
@@ -1458,7 +1450,7 @@ function _ref$4() {
 }
 
 var outputGlobalConfig = (function (config) {
-  return fs__default.outputJson(configFilePath, config)["catch"](function (e) {
+  return fs.outputJson(configFilePath, config)["catch"](function (e) {
     console.error(e);
   });
 });
@@ -1736,7 +1728,7 @@ var rimraf = (function (path) {
  * @return {Promise} Resolves when files are built
  */
 
-function test (_x) {
+function index$2 (_x) {
   return _ref$5.apply(this, arguments);
 }
 
@@ -1911,7 +1903,7 @@ function _processLocalRepo() {
                     switch (_context2.prev = _context2.next) {
                       case 0:
                         _context2.next = 2;
-                        return fs.lstat(f);
+                        return lstat(f);
 
                       case 2:
                         if (!_context2.sent.isFile()) {
@@ -1920,7 +1912,7 @@ function _processLocalRepo() {
                         }
 
                         _context2.next = 5;
-                        return fs.readFile(f);
+                        return readFile(f);
 
                       case 5:
                         _context2.t0 = _context2.sent;
@@ -1966,363 +1958,4 @@ function _processLocalRepo() {
   return _processLocalRepo.apply(this, arguments);
 }
 
-function healthChecks () {
-  return _ref$6.apply(this, arguments);
-}
-
-function _ref$6() {
-  _ref$6 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee() {
-    var packagejson, inGoodHealth;
-    return _regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            _context.next = 2;
-            return npm().repo('@politico/interactive-templates')["package"]();
-
-          case 2:
-            packagejson = _context.sent;
-            inGoodHealth = true;
-
-            if (semver.lt(meta.version, packagejson.version)) {
-              console.log(chalk.yellow("\nIt looks like your version of PIT is out of date.\nYou should run \"npm install -g @politico/interactive-templates\" to update to version ".concat(chalk.bold(packagejson.version), ".\n")));
-              inGoodHealth = false;
-            }
-
-            return _context.abrupt("return", inGoodHealth);
-
-          case 6:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee);
-  }));
-  return _ref$6.apply(this, arguments);
-}
-
-yargs // eslint-disable-line
-.help().scriptName('pit') // New
-.command('new [template] [destination]', 'Creates a new project from a template.', function (yargs) {
-  yargs.positional('template', {
-    alias: 't',
-    describe: 'The template to use',
-    type: 'string'
-  }).positional('destination', {
-    alias: 'd',
-    describe: 'A destination to put the new project',
-    type: 'string',
-    "default": ''
-  }).option('verbose', {
-    alias: 'v',
-    describe: 'Log to the console',
-    type: 'boolean',
-    "default": true
-  });
-},
-/*#__PURE__*/
-function () {
-  var _ref2 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(_ref) {
-    var template, destination, verbose;
-    return _regeneratorRuntime.wrap(function _callee$(_context) {
-      while (1) {
-        switch (_context.prev = _context.next) {
-          case 0:
-            template = _ref.template, destination = _ref.destination, verbose = _ref.verbose;
-
-            if (!verbose) {
-              _context.next = 4;
-              break;
-            }
-
-            _context.next = 4;
-            return healthChecks();
-
-          case 4:
-            _context.prev = 4;
-            _context.next = 7;
-            return newProject(template, destination, verbose);
-
-          case 7:
-            _context.next = 13;
-            break;
-
-          case 9:
-            _context.prev = 9;
-            _context.t0 = _context["catch"](4);
-
-            if (_context.t0.handled) {
-              _context.next = 13;
-              break;
-            }
-
-            throw _context.t0;
-
-          case 13:
-          case "end":
-            return _context.stop();
-        }
-      }
-    }, _callee, null, [[4, 9]]);
-  }));
-
-  return function (_x) {
-    return _ref2.apply(this, arguments);
-  };
-}()) // Register
-.command('register [path]', 'Registers new templates for use.', function (yargs) {
-  yargs.positional('path', {
-    describe: 'The GitHub path for the template',
-    type: 'string'
-  }).option('verbose', {
-    alias: 'v',
-    describe: 'Log to the console',
-    type: 'boolean',
-    "default": true
-  });
-},
-/*#__PURE__*/
-function () {
-  var _ref4 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee2(_ref3) {
-    var path, verbose;
-    return _regeneratorRuntime.wrap(function _callee2$(_context2) {
-      while (1) {
-        switch (_context2.prev = _context2.next) {
-          case 0:
-            path = _ref3.path, verbose = _ref3.verbose;
-
-            if (!verbose) {
-              _context2.next = 4;
-              break;
-            }
-
-            _context2.next = 4;
-            return healthChecks();
-
-          case 4:
-            _context2.next = 6;
-            return register(path, verbose);
-
-          case 6:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function (_x2) {
-    return _ref4.apply(this, arguments);
-  };
-}()) // Unregister
-.command('unregister [template]', 'Creates a new project from a template.', function (yargs) {
-  yargs.positional('template', {
-    alias: 't',
-    describe: 'The template to remove',
-    type: 'string'
-  }).option('verbose', {
-    alias: 'v',
-    describe: 'Log to the console',
-    type: 'boolean',
-    "default": true
-  });
-},
-/*#__PURE__*/
-function () {
-  var _ref6 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee3(_ref5) {
-    var template, verbose;
-    return _regeneratorRuntime.wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            template = _ref5.template, verbose = _ref5.verbose;
-
-            if (!verbose) {
-              _context3.next = 5;
-              break;
-            }
-
-            _context3.next = 4;
-            return healthChecks();
-
-          case 4:
-            console.log('Looks like you want to unregister a template.');
-
-          case 5:
-            _context3.next = 7;
-            return unregister(template, verbose);
-
-          case 7:
-          case "end":
-            return _context3.stop();
-        }
-      }
-    }, _callee3);
-  }));
-
-  return function (_x3) {
-    return _ref6.apply(this, arguments);
-  };
-}()) // Make
-.command('make [name]', 'Creates a template .pitrc file', function (yargs) {
-  yargs.positional('name', {
-    describe: 'The name of your template',
-    type: 'string'
-  }).option('verbose', {
-    alias: 'v',
-    describe: 'Log to the console',
-    type: 'boolean',
-    "default": true
-  });
-},
-/*#__PURE__*/
-function () {
-  var _ref8 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee4(_ref7) {
-    var name, verbose;
-    return _regeneratorRuntime.wrap(function _callee4$(_context4) {
-      while (1) {
-        switch (_context4.prev = _context4.next) {
-          case 0:
-            name = _ref7.name, verbose = _ref7.verbose;
-
-            if (!verbose) {
-              _context4.next = 4;
-              break;
-            }
-
-            _context4.next = 4;
-            return healthChecks();
-
-          case 4:
-            _context4.next = 6;
-            return make(name, verbose);
-
-          case 6:
-          case "end":
-            return _context4.stop();
-        }
-      }
-    }, _callee4);
-  }));
-
-  return function (_x4) {
-    return _ref8.apply(this, arguments);
-  };
-}()) // Test
-.command('test [context] [templateDirectory] [outputDirectory]', 'Tests a template', function (yargs) {
-  yargs.positional('context', {
-    describe: 'The path to a JSON file with context for your test',
-    type: 'string'
-  }).positional('templateDirectory', {
-    alias: 't',
-    describe: 'The destination containing template files',
-    type: 'string'
-  }).positional('outputDirectory', {
-    alias: 'o',
-    describe: 'The destination to save the template test files',
-    type: 'string'
-  }).option('cleanup', {
-    alias: 'c',
-    describe: 'Delete template files after test is complete',
-    type: 'boolean',
-    "default": true
-  }).option('verbose', {
-    alias: 'v',
-    describe: 'Log to the console',
-    type: 'boolean',
-    "default": true
-  });
-},
-/*#__PURE__*/
-function () {
-  var _ref10 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee5(_ref9) {
-    var contextPath, templateDirectory, outputDirectory, cleanup, verbose, context;
-    return _regeneratorRuntime.wrap(function _callee5$(_context5) {
-      while (1) {
-        switch (_context5.prev = _context5.next) {
-          case 0:
-            contextPath = _ref9.context, templateDirectory = _ref9.templateDirectory, outputDirectory = _ref9.outputDirectory, cleanup = _ref9.cleanup, verbose = _ref9.verbose;
-
-            if (!verbose) {
-              _context5.next = 4;
-              break;
-            }
-
-            _context5.next = 4;
-            return healthChecks();
-
-          case 4:
-            if (!contextPath) {
-              _context5.next = 8;
-              break;
-            }
-
-            _context5.next = 7;
-            return fs.readJSON(contextPath);
-
-          case 7:
-            context = _context5.sent;
-
-          case 8:
-            _context5.next = 10;
-            return test(context, templateDirectory, outputDirectory, cleanup, verbose);
-
-          case 10:
-          case "end":
-            return _context5.stop();
-        }
-      }
-    }, _callee5);
-  }));
-
-  return function (_x5) {
-    return _ref10.apply(this, arguments);
-  };
-}()) // Info
-.command('info', 'Runs health checks.', function (yargs) {
-  return yargs;
-},
-/*#__PURE__*/
-function () {
-  var _ref11 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee6(argv) {
-    var health;
-    return _regeneratorRuntime.wrap(function _callee6$(_context6) {
-      while (1) {
-        switch (_context6.prev = _context6.next) {
-          case 0:
-            _context6.next = 2;
-            return healthChecks();
-
-          case 2:
-            health = _context6.sent;
-
-            if (health) {
-              console.log('\n...Everything is up to date.');
-            }
-
-          case 4:
-          case "end":
-            return _context6.stop();
-        }
-      }
-    }, _callee6);
-  }));
-
-  return function (_x6) {
-    return _ref11.apply(this, arguments);
-  };
-}()).argv;
+export { index as make, index$1 as newProject, register, index$2 as test, unregister };

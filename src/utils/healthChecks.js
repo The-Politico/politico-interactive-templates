@@ -1,4 +1,4 @@
-import meta from 'Meta';
+import meta from 'Root/package.json';
 import semver from 'semver';
 import npm from 'npm-api';
 import chalk from 'chalk';

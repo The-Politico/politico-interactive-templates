@@ -18,7 +18,9 @@ export async function toFile(data, opts) {
   const ig = ignore().add(
     Array.isArray(config.ignore) ? [...globalIgnores, ...config.ignore] : globalIgnores
   );
-  if (ig.ignores(repoFilePath)) {
+
+  const relativePathName = repoFilePath[0] === '/' ? repoFilePath.substring(1, repoFilePath.length) : repoFilePath;
+  if (ig.ignores(relativePathName)) {
     return null;
   }
 
@@ -30,7 +32,7 @@ export async function toFile(data, opts) {
     file = Buffer.from(content, encoding);
   } else {
     file = Buffer.from(content, encoding).toString('utf8');
-    if (!jc.ignores(repoFilePath)) { // not ignoring means the file should be processed:
+    if (!jc.ignores(relativePathName)) { // not ignoring means the file should be processed:
       try {
         file = renderer(file, context);
       } catch (err) {

@@ -1,4 +1,4 @@
-import meta from 'Meta';
+import meta from 'Root/package.json';
 
 export default {
   version: `^${meta.version}`,

@@ -1,7 +1,7 @@
 {
   "plugins": [
     "transform-es2015-modules-commonjs",
-    [ "babel-plugin-webpack-alias", { "config": "./webpack.babel.js" } ],
+    [ "babel-plugin-webpack-alias", { "config": "./config/webpack.babel.js" } ],
     "@babel/plugin-proposal-class-properties"
   ],
   "presets": ["@babel/preset-react"]

@@ -13,7 +13,6 @@ export const babelOpts = {
   runtimeHelpers: true,
   presets: [
     [useLocal('@babel/preset-env'), { modules: false }],
-    useLocal('@babel/preset-react'),
   ],
   plugins: [
     useLocal('@babel/plugin-proposal-class-properties'),
@@ -23,11 +22,27 @@ export const babelOpts = {
 
 export const external = [
   ...Object.keys(pkg.dependencies),
+  'path',
+  'os',
+  'lodash/assign',
+  'lodash/flattenDeep',
+  'lodash/includes',
+  'lodash/zipObject',
+  'lodash/keys',
+  'lodash/merge',
+  'lodash/mergeWith',
+  'lodash/find',
+  '@babel/runtime/helpers/asyncToGenerator',
+  '@babel/runtime/helpers/toConsumableArray',
+  '@babel/runtime/helpers/classCallCheck',
+  '@babel/runtime/helpers/defineProperty',
+  '@babel/runtime/regenerator',
+  '@politico/interactive-bin/dist/scripts/env',
 ];
 
 export const plugins = [
   alias({
-    resolve: ['.jsx', '.js'],
+    resolve: ['.jsx', '.js', '.json'],
     Root: path.resolve(__dirname, '..'),
     Utils: path.resolve(__dirname, '../src/utils'),
     Constants: path.resolve(__dirname, '../src/constants'),

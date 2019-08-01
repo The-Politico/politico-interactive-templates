@@ -1,4 +1,5 @@
 import path from 'path';
+import chalk from 'chalk';
 import requireFromString from 'require-from-string';
 import parseRepoPath from './parseRepoPath';
 import client from './git';
@@ -14,7 +15,7 @@ export default async function(repoPath, local = false) {
     try {
       pitrc = require(pitrcPath);
     } catch (err) {
-      logger.log(`File ${repoPath.bold(pitrcPath)} could not be loaded.`, 'error');
+      logger.log(`File ${chalk.bold(pitrcPath)} could not be loaded.`, 'error');
       throw err;
     }
     return pitrc;
