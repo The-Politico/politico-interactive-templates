@@ -32,7 +32,6 @@ var ejs$1 = _interopDefault(require('ejs'));
 var semver = _interopDefault(require('semver'));
 var glob = _interopDefault(require('glob'));
 var rimraf$1 = _interopDefault(require('rimraf'));
-var npm = _interopDefault(require('npm-api'));
 
 var Logger = function Logger() {
   var _this = this;
@@ -1966,6 +1965,34 @@ function _processLocalRepo() {
   return _processLocalRepo.apply(this, arguments);
 }
 
+var https = require('https');
+
+function getLastNonBetaVersion (name) {
+  return new Promise(function (resolve, reject) {
+    https.get("https://registry.npmjs.org/".concat(name), function (resp) {
+      resp.setEncoding('utf8');
+      var body = '';
+      resp.on('data', function (data) {
+        body += data;
+      });
+      resp.on('end', function () {
+        var data = JSON.parse(body);
+        var versions = Object.keys(data.versions).reverse();
+        var latestNonBetaVersion = data['dist-tags'].latest;
+        versions.some(function (v) {
+          if (v.indexOf('beta') === -1 && v.indexOf('alpha') === -1) {
+            latestNonBetaVersion = v;
+            return true;
+          }
+
+          return false;
+        });
+        resolve(latestNonBetaVersion);
+      });
+    });
+  });
+}
+
 function healthChecks () {
   return _ref$6.apply(this, arguments);
 }
@@ -1974,20 +2001,20 @@ function _ref$6() {
   _ref$6 = _asyncToGenerator(
   /*#__PURE__*/
   _regeneratorRuntime.mark(function _callee() {
-    var packagejson, inGoodHealth;
+    var latest, inGoodHealth;
     return _regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             _context.next = 2;
-            return npm().repo('@politico/interactive-templates')["package"]();
+            return getLastNonBetaVersion('@politico/interactive-templates');
 
           case 2:
-            packagejson = _context.sent;
+            latest = _context.sent;
             inGoodHealth = true;
 
-            if (semver.lt(meta.version, packagejson.version)) {
-              console.log(chalk.yellow("\nIt looks like your version of PIT is out of date.\nYou should run \"npm install -g @politico/interactive-templates\" to update to version ".concat(chalk.bold(packagejson.version), ".\n")));
+            if (semver.lt(meta.version, latest)) {
+              console.log(chalk.yellow("\nIt looks like your version of PIT is out of date.\nYou should run \"npm install -g @politico/interactive-templates\" to update to version ".concat(chalk.bold(latest), ".\n")));
               inGoodHealth = false;
             }
 

@@ -8,3 +8,5 @@ export { default as git } from './utils/git';
 export { default as getGlobalConfig } from './utils/getGlobalConfig';
 export { default as getRepoConfig } from './utils/getRepoConfig';
 export { default as outputGlobalConfig } from './utils/outputGlobalConfig';
+export { default as getLatestNonBetaVersion } from './utils/getLatestNonBetaVersion';
+export { default as generateHash } from './utils/generateHash';
