@@ -104,6 +104,14 @@ describe('New - Build: Builds Template Files', () => {
     expect(files).to.contain(path.join(dir, 'src/components/test_app/touch'));
     const fileTwo = fs.readFileSync(path.join(dir, 'src/components/test_app/touch')).toString('utf-8');
     expect(fileTwo.trim()).to.be('A1');
+
+    expect(files).to.contain(path.join(dir, 'src/components/test_app/overrideMe.txt'));
+    const fileThree = fs.readFileSync(path.join(dir, 'src/components/test_app/overrideMe.txt')).toString('utf-8');
+    expect(fileThree.trim()).to.be('Overidden!');
+
+    expect(files).to.contain(path.join(dir, 'src/components/test_app/exampleTwo.txt'));
+    const fileFour = fs.readFileSync(path.join(dir, 'src/components/test_app/exampleTwo.txt')).toString('utf-8');
+    expect(fileFour.trim()).to.be('## Example Two');
   });
 
   after(async function() {

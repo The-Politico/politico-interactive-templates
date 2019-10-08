@@ -1,6 +1,8 @@
 import path from 'path';
 import assign from 'lodash/assign';
 import flattenDeep from 'lodash/flattenDeep';
+import uniqBy from 'lodash/uniqBy';
+import reverse from 'lodash/reverse';
 import setup from './setup';
 import build from './build';
 import output from './output';
@@ -34,7 +36,7 @@ export default async function(template, destination, verbose = true, defaultCont
   const { repos, config, renderer, context } = conf;
 
   log(`\n[2/3] ✏️  Rendering template...`);
-  const files = flattenDeep(await Promise.all(repos.map(d =>
+  let files = flattenDeep(await Promise.all(repos.map(d =>
     build(assign({}, d, {
       destination,
       config,
@@ -42,6 +44,7 @@ export default async function(template, destination, verbose = true, defaultCont
       context,
     }))
   )));
+  files = uniqBy(reverse(files), 'path');
 
   log(`\n[3/3] 💾  Saving files...`);
   try {

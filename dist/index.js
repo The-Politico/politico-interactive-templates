@@ -16,6 +16,8 @@ var cli = _interopDefault(require('cli-progress'));
 var inquirer = _interopDefault(require('inquirer'));
 var path$1 = _interopDefault(require('path'));
 var flattenDeep = _interopDefault(require('lodash/flattenDeep'));
+var uniqBy = _interopDefault(require('lodash/uniqBy'));
+var reverse = _interopDefault(require('lodash/reverse'));
 var _toConsumableArray = _interopDefault(require('@babel/runtime/helpers/toConsumableArray'));
 var zipObject = _interopDefault(require('lodash/zipObject'));
 var keys = _interopDefault(require('lodash/keys'));
@@ -863,50 +865,114 @@ function getRepoDependencies(_x) {
 function _getRepoDependencies() {
   _getRepoDependencies = _asyncToGenerator(
   /*#__PURE__*/
+  _regeneratorRuntime.mark(function _callee2(repoPath) {
+    var local,
+        depth,
+        dependencies,
+        repoConfig,
+        idx,
+        d,
+        additions,
+        _args2 = arguments;
+    return _regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            local = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : false;
+            depth = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : 0;
+            dependencies = [];
+            _context2.next = 5;
+            return getRepoConfig(repoPath, local);
+
+          case 5:
+            repoConfig = _context2.sent;
+
+            if (!repoConfig.dependencies) {
+              _context2.next = 18;
+              break;
+            }
+
+            idx = 0;
+
+          case 8:
+            if (!(idx < repoConfig.dependencies.length)) {
+              _context2.next = 18;
+              break;
+            }
+
+            d = repoConfig.dependencies[idx];
+            dependencies.push({
+              path: d,
+              idx: idx,
+              depth: depth
+            });
+            _context2.next = 13;
+            return getRepoDependencies(d, false, depth + 1);
+
+          case 13:
+            additions = _context2.sent;
+            additions.forEach(function (a) {
+              dependencies.push(a);
+            });
+
+          case 15:
+            idx++;
+            _context2.next = 8;
+            break;
+
+          case 18:
+            return _context2.abrupt("return", dependencies);
+
+          case 19:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return _getRepoDependencies.apply(this, arguments);
+}
+
+var getRepoDependencies$1 = /*#__PURE__*/
+(function () {
+  var _ref = _asyncToGenerator(
+  /*#__PURE__*/
   _regeneratorRuntime.mark(function _callee(repoPath) {
     var local,
         dependencies,
-        repoConfig,
-        additions,
         _args = arguments;
     return _regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             local = _args.length > 1 && _args[1] !== undefined ? _args[1] : false;
-            dependencies = [];
-            _context.next = 4;
-            return getRepoConfig(repoPath, local);
+            _context.next = 3;
+            return getRepoDependencies(repoPath, local, 0);
 
-          case 4:
-            repoConfig = _context.sent;
-
-            if (!repoConfig.dependencies) {
-              _context.next = 10;
-              break;
-            }
-
-            _context.next = 8;
-            return Promise.all(repoConfig.dependencies.map(function (d) {
-              return getRepoDependencies(d);
+          case 3:
+            dependencies = _context.sent;
+            return _context.abrupt("return", dependencies.sort(function (a, b) {
+              if (a.depth === b.depth) {
+                return a.idx - b.idx;
+              } else {
+                return b.depth - a.depth;
+              }
+            }).map(function (d) {
+              return d.path;
             }));
 
-          case 8:
-            additions = _context.sent;
-            dependencies = [].concat(_toConsumableArray(repoConfig.dependencies), _toConsumableArray(additions));
-
-          case 10:
-            return _context.abrupt("return", flattenDeep(dependencies));
-
-          case 11:
+          case 5:
           case "end":
             return _context.stop();
         }
       }
     }, _callee);
   }));
-  return _getRepoDependencies.apply(this, arguments);
-}
+
+  return function (_x2) {
+    return _ref.apply(this, arguments);
+  };
+})();
 
 var ejs = (function (str, context, options) {
   return ejs$1.render(str, context, options);
@@ -1020,7 +1086,7 @@ function _ref2$1() {
             }
 
             _context.next = 30;
-            return getRepoDependencies(templateOptions);
+            return getRepoDependencies$1(templateOptions);
 
           case 30:
             _context.t1 = _context.sent;
@@ -1425,33 +1491,34 @@ function _ref$4() {
           case 24:
             _context.t2 = _context.sent;
             files = (0, _context.t1)(_context.t2);
+            files = uniqBy(reverse(files), 'path');
             log("\n[3/3] \uD83D\uDCBE  Saving files...");
-            _context.prev = 27;
-            _context.next = 30;
+            _context.prev = 28;
+            _context.next = 31;
             return output(files, verbose);
 
-          case 30:
-            _context.next = 38;
+          case 31:
+            _context.next = 39;
             break;
 
-          case 32:
-            _context.prev = 32;
-            _context.t3 = _context["catch"](27);
+          case 33:
+            _context.prev = 33;
+            _context.t3 = _context["catch"](28);
             log(_context.t3.message, 'error');
             process.exitCode = 1;
             _context.t3.handled = true;
             throw _context.t3;
 
-          case 38:
+          case 39:
             log('');
             log("New ".concat(chalk.bold(config.name), " saved to ").concat(chalk.bold(path$1.join(cwd, destination)), "."), 'success');
 
-          case 40:
+          case 41:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[7, 13], [27, 32]]);
+    }, _callee, null, [[7, 13], [28, 33]]);
   }));
   return _ref$4.apply(this, arguments);
 }
@@ -1787,7 +1854,7 @@ function _ref$5() {
             _context.prev = 12;
             _context.t0 = templateConfig;
             _context.next = 16;
-            return getRepoDependencies(absoluteTemplateDir, true);
+            return getRepoDependencies$1(absoluteTemplateDir, true);
 
           case 16:
             _context.t1 = _context.sent;
