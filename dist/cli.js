@@ -108,7 +108,7 @@ var name = (function () {
 });
 
 var name$1 = "@politico/interactive-templates";
-var version = "1.2.2";
+var version = "1.2.3";
 var description = "Templating engine for generating codebases.";
 var main = "dist/index.js";
 var module$1 = "dist/module.js";
