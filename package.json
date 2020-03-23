@@ -1,6 +1,6 @@
 {
   "name": "@politico/interactive-templates",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Templating engine for generating codebases.",
   "main": "dist/index.js",
   "module": "dist/module.js",
