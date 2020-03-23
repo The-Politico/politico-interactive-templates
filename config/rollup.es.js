@@ -60,7 +60,7 @@ export const plugins = [
 export default [
   {
     input: [
-      path.resolve(process.cwd(), 'src/scripts/index.js'),
+      path.resolve(process.cwd(), 'src/index.js'),
     ],
     output: [
       { file: path.resolve(process.cwd(), pkg.main), format: 'cjs' },

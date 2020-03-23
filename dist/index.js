@@ -2032,8 +2032,58 @@ function _processLocalRepo() {
   return _processLocalRepo.apply(this, arguments);
 }
 
+var https = require('https');
+
+function getLatestNonBetaVersion (name) {
+  return new Promise(function (resolve, reject) {
+    https.get("https://registry.npmjs.org/".concat(name), function (resp) {
+      resp.setEncoding('utf8');
+      var body = '';
+      resp.on('data', function (data) {
+        body += data;
+      });
+      resp.on('end', function () {
+        var data = JSON.parse(body);
+        var versions = Object.keys(data.versions).reverse();
+        var latestNonBetaVersion = data['dist-tags'].latest;
+        versions.some(function (v) {
+          if (v.indexOf('beta') === -1 && v.indexOf('alpha') === -1) {
+            latestNonBetaVersion = v;
+            return true;
+          }
+
+          return false;
+        });
+        resolve(latestNonBetaVersion);
+      });
+    });
+  });
+}
+
+function generateHash (length, chars) {
+  var mask = '';
+  if (chars.indexOf('a') > -1) mask += 'abcdefghijklmnopqrstuvwxyz';
+  if (chars.indexOf('A') > -1) mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if (chars.indexOf('#') > -1) mask += '0123456789';
+  if (chars.indexOf('!') > -1) mask += '~`!@#$%^&*()_+-={}[]:";\'<>?,./|\\';
+  var result = '';
+
+  for (var i = length; i > 0; --i) {
+    result += mask[Math.floor(Math.random() * mask.length)];
+  }
+
+  return result;
+}
+
+exports.downloadFile = downloadFile;
+exports.generateHash = generateHash;
+exports.getGlobalConfig = getGlobalConfig;
+exports.getLatestNonBetaVersion = getLatestNonBetaVersion;
+exports.getRepoConfig = getRepoConfig;
+exports.git = client;
 exports.make = index;
 exports.newProject = index$1;
+exports.outputGlobalConfig = outputGlobalConfig;
 exports.register = register;
 exports.test = index$2;
 exports.unregister = unregister;

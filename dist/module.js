@@ -2025,4 +2025,47 @@ function _processLocalRepo() {
   return _processLocalRepo.apply(this, arguments);
 }
 
-export { index as make, index$1 as newProject, register, index$2 as test, unregister };
+var https = require('https');
+
+function getLatestNonBetaVersion (name) {
+  return new Promise(function (resolve, reject) {
+    https.get("https://registry.npmjs.org/".concat(name), function (resp) {
+      resp.setEncoding('utf8');
+      var body = '';
+      resp.on('data', function (data) {
+        body += data;
+      });
+      resp.on('end', function () {
+        var data = JSON.parse(body);
+        var versions = Object.keys(data.versions).reverse();
+        var latestNonBetaVersion = data['dist-tags'].latest;
+        versions.some(function (v) {
+          if (v.indexOf('beta') === -1 && v.indexOf('alpha') === -1) {
+            latestNonBetaVersion = v;
+            return true;
+          }
+
+          return false;
+        });
+        resolve(latestNonBetaVersion);
+      });
+    });
+  });
+}
+
+function generateHash (length, chars) {
+  var mask = '';
+  if (chars.indexOf('a') > -1) mask += 'abcdefghijklmnopqrstuvwxyz';
+  if (chars.indexOf('A') > -1) mask += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if (chars.indexOf('#') > -1) mask += '0123456789';
+  if (chars.indexOf('!') > -1) mask += '~`!@#$%^&*()_+-={}[]:";\'<>?,./|\\';
+  var result = '';
+
+  for (var i = length; i > 0; --i) {
+    result += mask[Math.floor(Math.random() * mask.length)];
+  }
+
+  return result;
+}
+
+export { downloadFile, generateHash, getGlobalConfig, getLatestNonBetaVersion, getRepoConfig, client as git, index as make, index$1 as newProject, outputGlobalConfig, register, index$2 as test, unregister };
