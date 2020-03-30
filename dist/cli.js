@@ -26,7 +26,7 @@ var mergeWith = _interopDefault(require('lodash/mergeWith'));
 var os = _interopDefault(require('os'));
 var requireFromString = _interopDefault(require('require-from-string'));
 require('@politico/interactive-bin/dist/scripts/env');
-var Octokit = _interopDefault(require('@octokit/rest'));
+var { Octokit } = require('@octokit/rest');
 var includes = _interopDefault(require('lodash/includes'));
 var ignore = _interopDefault(require('ignore'));
 var find = _interopDefault(require('lodash/find'));
@@ -108,7 +108,7 @@ var name = (function () {
 });
 
 var name$1 = "@politico/interactive-templates";
-var version = "1.2.3";
+var version = "1.2.4";
 var description = "Templating engine for generating codebases.";
 var main = "dist/index.js";
 var module$1 = "dist/module.js";
@@ -118,6 +118,7 @@ var bin = {
 var scripts = {
 	dev: "nodemon --ignore dist --exec npm run build",
 	build: "rollup --config config/rollup.es.js",
+	postbuild: "node ./bin/post-build.js",
 	test: "nyc mocha $(find src/**/**/test.js -name '*.js') --require \"@babel/register\" --timeout 30000",
 	"test-specific": "mocha $(find src/**/**/test.js -name '*.js') --require \"@babel/register\" --timeout 30000 -g",
 	posttest: "rmdir test 2>/dev/null ; exit 0;",
