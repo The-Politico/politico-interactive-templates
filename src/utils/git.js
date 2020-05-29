@@ -1,4 +1,4 @@
-import '@politico/interactive-bin/dist/scripts/env';
+import '@politico/interactive-bin/lib/scripts/env';
 import { Octokit } from '@octokit/rest';
 
 const client = new Octokit({

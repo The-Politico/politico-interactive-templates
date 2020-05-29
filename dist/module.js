@@ -18,7 +18,7 @@ import merge from 'lodash/merge';
 import mergeWith from 'lodash/mergeWith';
 import os from 'os';
 import requireFromString from 'require-from-string';
-import '@politico/interactive-bin/dist/scripts/env';
+import '@politico/interactive-bin/lib/scripts/env';
 import { Octokit } from '@octokit/rest';
 import includes from 'lodash/includes';
 import ignore from 'ignore';
@@ -101,7 +101,7 @@ var name = (function () {
 });
 
 var name$1 = "@politico/interactive-templates";
-var version = "1.2.4";
+var version = "1.3.0";
 var description = "Templating engine for generating codebases.";
 var main = "dist/index.js";
 var module = "dist/module.js";
@@ -123,9 +123,10 @@ var devDependencies = {
 	"@babel/plugin-proposal-class-properties": "^7.5.0",
 	"@babel/plugin-transform-runtime": "^7.5.5",
 	"@babel/preset-env": "^7.5.5",
+	"@babel/preset-react": "^7.10.1",
 	"@babel/register": "^7.0.0",
 	"@politico/eslint-config-interactives": "^0.0.4",
-	"@politico/interactive-bin": "^0.1.5",
+	"@politico/interactive-bin": "1.0.0-beta.20",
 	"babel-core": "7.0.0-bridge.0",
 	"babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
 	"babel-plugin-webpack-alias": "^2.1.2",
@@ -148,7 +149,7 @@ var author = "";
 var license = "MIT";
 var dependencies = {
 	"@babel/runtime": "^7.4.2",
-	"@octokit/rest": "^16.28.4",
+	"@octokit/rest": "^17.1.2",
 	chalk: "^2.4.2",
 	"child-process-promise": "^2.2.1",
 	"cli-progress": "^2.1.1",
