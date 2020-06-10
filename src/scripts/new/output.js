@@ -1,4 +1,5 @@
 import path from 'path';
+import findIndex from 'lodash/findIndex';
 import { ensureDir, writeFile, exists } from 'fs-extra';
 import { Logger } from 'Utils/console';
 
@@ -21,7 +22,17 @@ export default async function(files, verbose) {
     throw new Error(`"${anyFilesExist[0].path}" already exists. Aborting template creation. No files were created.`);
   }
 
-  await Promise.all(files.map(async function(f) {
+  const uniqueFiles = [];
+  files.forEach(f => {
+    const fileIdx = findIndex(uniqueFiles, { path: f.path });
+    if (fileIdx >= 0) {
+      uniqueFiles.splice(fileIdx, 1);
+    }
+
+    uniqueFiles.push(f);
+  });
+
+  await Promise.all(uniqueFiles.map(async function(f) {
     await ensureDir(path.dirname(f.path));
     await writeFile(f.path, f.content);
     logger.log(f.path, 'info');

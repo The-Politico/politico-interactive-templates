@@ -1076,10 +1076,10 @@
     eslint-plugin-react "*"
     eslint-plugin-standard "*"
 
-"@politico/interactive-bin@1.0.0-beta.20":
-  version "1.0.0-beta.20"
-  resolved "https://registry.yarnpkg.com/@politico/interactive-bin/-/interactive-bin-1.0.0-beta.20.tgz#a40c5a715e723f08e94aeaed507cf0f51f9f5818"
-  integrity sha512-jKyFWe1QLtCEa/JXIWrobVzR5f21XSzJbXJneo8F8KXxzbKW2Fxv0Qr8I4Aq+wN5hhJVBPYDbn+OCp9uECE+Rw==
+"@politico/interactive-bin@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@politico/interactive-bin/-/interactive-bin-1.0.0.tgz#a4186f165a26955a6680eecc3509da1b902a202f"
+  integrity sha512-KK4sKttdUdVdX2KtvOcH8o2+xMz09NtZvhLA+rFLm7qWGR8jt1zgZFq1byoQEG3u+m9A8MwxSs0kNy+OMmfVJQ==
   dependencies:
     "@octokit/rest" "^17.1.2"
     chalk "^2.4.2"

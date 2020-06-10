@@ -25,6 +25,7 @@ import ignore from 'ignore';
 import find from 'lodash/find';
 import ejs$1 from 'ejs';
 import semver from 'semver';
+import findIndex from 'lodash/findIndex';
 import glob from 'glob';
 import rimraf$1 from 'rimraf';
 
@@ -101,7 +102,7 @@ var name = (function () {
 });
 
 var name$1 = "@politico/interactive-templates";
-var version = "1.3.0";
+var version = "1.3.1";
 var description = "Templating engine for generating codebases.";
 var main = "dist/index.js";
 var module = "dist/module.js";
@@ -126,7 +127,7 @@ var devDependencies = {
 	"@babel/preset-react": "^7.10.1",
 	"@babel/register": "^7.0.0",
 	"@politico/eslint-config-interactives": "^0.0.4",
-	"@politico/interactive-bin": "1.0.0-beta.20",
+	"@politico/interactive-bin": "^1.0.0",
 	"babel-core": "7.0.0-bridge.0",
 	"babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
 	"babel-plugin-webpack-alias": "^2.1.2",
@@ -1297,7 +1298,7 @@ function _ref$3() {
   _ref$3 = _asyncToGenerator(
   /*#__PURE__*/
   _regeneratorRuntime.mark(function _callee3(files, verbose) {
-    var logger, anyFilesExist;
+    var logger, anyFilesExist, uniqueFiles;
     return _regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
@@ -1356,8 +1357,20 @@ function _ref$3() {
             throw new Error("\"".concat(anyFilesExist[0].path, "\" already exists. Aborting template creation. No files were created."));
 
           case 7:
-            _context3.next = 9;
-            return Promise.all(files.map(
+            uniqueFiles = [];
+            files.forEach(function (f) {
+              var fileIdx = findIndex(uniqueFiles, {
+                path: f.path
+              });
+
+              if (fileIdx >= 0) {
+                uniqueFiles.splice(fileIdx, 1);
+              }
+
+              uniqueFiles.push(f);
+            });
+            _context3.next = 11;
+            return Promise.all(uniqueFiles.map(
             /*#__PURE__*/
             function () {
               var _ref3 = _asyncToGenerator(
@@ -1390,7 +1403,7 @@ function _ref$3() {
               };
             }()));
 
-          case 9:
+          case 11:
           case "end":
             return _context3.stop();
         }
