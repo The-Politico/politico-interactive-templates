@@ -109,7 +109,7 @@ var name = (function () {
 });
 
 var name$1 = "@politico/interactive-templates";
-var version = "1.3.1";
+var version = "1.3.2";
 var description = "Templating engine for generating codebases.";
 var main = "dist/index.js";
 var module$1 = "dist/module.js";
@@ -228,9 +228,7 @@ function make (_x) {
 }
 
 function _ref() {
-  _ref = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(name$1) {
+  _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(name$1) {
     var verbose,
         logger,
         log,
@@ -389,9 +387,7 @@ function toFile(_x, _x2) {
 }
 
 function _toFile() {
-  _toFile = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(data, opts) {
+  _toFile = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(data, opts) {
     var content, encoding, name, repoFilePath, destination, config, renderer, context, ig, relativePathName, jc, file, renderedFilepath;
     return _regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -467,9 +463,7 @@ function toString(_x3) {
 }
 
 function _toString() {
-  _toString = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee2(data) {
+  _toString = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee2(data) {
     var text;
     return _regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
@@ -493,9 +487,7 @@ function getRepoConfig (_x) {
 }
 
 function _ref$1() {
-  _ref$1 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(repoPath) {
+  _ref$1 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(repoPath) {
     var local,
         logger,
         pitrc,
@@ -545,7 +537,7 @@ function _ref$1() {
             }
 
             _context.next = 18;
-            return client.repos.getContents({
+            return client.repos.getContent({
               owner: owner,
               repo: repo,
               path: '.pitrc'
@@ -593,9 +585,7 @@ function all (_x) {
 }
 
 function _ref2() {
-  _ref2 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(templates) {
+  _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(templates) {
     return _regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -662,9 +652,7 @@ function category (_x) {
 }
 
 function _ref3() {
-  _ref3 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(templates) {
+  _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(templates) {
     var map, categories, category, templateChoices;
     return _regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -735,12 +723,8 @@ var qTemplate$1 = function qTemplate(choices) {
   });
 };
 
-var search =
-/*#__PURE__*/
-function () {
-  var _ref4 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(templates) {
+var search = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(templates) {
     var phrase, rgx, choices;
     return _regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -836,9 +820,7 @@ function promptTemplate (_x) {
 }
 
 function _ref$2() {
-  _ref$2 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(templates) {
+  _ref$2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(templates) {
     var type;
     return _regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -866,9 +848,7 @@ function getRepoDependencies(_x) {
 }
 
 function _getRepoDependencies() {
-  _getRepoDependencies = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee2(repoPath) {
+  _getRepoDependencies = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee2(repoPath) {
     var local,
         depth,
         dependencies,
@@ -936,11 +916,8 @@ function _getRepoDependencies() {
   return _getRepoDependencies.apply(this, arguments);
 }
 
-var getRepoDependencies$1 = /*#__PURE__*/
-(function () {
-  var _ref = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(repoPath) {
+var getRepoDependencies$1 = /*#__PURE__*/(function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(repoPath) {
     var local,
         dependencies,
         _args = arguments;
@@ -984,6 +961,7 @@ var ejs = (function (str, context, options) {
 
 
 var renderMethods = /*#__PURE__*/Object.freeze({
+  __proto__: null,
   ejs: ejs
 });
 
@@ -997,9 +975,7 @@ function setup (_x) {
 }
 
 function _ref2$1() {
-  _ref2$1 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(_ref) {
+  _ref2$1 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(_ref) {
     var template, destination, _ref$verbose, verbose, context, _ref$override, override, _ref$validateVersion, validateVersion, globalConfig, templateOptions, templateConfig, renderer, dependencyPaths, repos, dependencies, projectConfig, staticKeys, staticValues, statics;
 
     return _regeneratorRuntime.wrap(function _callee$(_context) {
@@ -1166,9 +1142,7 @@ function downloadFile(_x, _x2) {
 }
 
 function _downloadFile() {
-  _downloadFile = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(opts, preData) {
+  _downloadFile = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(opts, preData) {
     var owner, repo, repoFilePath, size, sha, fileData;
     return _regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -1196,7 +1170,7 @@ function _downloadFile() {
 
           case 8:
             _context.next = 10;
-            return client.repos.getContents({
+            return client.repos.getContent({
               owner: owner,
               repo: repo,
               path: repoFilePath
@@ -1228,9 +1202,7 @@ function processRepo(_x) {
 }
 
 function _processRepo() {
-  _processRepo = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(opts) {
+  _processRepo = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(opts) {
     var owner, repo, repoPath, files, output;
     return _regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -1256,7 +1228,7 @@ function _processRepo() {
           case 5:
             repoPath = opts.path || '';
             _context.next = 8;
-            return client.repos.getContents({
+            return client.repos.getContent({
               owner: owner,
               repo: repo,
               path: repoPath
@@ -1302,9 +1274,7 @@ function output (_x, _x2) {
 }
 
 function _ref$3() {
-  _ref$3 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee3(files, verbose) {
+  _ref$3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee3(files, verbose) {
     var logger, anyFilesExist, uniqueFiles;
     return _regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
@@ -1315,12 +1285,8 @@ function _ref$3() {
               verbose: verbose
             });
             _context3.next = 3;
-            return Promise.all(files.map(
-            /*#__PURE__*/
-            function () {
-              var _ref2 = _asyncToGenerator(
-              /*#__PURE__*/
-              _regeneratorRuntime.mark(function _callee(f) {
+            return Promise.all(files.map( /*#__PURE__*/function () {
+              var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(f) {
                 return _regeneratorRuntime.wrap(function _callee$(_context) {
                   while (1) {
                     switch (_context.prev = _context.next) {
@@ -1350,20 +1316,18 @@ function _ref$3() {
             }()));
 
           case 3:
-            _context3.t0 = function (f) {
+            anyFilesExist = _context3.sent.filter(function (f) {
               return f.exists;
-            };
-
-            anyFilesExist = _context3.sent.filter(_context3.t0);
+            });
 
             if (!(anyFilesExist.length > 0)) {
-              _context3.next = 7;
+              _context3.next = 6;
               break;
             }
 
             throw new Error("\"".concat(anyFilesExist[0].path, "\" already exists. Aborting template creation. No files were created."));
 
-          case 7:
+          case 6:
             uniqueFiles = [];
             files.forEach(function (f) {
               var fileIdx = findIndex(uniqueFiles, {
@@ -1376,13 +1340,9 @@ function _ref$3() {
 
               uniqueFiles.push(f);
             });
-            _context3.next = 11;
-            return Promise.all(uniqueFiles.map(
-            /*#__PURE__*/
-            function () {
-              var _ref3 = _asyncToGenerator(
-              /*#__PURE__*/
-              _regeneratorRuntime.mark(function _callee2(f) {
+            _context3.next = 10;
+            return Promise.all(uniqueFiles.map( /*#__PURE__*/function () {
+              var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee2(f) {
                 return _regeneratorRuntime.wrap(function _callee2$(_context2) {
                   while (1) {
                     switch (_context2.prev = _context2.next) {
@@ -1410,7 +1370,7 @@ function _ref$3() {
               };
             }()));
 
-          case 11:
+          case 10:
           case "end":
             return _context3.stop();
         }
@@ -1435,9 +1395,7 @@ function newProject (_x, _x2) {
 }
 
 function _ref$4() {
-  _ref$4 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(template, destination) {
+  _ref$4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(template, destination) {
     var verbose,
         defaultContext,
         setupOverride,
@@ -1574,12 +1532,8 @@ var override = (function (name) {
  * @return {Promise} Resolves when the template is registered
  */
 
-var register =
-/*#__PURE__*/
-function () {
-  var _ref = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(githubPath) {
+var register = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(githubPath) {
     var verbose,
         logger,
         log,
@@ -1710,12 +1664,8 @@ function () {
  * @return {Promise} Resolves when the template is removed
  */
 
-var unregister =
-/*#__PURE__*/
-function () {
-  var _ref = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(name) {
+var unregister = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(name) {
     var verbose,
         globalConfig,
         _args = arguments;
@@ -1822,9 +1772,7 @@ function test (_x) {
 }
 
 function _ref$5() {
-  _ref$5 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(baseContext) {
+  _ref$5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(baseContext) {
     var templateDirectory,
         outputDirectory,
         cleanup,
@@ -1968,9 +1916,7 @@ function processLocalRepo(_x2, _x3) {
 }
 
 function _processLocalRepo() {
-  _processLocalRepo = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee3(dir, opts) {
+  _processLocalRepo = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee3(dir, opts) {
     var files, filesData;
     return _regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
@@ -1980,12 +1926,8 @@ function _processLocalRepo() {
               dot: true
             });
             _context3.next = 3;
-            return Promise.all(files.map(
-            /*#__PURE__*/
-            function () {
-              var _ref2 = _asyncToGenerator(
-              /*#__PURE__*/
-              _regeneratorRuntime.mark(function _callee2(f) {
+            return Promise.all(files.map( /*#__PURE__*/function () {
+              var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee2(f) {
                 var data;
                 return _regeneratorRuntime.wrap(function _callee2$(_context2) {
                   while (1) {
@@ -2080,9 +2022,7 @@ function healthChecks () {
 }
 
 function _ref$6() {
-  _ref$6 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee() {
+  _ref$6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee() {
     var latest, inGoodHealth;
     return _regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -2130,12 +2070,8 @@ yargs // eslint-disable-line
     type: 'boolean',
     "default": true
   });
-},
-/*#__PURE__*/
-function () {
-  var _ref2 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee(_ref) {
+}, /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee(_ref) {
     var template, destination, verbose;
     return _regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -2193,12 +2129,8 @@ function () {
     type: 'boolean',
     "default": true
   });
-},
-/*#__PURE__*/
-function () {
-  var _ref4 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee2(_ref3) {
+}, /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee2(_ref3) {
     var path, verbose;
     return _regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
@@ -2241,12 +2173,8 @@ function () {
     type: 'boolean',
     "default": true
   });
-},
-/*#__PURE__*/
-function () {
-  var _ref6 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee3(_ref5) {
+}, /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee3(_ref5) {
     var template, verbose;
     return _regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
@@ -2291,12 +2219,8 @@ function () {
     type: 'boolean',
     "default": true
   });
-},
-/*#__PURE__*/
-function () {
-  var _ref8 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee4(_ref7) {
+}, /*#__PURE__*/function () {
+  var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee4(_ref7) {
     var name, verbose;
     return _regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
@@ -2351,12 +2275,8 @@ function () {
     type: 'boolean',
     "default": true
   });
-},
-/*#__PURE__*/
-function () {
-  var _ref10 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee5(_ref9) {
+}, /*#__PURE__*/function () {
+  var _ref10 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee5(_ref9) {
     var contextPath, templateDirectory, outputDirectory, cleanup, verbose, context;
     return _regeneratorRuntime.wrap(function _callee5$(_context5) {
       while (1) {
@@ -2402,12 +2322,8 @@ function () {
 }()) // Info
 .command('info', 'Runs health checks.', function (yargs) {
   return yargs;
-},
-/*#__PURE__*/
-function () {
-  var _ref11 = _asyncToGenerator(
-  /*#__PURE__*/
-  _regeneratorRuntime.mark(function _callee6(argv) {
+}, /*#__PURE__*/function () {
+  var _ref11 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime.mark(function _callee6(argv) {
     var health;
     return _regeneratorRuntime.wrap(function _callee6$(_context6) {
       while (1) {

@@ -23,7 +23,7 @@ async function downloadFile(opts, preData) {
       sha: sha,
     });
   } else {
-    fileData = await client.repos.getContents({
+    fileData = await client.repos.getContent({
       owner,
       repo,
       path: repoFilePath,

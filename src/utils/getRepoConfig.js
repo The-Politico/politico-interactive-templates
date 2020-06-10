@@ -27,7 +27,7 @@ export default async function(repoPath, local = false) {
       ({ owner, repo } = repoPath);
     }
 
-    const fileData = await client.repos.getContents({
+    const fileData = await client.repos.getContent({
       owner,
       repo,
       path: '.pitrc',

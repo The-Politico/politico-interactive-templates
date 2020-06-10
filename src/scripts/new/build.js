@@ -19,7 +19,7 @@ async function processRepo(opts) {
 
   const repoPath = opts.path || '';
 
-  const files = await client.repos.getContents({
+  const files = await client.repos.getContent({
     owner,
     repo,
     path: repoPath,
