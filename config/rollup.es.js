@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import babel from 'rollup-plugin-babel';
 import alias from 'rollup-plugin-alias';
@@ -57,30 +58,78 @@ export const plugins = [
   }),
 ];
 
-export default [
-  {
-    input: [
-      path.resolve(process.cwd(), 'src/index.js'),
-    ],
-    output: [
-      { file: path.resolve(process.cwd(), pkg.main), format: 'cjs' },
-      { file: path.resolve(process.cwd(), pkg.module), format: 'es' },
-    ],
-    external,
-    plugins,
-  },
-  {
-    input: [
-      path.resolve(process.cwd(), 'src/cli.js'),
-    ],
-    output: [
-      {
-        file: path.resolve(process.cwd(), 'dist/cli.js'),
-        format: 'cjs',
-        banner: '#!/usr/bin/env node',
-      },
-    ],
-    external,
-    plugins,
-  },
-];
+const builds = [];
+
+// index build
+builds.push({
+  input: [
+    path.resolve(process.cwd(), 'src/index.js'),
+  ],
+  output: [
+    { file: path.resolve(process.cwd(), pkg.main), format: 'cjs' },
+    { file: path.resolve(process.cwd(), pkg.module), format: 'es' },
+  ],
+  external,
+  plugins,
+});
+
+// cli build
+builds.push({
+  input: [
+    path.resolve(process.cwd(), 'src/cli.js'),
+  ],
+  output: [
+    {
+      file: path.resolve(process.cwd(), pkg.bin.pit),
+      format: 'cjs',
+      banner: '#!/usr/bin/env node',
+    },
+  ],
+  external,
+  plugins,
+});
+
+// script builds
+fs.readdirSync(path.join(__dirname, '../src/scripts')).forEach(f => {
+  const pathToF = path.join(__dirname, '../src/scripts', f);
+  const isDirectory = fs.lstatSync(pathToF).isDirectory();
+  if (isDirectory) {
+    builds.push({
+      input: [pathToF],
+      output: [
+        {
+          file: f.endsWith('.js') ?
+            path.resolve(process.cwd(), `lib/scripts/${f}`) :
+            path.resolve(process.cwd(), `lib/scripts/${f}.js`),
+          format: 'cjs',
+          banner: '#!/usr/bin/env node',
+        },
+      ],
+      external,
+      plugins,
+    });
+  }
+});
+
+// utils builds
+fs.readdirSync(path.join(__dirname, '../src/utils')).forEach(f => {
+  const pathToF = path.join(__dirname, '../src/utils', f);
+  if (f[0] !== '_') {
+    builds.push({
+      input: [pathToF],
+      output: [
+        {
+          file: f.endsWith('.js') ?
+            path.resolve(process.cwd(), `lib/utils/${f}`) :
+            path.resolve(process.cwd(), `lib/utils/${f}.js`),
+          format: 'cjs',
+          banner: '#!/usr/bin/env node',
+        },
+      ],
+      external,
+      plugins,
+    });
+  }
+});
+
+export default builds;
