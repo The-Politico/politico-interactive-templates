@@ -1,5 +1,7 @@
-import '@politico/interactive-bin/lib/scripts/env';
+import { env } from '@politico/hermes';
 import { Octokit } from '@octokit/rest';
+
+env.loadEnvFromPibrc();
 
 const client = new Octokit({
   auth: process.env.GITHUB_TOKEN,

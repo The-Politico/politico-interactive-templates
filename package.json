@@ -1,6 +1,6 @@
 {
   "name": "@politico/interactive-templates",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Templating engine for generating codebases.",
   "main": "dist/index.js",
   "module": "dist/module.js",
@@ -25,7 +25,7 @@
     "@babel/preset-react": "^7.10.1",
     "@babel/register": "^7.0.0",
     "@politico/eslint-config-interactives": "^0.0.4",
-    "@politico/interactive-bin": "^1.0.0",
+    "aws-sdk": "^2.0.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "babel-plugin-webpack-alias": "^2.1.2",
@@ -46,9 +46,13 @@
   },
   "author": "",
   "license": "MIT",
+  "peerDependencies": {
+    "aws-sdk": "^2.0.0"
+  },
   "dependencies": {
     "@babel/runtime": "^7.4.2",
     "@octokit/rest": "^17.1.2",
+    "@politico/hermes": "^0.0.3",
     "chalk": "^2.4.2",
     "child-process-promise": "^2.2.1",
     "cli-progress": "^2.1.1",
@@ -66,9 +70,6 @@
     "rimraf": "^2.6.3",
     "semver": "^6.2.0",
     "yargs": "^13.3.0"
-  },
-  "peerDependencies": {
-    "@politico/interactive-bin": "*"
   },
   "repository": {
     "type": "git",
