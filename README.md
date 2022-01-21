@@ -38,7 +38,7 @@ Because your templates are always pulled down from GitHub, you can be sure your 
 2. Install:
 
   ```
-  $ npm install -g @politico/interactive-templates aws-skd@^2.0.0
+  $ npm install -g @politico/interactive-templates aws-sdk@^2.0.0
   ```
 
 3. Register a [PIT-configured template](docs/templates.md) hosted on GitHub by using the HTTPS URL for the repo:
